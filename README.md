@@ -4,7 +4,7 @@
 
 # prettier-plugin-yaml
 
-Format YAML files with Prettier, extended with additional formatting options.
+Additional YAML formatting options for Prettier.
 
 ## Install
 
@@ -31,8 +31,6 @@ Reference `prettier-plugin-yaml` in your [Prettier config](https://prettier.io/d
 If you’re using any other YAML plugins, make sure `prettier-plugin-yaml` is listed last.
 
 ## Options
-
-This plugin extends Prettier’s built-in YAML support with additional formatting options for improved consistency.
 
 ```ts
 interface PluginOptions {

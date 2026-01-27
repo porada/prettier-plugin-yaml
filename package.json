@@ -1,7 +1,7 @@
 {
 	"name": "prettier-plugin-yaml",
-	"version": "1.0.0",
-	"description": "Format YAML files with Prettier, extended with additional formatting options",
+	"version": "1.0.1",
+	"description": "Additional YAML formatting options for Prettier",
 	"license": "MIT",
 	"author": {
 		"name": "Dom Porada",
