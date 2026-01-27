@@ -1,6 +1,6 @@
 import type { Plugin } from 'prettier';
 
-export type PluginOptions = {
+export interface PluginOptions {
 	/**
 	 * Enforce a single collection style for maps and sequences.
 	 */
@@ -15,7 +15,7 @@ export type PluginOptions = {
 	 * @default false
 	 */
 	yamlQuoteValues?: boolean | undefined;
-};
+}
 
 declare module 'prettier' {
 	interface Options extends PluginOptions {}

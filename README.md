@@ -30,6 +30,29 @@ Reference `prettier-plugin-yaml` in your [Prettier config](https://prettier.io/d
 
 If you’re using any other YAML plugins, make sure `prettier-plugin-yaml` is listed last.
 
+## Options
+
+This plugin extends Prettier’s built-in YAML support with additional formatting options for improved consistency.
+
+```ts
+interface PluginOptions {
+    /**
+     * Enforce a single collection style for maps and sequences.
+     */
+    yamlCollectionStyle?: 'block' | 'flow' | undefined;
+    /**
+     * Quote all mapping keys. Removes unnecessary quotes when disabled.
+     * @default false
+     */
+    yamlQuoteKeys?: boolean | undefined;
+    /**
+     * Quote all string values. Removes unnecessary quotes when disabled.
+     * @default false
+     */
+    yamlQuoteValues?: boolean | undefined;
+}
+```
+
 ## Related
 
 - [**@standard-config/prettier**](https://github.com/standard-config/prettier)
