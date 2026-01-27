@@ -119,6 +119,7 @@ test('works with other plugins', async () => {
 		parsers: {
 			yaml: {
 				...prettierParsers.yaml,
+				parse: () => {},
 				preprocess: async () => {
 					/* oxlint-disable-next-line eslint/no-promise-executor-return */
 					await new Promise((resolve) => setTimeout(resolve));
@@ -127,6 +128,9 @@ test('works with other plugins', async () => {
 			},
 		},
 	};
+
+	/* @ts-expect-error */
+	delete testPlugin.parsers.yaml.parse;
 
 	const emptyPlugin: Plugin = {};
 
