@@ -1,0 +1,6 @@
+.DS_Store
+.husky/_
+coverage
+dist
+node_modules
+tsconfig.tsbuildinfo

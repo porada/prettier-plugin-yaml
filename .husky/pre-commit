@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Enable strict mode
+set -eu
+
+# Ensure all dependencies are up to date
+pnpm --silent install --ignore-scripts
+
+# Lint and test the project
+pnpm prepack

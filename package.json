@@ -1,0 +1,67 @@
+{
+	"name": "prettier-plugin-yaml",
+	"version": "0.0.0",
+	"description": "Format YAML files with Prettier, extended with additional formatting options",
+	"license": "MIT",
+	"author": {
+		"name": "Dom Porada",
+		"email": "dom@dom.engineering",
+		"url": "https://dom.engineering"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/porada/prettier-plugin-yaml.git"
+	},
+	"keywords": [
+		"formatting",
+		"prettier",
+		"prettier-plugin",
+		"yaml",
+		"yml"
+	],
+	"files": [
+		"dist/**"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"exports": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"engines": {
+		"node": ">=22"
+	},
+	"packageManager": "pnpm@10.28.2",
+	"dependencies": {
+		"yaml": "2.8.2"
+	},
+	"peerDependencies": {
+		"prettier": ">=3"
+	},
+	"devDependencies": {
+		"@standard-config/eslint": "1.2.1",
+		"@standard-config/prettier": "1.6.1",
+		"@standard-config/tsconfig": "2.0.2",
+		"@vitest/coverage-v8": "4.0.18",
+		"eslint": "9.39.2",
+		"husky": "9.1.7",
+		"jiti": "2.6.1",
+		"oxlint": "1.42.0",
+		"oxlint-tsgolint": "0.11.2",
+		"prettier": "3.8.1",
+		"publint": "0.3.17",
+		"tsdown": "0.20.1",
+		"typescript": "5.9.3",
+		"vitest": "4.0.18"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"fix": "pnpm format && pnpm lint",
+		"format": "prettier --write --ignore-unknown .",
+		"format:check": "prettier --check --ignore-unknown .",
+		"lint": "oxlint --fix --type-aware --type-check --deny-warnings --report-unused-disable-directives && eslint . --fix",
+		"lint:check": "oxlint --type-aware --type-check --deny-warnings --report-unused-disable-directives && eslint .",
+		"prepack": "pnpm run '/^(format:check|lint:check|test|typecheck)$/' && pnpm build",
+		"prepare": "husky",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	}
+}

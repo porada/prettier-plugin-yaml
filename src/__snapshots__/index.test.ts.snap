@@ -1,0 +1,158 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`formats YAML 1`] = `
+"version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+"
+`;
+
+exports[`respects \`tabWidth\` 1`] = `
+"version: 2
+
+updates:
+    - package-ecosystem: github-actions
+      directory: /
+      schedule: { interval: weekly }
+
+    - package-ecosystem: npm
+      directory: /
+      schedule:
+          interval: daily
+      versioning-strategy: increase
+"
+`;
+
+exports[`supports \`yamlCollectionStyle\` 1`] = `
+"version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+"
+`;
+
+exports[`supports \`yamlCollectionStyle\` 2`] = `
+"{
+  version: 2,
+
+  updates:
+    [
+      {
+        package-ecosystem: github-actions,
+        directory: /,
+        schedule: { interval: weekly },
+      },
+
+      {
+        package-ecosystem: npm,
+        directory: /,
+        schedule: { interval: daily },
+        versioning-strategy: increase,
+      },
+    ],
+}
+"
+`;
+
+exports[`supports \`yamlQuoteKeys\` 1`] = `
+""version": 2
+
+"updates":
+  - "package-ecosystem": github-actions
+    "directory": /
+    "schedule": { "interval": weekly }
+
+  - "package-ecosystem": npm
+    "directory": /
+    "schedule":
+      "interval": daily
+    "versioning-strategy": increase
+"
+`;
+
+exports[`supports \`yamlQuoteKeys\` 2`] = `
+"'version': 2
+
+'updates':
+  - 'package-ecosystem': github-actions
+    'directory': /
+    'schedule': { 'interval': weekly }
+
+  - 'package-ecosystem': npm
+    'directory': /
+    'schedule':
+      'interval': daily
+    'versioning-strategy': increase
+"
+`;
+
+exports[`supports \`yamlQuoteValues\` 1`] = `
+"version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule: { interval: "weekly" }
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    versioning-strategy: "increase"
+"
+`;
+
+exports[`supports \`yamlQuoteValues\` 2`] = `
+"version: 2
+
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule: { interval: 'weekly' }
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    versioning-strategy: 'increase'
+"
+`;
+
+exports[`supports \`yamlQuoteValues\` 3`] = `
+"'version': 2
+
+'updates':
+  - 'package-ecosystem': 'github-actions'
+    'directory': '/'
+    'schedule': { 'interval': 'weekly' }
+
+  - 'package-ecosystem': 'npm'
+    'directory': '/'
+    'schedule':
+      'interval': 'daily'
+    'versioning-strategy': 'increase'
+"
+`;
+
+exports[`works with other plugins 1`] = `
+"foo: [bar, baz]
+"
+`;

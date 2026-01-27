@@ -1,0 +1,305 @@
+{
+	"plugins": [
+		"eslint",
+		"import",
+		"node",
+		"oxc",
+		"promise",
+		"typescript",
+		"unicorn",
+		"vitest"
+	],
+	"categories": {
+		"correctness": "error",
+		"pedantic": "error",
+		"perf": "error",
+		"restriction": "error",
+		"style": "error",
+		"suspicious": "error"
+	},
+	"env": {
+		"node": true
+	},
+	"settings": {
+		"vitest": {
+			"typecheck": true
+		}
+	},
+	"rules": {
+		"eslint/accessor-pairs": [
+			"error",
+			{
+				"enforceForClassMembers": true
+			}
+		],
+		"eslint/array-callback-return": [
+			"error",
+			{
+				"allowImplicit": true
+			}
+		],
+		"eslint/arrow-body-style": "off",
+		"eslint/capitalized-comments": "off",
+		"eslint/func-names": "off",
+		"eslint/func-style": [
+			"error",
+			"declaration",
+			{
+				"allowArrowFunctions": true
+			}
+		],
+		"eslint/grouped-accessor-pairs": [
+			"error",
+			"getBeforeSet"
+		],
+		"eslint/id-length": "off",
+		"eslint/init-declarations": "off",
+		"eslint/max-lines": "off",
+		"eslint/max-lines-per-function": "off",
+		"eslint/max-params": "off",
+		"eslint/max-statements": "off",
+		"eslint/new-cap": "off",
+		"eslint/no-await-in-loop": "off",
+		"eslint/no-continue": "off",
+		"eslint/no-duplicate-imports": "off",
+		"eslint/no-else-return": [
+			"error",
+			{
+				"allowElseIf": false
+			}
+		],
+		"eslint/no-empty": [
+			"error",
+			{
+				"allowEmptyCatch": true
+			}
+		],
+		"eslint/no-magic-numbers": "off",
+		"eslint/no-param-reassign": [
+			"error"
+		],
+		"eslint/no-return-assign": [
+			"error",
+			"always"
+		],
+		"eslint/no-self-assign": [
+			"error",
+			{
+				"props": true
+			}
+		],
+		"eslint/no-ternary": "off",
+		"eslint/no-undefined": "off",
+		"eslint/no-unsafe-negation": [
+			"error",
+			{
+				"enforceForOrderingRelations": true
+			}
+		],
+		"eslint/no-unsafe-optional-chaining": [
+			"error",
+			{
+				"disallowArithmeticOperators": true
+			}
+		],
+		"eslint/no-unused-expressions": [
+			"error",
+			{
+				"enforceForJSX": true
+			}
+		],
+		"eslint/no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_",
+				"caughtErrorsIgnorePattern": "^_",
+				"destructuredArrayIgnorePattern": "^_",
+				"varsIgnorePattern": "^_"
+			}
+		],
+		"eslint/no-void": "off",
+		"eslint/prefer-destructuring": [
+			"error",
+			{
+				"enforceForRenamedProperties": false
+			}
+		],
+		"eslint/prefer-promise-reject-errors": "off",
+		"eslint/prefer-regex-literals": [
+			"error",
+			{
+				"disallowRedundantWrapping": true
+			}
+		],
+		"eslint/require-await": "off",
+		"eslint/sort-imports": "off",
+		"eslint/sort-keys": "off",
+		"eslint/valid-typeof": [
+			"error",
+			{
+				"requireStringLiterals": false
+			}
+		],
+		"import/exports-last": "off",
+		"import/group-exports": "off",
+		"import/max-dependencies": "off",
+		"import/no-default-export": "off",
+		"import/no-named-export": "off",
+		"import/no-namespace": "off",
+		"import/no-unassigned-import": "error",
+		"import/unambiguous": "warn",
+		"oxc/no-async-await": "off",
+		"oxc/no-optional-chaining": "off",
+		"oxc/no-rest-spread-properties": "off",
+		"promise/avoid-new": "off",
+		"promise/prefer-await-to-callbacks": "off",
+		"typescript/array-type": [
+			"error",
+			{
+				"default": "array-simple",
+				"readonly": "generic"
+			}
+		],
+		"typescript/ban-ts-comment": [
+			"error",
+			{
+				"ts-check": true,
+				"ts-expect-error": false,
+				"ts-ignore": true,
+				"ts-nocheck": true
+			}
+		],
+		"typescript/consistent-type-definitions": [
+			"error",
+			"type"
+		],
+		"typescript/consistent-type-imports": [
+			"error",
+			{
+				"fixStyle": "separate-type-imports",
+				"prefer": "type-imports"
+			}
+		],
+		"typescript/explicit-function-return-type": "off",
+		"typescript/no-confusing-void-expression": [
+			"error",
+			{
+				"ignoreArrowShorthand": true
+			}
+		],
+		"typescript/no-misused-promises": [
+			"error",
+			{
+				"checksConditionals": true,
+				"checksVoidReturn": false
+			}
+		],
+		"typescript/no-namespace": [
+			"error",
+			{
+				"allowDeclarations": true
+			}
+		],
+		"typescript/no-non-null-assertion": "off",
+		"typescript/no-restricted-types": [
+			"error",
+			{
+				"types": {
+					"[]": true,
+					"null": true,
+					"object": true
+				}
+			}
+		],
+		"typescript/no-unsafe-type-assertion": "off",
+		"typescript/only-throw-error": [
+			"error",
+			{
+				"allowThrowingAny": false,
+				"allowThrowingUnknown": true
+			}
+		],
+		"typescript/prefer-nullish-coalescing": [
+			"error",
+			{
+				"ignoreConditionalTests": false
+			}
+		],
+		"typescript/prefer-promise-reject-errors": "off",
+		"typescript/require-array-sort-compare": [
+			"error",
+			{
+				"ignoreStringArrays": true
+			}
+		],
+		"typescript/restrict-template-expressions": [
+			"error",
+			{
+				"allowNumber": true
+			}
+		],
+		"typescript/strict-boolean-expressions": "off",
+		"typescript/switch-exhaustiveness-check": [
+			"error",
+			{
+				"allowDefaultCaseForExhaustiveSwitch": false,
+				"considerDefaultExhaustiveForUnions": true,
+				"requireDefaultForNonUnion": true
+			}
+		],
+		"typescript/unbound-method": "off",
+		"unicorn/no-array-callback-reference": "off",
+		"unicorn/no-null": "off",
+		"unicorn/no-single-promise-in-promise-methods": "off",
+		"unicorn/no-useless-undefined": "off",
+		"unicorn/prefer-bigint-literals": "off"
+	},
+	"overrides": [
+		{
+			"files": [
+				"*.d.ts"
+			],
+			"rules": {
+				"import/no-empty-named-blocks": "off",
+				"import/no-unassigned-import": "off",
+				"import/unambiguous": "off",
+				"typescript/consistent-type-definitions": "off",
+				"typescript/no-empty-interface": "off",
+				"typescript/no-empty-object-type": "off",
+				"typescript/no-restricted-types": "off",
+				"unicorn/require-module-specifiers": "off"
+			}
+		},
+		{
+			"files": [
+				"**/*.config.ts"
+			],
+			"rules": {
+				"import/unambiguous": "off",
+				"unicorn/no-empty-file": "off",
+				"vitest/require-hook": "off"
+			}
+		},
+		{
+			"files": [
+				"**/*.test.ts"
+			],
+			"rules": {
+				"eslint/no-alert": "off",
+				"import/unambiguous": "off",
+				"promise/prefer-await-to-then": "off",
+				"typescript/ban-ts-comment": "off",
+				"typescript/no-confusing-void-expression": "off",
+				"typescript/no-empty-function": "off",
+				"typescript/no-extraneous-class": "off",
+				"typescript/no-unsafe-assignment": "off",
+				"typescript/no-unsafe-member-access": "off",
+				"unicorn/consistent-function-scoping": "off",
+				"unicorn/no-empty-file": "off",
+				"vitest/no-conditional-tests": "off",
+				"vitest/prefer-to-be-falsy": "off",
+				"vitest/prefer-to-be-truthy": "off"
+			}
+		}
+	]
+}
