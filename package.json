@@ -31,14 +31,14 @@
 	},
 	"packageManager": "pnpm@10.28.2",
 	"dependencies": {
-		"yaml": "2.8.2"
+		"yaml": "^2.8.2"
 	},
 	"peerDependencies": {
 		"prettier": ">=3"
 	},
 	"devDependencies": {
 		"@standard-config/eslint": "1.2.1",
-		"@standard-config/prettier": "1.6.1",
+		"@standard-config/prettier": "1.7.0",
 		"@standard-config/tsconfig": "2.0.2",
 		"@vitest/coverage-v8": "4.0.18",
 		"eslint": "9.39.2",
