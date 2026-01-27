@@ -19,6 +19,11 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: "increase"
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+        update-types: >
+          version-update:semver-patch
 `;
 
 test('exposes correct public API', () => {

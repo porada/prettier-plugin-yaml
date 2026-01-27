@@ -1,7 +1,7 @@
 import type { Parser, ParserOptions, Plugin } from 'prettier';
 import type { PluginOptions, PluginWithParsers } from './types/index.d.ts';
 import { parsers as prettierParsers } from 'prettier/plugins/yaml';
-import { parseDocument, visit } from 'yaml';
+import { parseDocument, Scalar, visit } from 'yaml';
 
 function createParser(): Parser {
 	const parse: Parser['parse'] = async (
@@ -100,18 +100,25 @@ export default function process(
 ): string {
 	const document = parseDocument(text);
 
+	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE, QUOTE_SINGLE } =
+		Scalar;
+
 	visit(document, {
 		Scalar(key, node) {
 			if (typeof node.value !== 'string') {
 				return;
 			}
 
-			if (key === 'key' ? yamlQuoteKeys : yamlQuoteValues) {
-				node.type = singleQuote ? 'QUOTE_SINGLE' : 'QUOTE_DOUBLE';
+			if (node.type === BLOCK_FOLDED || node.type === BLOCK_LITERAL) {
 				return;
 			}
 
-			node.type = 'PLAIN';
+			if (key === 'key' ? yamlQuoteKeys : yamlQuoteValues) {
+				node.type = singleQuote ? QUOTE_SINGLE : QUOTE_DOUBLE;
+				return;
+			}
+
+			node.type = PLAIN;
 		},
 	});
 

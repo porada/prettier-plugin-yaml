@@ -13,6 +13,11 @@ updates:
     schedule:
       interval: daily
     versioning-strategy: increase
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+        update-types: >
+          version-update:semver-patch
 "
 `;
 
@@ -29,6 +34,11 @@ updates:
       schedule:
           interval: daily
       versioning-strategy: increase
+      ignore:
+          - dependency-name: |
+                @standard-config/prettier
+            update-types: >
+                version-update:semver-patch
 "
 `;
 
@@ -46,6 +56,11 @@ updates:
     schedule:
       interval: daily
     versioning-strategy: increase
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+        update-types: >
+          version-update:semver-patch
 "
 `;
 
@@ -66,6 +81,13 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
         directory: /,
         schedule: { interval: daily },
         versioning-strategy: increase,
+        ignore:
+          [
+            {
+              dependency-name: "@standard-config/prettier\\n",
+              update-types: "version-update:semver-patch\\n",
+            },
+          ],
       },
     ],
 }
@@ -85,6 +107,11 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
     "schedule":
       "interval": daily
     "versioning-strategy": increase
+    "ignore":
+      - "dependency-name": |
+          @standard-config/prettier
+        "update-types": >
+          version-update:semver-patch
 "
 `;
 
@@ -101,6 +128,11 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
     'schedule':
       'interval': daily
     'versioning-strategy': increase
+    'ignore':
+      - 'dependency-name': |
+          @standard-config/prettier
+        'update-types': >
+          version-update:semver-patch
 "
 `;
 
@@ -117,6 +149,11 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: "increase"
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+        update-types: >
+          version-update:semver-patch
 "
 `;
 
@@ -133,6 +170,11 @@ updates:
     schedule:
       interval: 'daily'
     versioning-strategy: 'increase'
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+        update-types: >
+          version-update:semver-patch
 "
 `;
 
@@ -149,6 +191,11 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
     'schedule':
       'interval': 'daily'
     'versioning-strategy': 'increase'
+    'ignore':
+      - 'dependency-name': |
+          @standard-config/prettier
+        'update-types': >
+          version-update:semver-patch
 "
 `;
 
