@@ -8,6 +8,9 @@ import * as pluginYAML from './index.ts';
 const TEST_YAML = `
 version: 2
 
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
+
 updates:
   - package-ecosystem: github-actions
     directory: '/'
@@ -22,8 +25,6 @@ updates:
     ignore:
       - dependency-name: |
           @standard-config/prettier
-        update-types: >
-          version-update:semver-patch
 `;
 
 test('exposes correct public API', () => {

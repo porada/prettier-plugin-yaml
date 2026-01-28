@@ -3,6 +3,9 @@
 exports[`formats YAML 1`] = `
 "version: 2
 
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
+
 updates:
   - package-ecosystem: github-actions
     directory: /
@@ -16,13 +19,14 @@ updates:
     ignore:
       - dependency-name: |
           @standard-config/prettier
-        update-types: >
-          version-update:semver-patch
 "
 `;
 
 exports[`respects \`tabWidth\` 1`] = `
 "version: 2
+
+description: >
+    You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
     - package-ecosystem: github-actions
@@ -37,13 +41,14 @@ updates:
       ignore:
           - dependency-name: |
                 @standard-config/prettier
-            update-types: >
-                version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlCollectionStyle\` 1`] = `
 "version: 2
+
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
   - package-ecosystem: github-actions
@@ -59,14 +64,14 @@ updates:
     ignore:
       - dependency-name: |
           @standard-config/prettier
-        update-types: >
-          version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlCollectionStyle\` 2`] = `
 "{
   version: 2,
+
+  description: "You can use Dependabot to keep the packages you use updated to the latest versions.\\n",
 
   updates:
     [
@@ -81,13 +86,7 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
         directory: /,
         schedule: { interval: daily },
         versioning-strategy: increase,
-        ignore:
-          [
-            {
-              dependency-name: "@standard-config/prettier\\n",
-              update-types: "version-update:semver-patch\\n",
-            },
-          ],
+        ignore: [{ dependency-name: "@standard-config/prettier\\n" }],
       },
     ],
 }
@@ -96,6 +95,9 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
 
 exports[`supports \`yamlQuoteKeys\` 1`] = `
 ""version": 2
+
+"description": >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 "updates":
   - "package-ecosystem": github-actions
@@ -110,13 +112,14 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
     "ignore":
       - "dependency-name": |
           @standard-config/prettier
-        "update-types": >
-          version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlQuoteKeys\` 2`] = `
 "'version': 2
+
+'description': >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 'updates':
   - 'package-ecosystem': github-actions
@@ -131,13 +134,14 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
     'ignore':
       - 'dependency-name': |
           @standard-config/prettier
-        'update-types': >
-          version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlQuoteValues\` 1`] = `
 "version: 2
+
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
   - package-ecosystem: "github-actions"
@@ -152,13 +156,14 @@ updates:
     ignore:
       - dependency-name: |
           @standard-config/prettier
-        update-types: >
-          version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlQuoteValues\` 2`] = `
 "version: 2
+
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
   - package-ecosystem: 'github-actions'
@@ -173,13 +178,14 @@ updates:
     ignore:
       - dependency-name: |
           @standard-config/prettier
-        update-types: >
-          version-update:semver-patch
 "
 `;
 
 exports[`supports \`yamlQuoteValues\` 3`] = `
 "'version': 2
+
+'description': >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
 
 'updates':
   - 'package-ecosystem': 'github-actions'
@@ -194,8 +200,6 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
     'ignore':
       - 'dependency-name': |
           @standard-config/prettier
-        'update-types': >
-          version-update:semver-patch
 "
 `;
 

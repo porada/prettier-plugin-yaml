@@ -90,7 +90,6 @@ function omitCurrentParser(
 export default function process(
 	text: string,
 	{
-		printWidth,
 		singleQuote,
 		tabWidth,
 		yamlCollectionStyle,
@@ -100,8 +99,7 @@ export default function process(
 ): string {
 	const document = parseDocument(text);
 
-	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE, QUOTE_SINGLE } =
-		Scalar;
+	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
 	visit(document, {
 		Scalar(key, node) {
@@ -114,7 +112,7 @@ export default function process(
 			}
 
 			if (key === 'key' ? yamlQuoteKeys : yamlQuoteValues) {
-				node.type = singleQuote ? QUOTE_SINGLE : QUOTE_DOUBLE;
+				node.type = QUOTE_DOUBLE;
 				return;
 			}
 
@@ -125,7 +123,8 @@ export default function process(
 	return document.toString({
 		...(yamlCollectionStyle && { collectionStyle: yamlCollectionStyle }),
 		...(tabWidth && { indent: tabWidth }),
-		...(printWidth && { lineWidth: printWidth }),
+		lineWidth: 0,
+		singleQuote,
 	});
 }
 
