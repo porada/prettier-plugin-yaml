@@ -55,6 +55,18 @@ test('respects `tabWidth`', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('supports `yamlBlockStyle`', async () => {
+	for (const value of ['folded', 'literal'] as const) {
+		const output = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+			yamlBlockStyle: value,
+		});
+
+		expect(output).toMatchSnapshot();
+	}
+});
+
 test('supports `yamlCollectionStyle`', async () => {
 	for (const value of ['block', 'flow'] as const) {
 		const output = await format(TEST_YAML, {

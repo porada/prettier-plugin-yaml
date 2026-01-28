@@ -44,6 +44,50 @@ updates:
 "
 `;
 
+exports[`supports \`yamlBlockStyle\` 1`] = `
+"version: 2
+
+description: >
+  You can use Dependabot to keep the packages you use updated to the latest versions.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: >
+          @standard-config/prettier
+"
+`;
+
+exports[`supports \`yamlBlockStyle\` 2`] = `
+"version: 2
+
+description: |
+  You can use Dependabot to keep the packages you use updated to the latest versions.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: |
+          @standard-config/prettier
+"
+`;
+
 exports[`supports \`yamlCollectionStyle\` 1`] = `
 "version: 2
 

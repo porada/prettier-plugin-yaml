@@ -4,6 +4,7 @@ import { expectTypeOf, test } from 'vitest';
 
 test('exposes valid types', () => {
 	expectTypeOf<PluginOptions>().toBeObject();
+	expectTypeOf<PluginOptions>().toHaveProperty('yamlBlockStyle');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlCollectionStyle');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteKeys');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValues');
@@ -15,6 +16,7 @@ test('exposes valid types', () => {
 test('extends Prettier’s `Options`', () => {
 	expectTypeOf<PrettierOptions>().toBeObject();
 	expectTypeOf<PrettierOptions>().toHaveProperty('useTabs');
+	expectTypeOf<PrettierOptions>().toHaveProperty('yamlBlockStyle');
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlCollectionStyle');
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteKeys');
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteValues');

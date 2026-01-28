@@ -35,6 +35,10 @@ If you’re using any other YAML plugins, make sure `prettier-plugin-yaml` is li
 ```ts
 interface PluginOptions {
     /**
+     * Enforce a single block style for multi-line string values.
+     */
+    yamlBlockStyle?: 'folded' | 'literal' | undefined;
+    /**
      * Enforce a single collection style for maps and sequences.
      */
     yamlCollectionStyle?: 'block' | 'flow' | undefined;

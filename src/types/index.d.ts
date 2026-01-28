@@ -2,6 +2,10 @@ import type { Plugin } from 'prettier';
 
 export interface PluginOptions {
 	/**
+	 * Enforce a single block style for multi-line string values.
+	 */
+	yamlBlockStyle?: 'folded' | 'literal' | undefined;
+	/**
 	 * Enforce a single collection style for maps and sequences.
 	 */
 	yamlCollectionStyle?: 'block' | 'flow' | undefined;

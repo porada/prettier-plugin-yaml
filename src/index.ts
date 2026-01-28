@@ -92,6 +92,7 @@ export default function process(
 	{
 		singleQuote,
 		tabWidth,
+		yamlBlockStyle,
 		yamlCollectionStyle,
 		yamlQuoteKeys,
 		yamlQuoteValues,
@@ -121,6 +122,7 @@ export default function process(
 	});
 
 	return document.toString({
+		...(yamlBlockStyle && { blockQuote: yamlBlockStyle }),
 		...(yamlCollectionStyle && { collectionStyle: yamlCollectionStyle }),
 		...(tabWidth && { indent: tabWidth }),
 		lineWidth: 0,
@@ -133,11 +135,35 @@ export const parsers: Plugin['parsers'] = {
 };
 
 export const options: Plugin['options'] = {
+	yamlBlockStyle: {
+		category: 'Output',
+		description: 'Enforce a block style for multi-line string values.',
+		type: 'choice',
+		choices: [
+			{
+				description: 'Use folded block scalars.',
+				value: 'folded',
+			},
+			{
+				description: 'Use literal block scalars.',
+				value: 'literal',
+			},
+		],
+	},
 	yamlCollectionStyle: {
 		category: 'Output',
-		description:
-			'Enforce a single collection style for maps and sequences.',
-		type: 'string',
+		description: 'Enforce a collection style for maps and sequences.',
+		type: 'choice',
+		choices: [
+			{
+				description: 'Use block style.',
+				value: 'block',
+			},
+			{
+				description: 'Use flow style.',
+				value: 'flow',
+			},
+		],
 	},
 	yamlQuoteKeys: {
 		category: 'Output',
