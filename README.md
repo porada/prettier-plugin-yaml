@@ -1,10 +1,24 @@
-[![](https://img.shields.io/npm/v/prettier-plugin-yaml)](https://www.npmjs.com/package/prettier-plugin-yaml)
-[![](https://img.shields.io/github/actions/workflow/status/porada/prettier-plugin-yaml/test.yaml)](https://github.com/porada/prettier-plugin-yaml/actions/workflows/test.yaml)
-[![](https://img.shields.io/codecov/c/github/porada/prettier-plugin-yaml)](https://codecov.io/github/porada/prettier-plugin-yaml)
+<h1 align="center">
+    prettier-plugin-yaml
+</h1>
 
-# prettier-plugin-yaml
+<p align="center">
+    Additional YAML formatting options for&nbsp;Prettier.
+</p>
 
-Additional YAML formatting options for Prettier.
+<p align="center">
+    <a href="https://www.npmjs.com/package/prettier-plugin-yaml">
+        <img src="https://img.shields.io/npm/v/prettier-plugin-yaml" alt="" />
+    </a>
+    <a href="https://github.com/porada/prettier-plugin-yaml/actions/workflows/test.yaml">
+        <img src="https://img.shields.io/github/actions/workflow/status/porada/prettier-plugin-yaml/test.yaml" alt="" />
+    </a>
+    <a href="https://codecov.io/github/porada/prettier-plugin-yaml">
+        <img src="https://img.shields.io/codecov/c/github/porada/prettier-plugin-yaml" alt="" />
+    </a>
+</p>
+
+<div>&nbsp;</div>
 
 ## Install
 
