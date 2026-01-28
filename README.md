@@ -1,8 +1,9 @@
 <p align="center">
     <a href="https://github.com/porada/prettier-plugin-yaml">
         <picture>
-            <source srcset="assets/prettier-plugin-yaml@3x.png" media="(prefers-color-scheme: light)" />
-            <img src="assets/prettier-plugin-yaml@3x.png" width="520" alt="" />
+            <source srcset="assets/prettier-plugin-yaml-dark-scheme@3x.png" media="(prefers-color-scheme: dark)" />
+            <source srcset="assets/prettier-plugin-yaml-light-scheme@3x.png" media="(prefers-color-scheme: light)" />
+            <img src="assets/prettier-plugin-yaml-light-scheme@3x.png" width="520" alt="" />
         </picture>
     </a>
 </p>
