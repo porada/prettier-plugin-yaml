@@ -1,5 +1,5 @@
 import type { Options as PrettierOptions } from 'prettier';
-import type { PluginOptions, PluginWithParsers } from './index.ts';
+import type { PluginOptions, PluginWithParsers } from './index.d.ts';
 import { expectTypeOf, test } from 'vitest';
 
 test('exposes valid types', () => {

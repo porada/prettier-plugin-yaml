@@ -3,7 +3,7 @@
 exports[`formats YAML 1`] = `
 "version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -17,7 +17,52 @@ updates:
       interval: daily
     versioning-strategy: increase
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
+          @standard-config/prettier
+"
+`;
+
+exports[`respects \`bracketSpacing\` 1`] = `
+"version: 2
+
+description: >-
+  You can use Dependabot to keep the packages you use updated to the latest versions.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: weekly}
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: |-
+          @standard-config/prettier
+"
+`;
+
+exports[`respects \`proseWrap\` 1`] = `
+"version: 2
+
+description: >-
+  You can use Dependabot to keep the packages you use updated to the latest
+  versions.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+    ignore:
+      - dependency-name: |-
           @standard-config/prettier
 "
 `;
@@ -25,7 +70,7 @@ updates:
 exports[`respects \`tabWidth\` 1`] = `
 "version: 2
 
-description: >
+description: >-
     You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -39,7 +84,7 @@ updates:
           interval: daily
       versioning-strategy: increase
       ignore:
-          - dependency-name: |
+          - dependency-name: |-
                 @standard-config/prettier
 "
 `;
@@ -47,7 +92,7 @@ updates:
 exports[`supports \`yamlBlockStyle\` 1`] = `
 "version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -61,7 +106,7 @@ updates:
       interval: daily
     versioning-strategy: increase
     ignore:
-      - dependency-name: >
+      - dependency-name: >-
           @standard-config/prettier
 "
 `;
@@ -69,7 +114,7 @@ updates:
 exports[`supports \`yamlBlockStyle\` 2`] = `
 "version: 2
 
-description: |
+description: |-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -83,7 +128,7 @@ updates:
       interval: daily
     versioning-strategy: increase
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
           @standard-config/prettier
 "
 `;
@@ -91,7 +136,7 @@ updates:
 exports[`supports \`yamlCollectionStyle\` 1`] = `
 "version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -106,7 +151,7 @@ updates:
       interval: daily
     versioning-strategy: increase
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
           @standard-config/prettier
 "
 `;
@@ -115,7 +160,7 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
 "{
   version: 2,
 
-  description: "You can use Dependabot to keep the packages you use updated to the latest versions.\\n",
+  description: You can use Dependabot to keep the packages you use updated to the latest versions.,
 
   updates:
     [
@@ -130,7 +175,33 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
         directory: /,
         schedule: { interval: daily },
         versioning-strategy: increase,
-        ignore: [{ dependency-name: "@standard-config/prettier\\n" }],
+        ignore: [{ dependency-name: "@standard-config/prettier" }],
+      },
+    ],
+}
+"
+`;
+
+exports[`supports \`yamlCollectionStyle\` 3`] = `
+"{
+  version: 2,
+
+  description: You can use Dependabot to keep the packages you use updated to the latest versions.,
+
+  updates:
+    [
+      {
+        package-ecosystem: github-actions,
+        directory: /,
+        schedule: {interval: weekly},
+      },
+
+      {
+        package-ecosystem: npm,
+        directory: /,
+        schedule: {interval: daily},
+        versioning-strategy: increase,
+        ignore: [{dependency-name: "@standard-config/prettier"}],
       },
     ],
 }
@@ -140,7 +211,7 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
 exports[`supports \`yamlQuoteKeys\` 1`] = `
 ""version": 2
 
-"description": >
+"description": >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 "updates":
@@ -154,7 +225,7 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
       "interval": daily
     "versioning-strategy": increase
     "ignore":
-      - "dependency-name": |
+      - "dependency-name": |-
           @standard-config/prettier
 "
 `;
@@ -162,7 +233,7 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
 exports[`supports \`yamlQuoteKeys\` 2`] = `
 "'version': 2
 
-'description': >
+'description': >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 'updates':
@@ -176,7 +247,7 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
       'interval': daily
     'versioning-strategy': increase
     'ignore':
-      - 'dependency-name': |
+      - 'dependency-name': |-
           @standard-config/prettier
 "
 `;
@@ -184,7 +255,7 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
 exports[`supports \`yamlQuoteValues\` 1`] = `
 "version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -198,7 +269,7 @@ updates:
       interval: "daily"
     versioning-strategy: "increase"
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
           @standard-config/prettier
 "
 `;
@@ -206,7 +277,7 @@ updates:
 exports[`supports \`yamlQuoteValues\` 2`] = `
 "version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -220,7 +291,7 @@ updates:
       interval: 'daily'
     versioning-strategy: 'increase'
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
           @standard-config/prettier
 "
 `;
@@ -228,7 +299,7 @@ updates:
 exports[`supports \`yamlQuoteValues\` 3`] = `
 "'version': 2
 
-'description': >
+'description': >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 'updates':
@@ -242,7 +313,7 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
       'interval': 'daily'
     'versioning-strategy': 'increase'
     'ignore':
-      - 'dependency-name': |
+      - 'dependency-name': |-
           @standard-config/prettier
 "
 `;

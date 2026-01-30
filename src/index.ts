@@ -108,16 +108,19 @@ export default function process(
 				return;
 			}
 
+			if (key === 'key') {
+				node.type = yamlQuoteKeys ? QUOTE_DOUBLE : PLAIN;
+				return;
+			}
+
 			if (node.type === BLOCK_FOLDED || node.type === BLOCK_LITERAL) {
+				if (yamlCollectionStyle === 'flow') {
+					node.type = yamlQuoteValues ? QUOTE_DOUBLE : PLAIN;
+				}
 				return;
 			}
 
-			if (key === 'key' ? yamlQuoteKeys : yamlQuoteValues) {
-				node.type = QUOTE_DOUBLE;
-				return;
-			}
-
-			node.type = PLAIN;
+			node.type = yamlQuoteValues ? QUOTE_DOUBLE : PLAIN;
 		},
 	});
 

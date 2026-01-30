@@ -8,7 +8,7 @@ import * as pluginYAML from './index.ts';
 const TEST_YAML = `
 version: 2
 
-description: >
+description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
 
 updates:
@@ -23,7 +23,7 @@ updates:
       interval: "daily"
     versioning-strategy: "increase"
     ignore:
-      - dependency-name: |
+      - dependency-name: |-
           @standard-config/prettier
 `;
 
@@ -45,6 +45,26 @@ test('formats YAML', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('respects `bracketSpacing`', async () => {
+	const output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		bracketSpacing: false,
+	});
+
+	expect(output).toMatchSnapshot();
+});
+
+test('respects `proseWrap`', async () => {
+	const output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		proseWrap: 'always',
+	});
+
+	expect(output).toMatchSnapshot();
+});
+
 test('respects `tabWidth`', async () => {
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',
@@ -56,11 +76,11 @@ test('respects `tabWidth`', async () => {
 });
 
 test('supports `yamlBlockStyle`', async () => {
-	for (const value of ['folded', 'literal'] as const) {
+	for (const yamlBlockStyle of ['folded', 'literal'] as const) {
 		const output = await format(TEST_YAML, {
 			parser: 'yaml',
 			plugins: [pluginYAML],
-			yamlBlockStyle: value,
+			yamlBlockStyle,
 		});
 
 		expect(output).toMatchSnapshot();
@@ -68,11 +88,20 @@ test('supports `yamlBlockStyle`', async () => {
 });
 
 test('supports `yamlCollectionStyle`', async () => {
-	for (const value of ['block', 'flow'] as const) {
+	const output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'block',
+	});
+
+	expect(output).toMatchSnapshot();
+
+	for (const bracketSpacing of [true, false] as const) {
 		const output = await format(TEST_YAML, {
 			parser: 'yaml',
 			plugins: [pluginYAML],
-			yamlCollectionStyle: value,
+			bracketSpacing,
+			yamlCollectionStyle: 'flow',
 		});
 
 		expect(output).toMatchSnapshot();
