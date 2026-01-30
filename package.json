@@ -1,6 +1,6 @@
 {
 	"name": "prettier-plugin-yaml",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Additional YAML formatting options for Prettier",
 	"license": "MIT",
 	"author": {
