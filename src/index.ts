@@ -184,7 +184,7 @@ export const options: Plugin['options'] = {
 	},
 };
 
-export const defaultOptions = {
+export const defaultOptions: Plugin['defaultOptions'] = {
 	useTabs: false,
 };
 
