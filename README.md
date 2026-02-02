@@ -68,6 +68,8 @@ If you’re using any other YAML plugins, make sure `prettier-plugin-yaml` is li
 
 ## Options
 
+In addition to Prettier’s [built-in options](https://prettier.io/docs/options) that affect YAML formatting, `prettier-plugin-yaml` offers additional configuration options.
+
 ```ts
 interface PluginOptions {
     /**
