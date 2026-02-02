@@ -87,7 +87,7 @@ function omitCurrentParser(
 	};
 }
 
-export default function process(
+function process(
 	text: string,
 	{
 		singleQuote,
