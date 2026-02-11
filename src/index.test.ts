@@ -163,7 +163,6 @@ test('works with other plugins', async () => {
 				...prettierParsers.yaml,
 				parse: () => {},
 				preprocess: async () => {
-					/* oxlint-disable-next-line eslint/no-promise-executor-return */
 					await new Promise((resolve) => setTimeout(resolve));
 					return 'foo: ["bar", "baz"]';
 				},
