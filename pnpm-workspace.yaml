@@ -5,6 +5,7 @@ onlyBuiltDependencies:
 
 peerDependencyRules:
   allowedVersions:
+    eslint: '*'
     vitest: '*'
 
 strictPeerDependencies: true
