@@ -37,7 +37,7 @@
 		"prettier": ">=3"
 	},
 	"devDependencies": {
-		"@standard-config/eslint": "1.4.0",
+		"@standard-config/eslint": "1.4.1",
 		"@standard-config/oxlint": "1.1.0",
 		"@standard-config/prettier": "1.9.1",
 		"@standard-config/tsconfig": "2.0.2",
