@@ -45,7 +45,7 @@
 		"eslint": "^10.0.0",
 		"husky": "9.1.7",
 		"jiti": "^2.6.1",
-		"oxlint": "^1.47.0",
+		"oxlint": "^1.48.0",
 		"oxlint-tsgolint": "^0.13.0",
 		"prettier": "^3.8.1",
 		"publint": "^0.3.17",
