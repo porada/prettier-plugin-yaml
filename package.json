@@ -42,7 +42,7 @@
 		"@standard-config/prettier": "^1.9.1",
 		"@standard-config/tsconfig": "^2.0.2",
 		"@vitest/coverage-v8": "^4.0.18",
-		"eslint": "^10.0.0",
+		"eslint": "^10.0.2",
 		"husky": "9.1.7",
 		"jiti": "^2.6.1",
 		"oxlint": "^1.47.0",
