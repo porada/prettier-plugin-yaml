@@ -5,6 +5,5 @@
 	"search.exclude": {
 		"**/*.snap": true,
 		"pnpm-lock.yaml": true
-	},
-	"typescript.tsdk": "node_modules/typescript/lib"
+	}
 }
