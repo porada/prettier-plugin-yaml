@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@standard-config/eslint": "^1.6.1",
-		"@standard-config/oxlint": "^1.5.2",
+		"@standard-config/oxlint": "^1.5.3",
 		"@standard-config/prettier": "^1.11.0",
 		"@standard-config/tsconfig": "^2.0.2",
 		"@vitest/coverage-v8": "^4.1.0",
