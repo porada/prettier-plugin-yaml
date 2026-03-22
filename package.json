@@ -31,7 +31,7 @@
 	},
 	"packageManager": "pnpm@10.32.1",
 	"dependencies": {
-		"yaml": "^2.8.2"
+		"yaml": "^2.8.3"
 	},
 	"peerDependencies": {
 		"prettier": ">=3"
