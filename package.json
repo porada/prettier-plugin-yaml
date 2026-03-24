@@ -41,7 +41,7 @@
 		"@standard-config/oxlint": "^1.6.0",
 		"@standard-config/prettier": "^1.11.1",
 		"@standard-config/tsconfig": "^2.0.2",
-		"@vitest/coverage-v8": "^4.1.0",
+		"@vitest/coverage-v8": "^4.1.1",
 		"eslint": "^10.1.0",
 		"husky": "9.1.7",
 		"oxlint": "^1.56.0",
