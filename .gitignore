@@ -1,5 +1,5 @@
 .DS_Store
-.husky/_
+.vite-hooks/_
 coverage
 dist
 node_modules
