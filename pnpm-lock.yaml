@@ -17,10 +17,10 @@ importers:
     devDependencies:
       '@standard-config/eslint':
         specifier: ^2.0.2
-        version: 2.0.2(@standard-config/oxlint@1.6.1(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3)))(eslint@10.2.0)(typescript@6.0.2)
+        version: 2.0.2(@standard-config/oxlint@1.6.2(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3)))(eslint@10.2.0)(typescript@6.0.2)
       '@standard-config/oxlint':
-        specifier: ^1.6.1
-        version: 1.6.1(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))
+        specifier: ^1.6.2
+        version: 1.6.2(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))
       '@standard-config/prettier':
         specifier: ^1.12.0
         version: 1.12.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(prettier@3.8.1)
@@ -559,8 +559,8 @@ packages:
       typescript-eslint:
         optional: true
 
-  '@standard-config/oxlint@1.6.1':
-    resolution: {integrity: sha512-feCfclWbjZOjUW5R9lH8B6QKktewqj6+pp/YLpEYF3CEvKS0cJQGc4ghHWkC0+/q1PHNfGS9epMB2ggYtDp2MQ==}
+  '@standard-config/oxlint@1.6.2':
+    resolution: {integrity: sha512-HNCw68uS0Xe/K2jC0Ra8Il194T8grJNXy6gMlUZzYkVfdMiiuUogM3ap/mV/4j3FRmNNutCSef9y4cwzzjTGIQ==}
     engines: {node: '>=20'}
     peerDependencies:
       oxlint: '>=1.52.0'
@@ -1856,19 +1856,19 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-rc.12': {}
 
-  '@standard-config/eslint@2.0.2(@standard-config/oxlint@1.6.1(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3)))(eslint@10.2.0)(typescript@6.0.2)':
+  '@standard-config/eslint@2.0.2(@standard-config/oxlint@1.6.2(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3)))(eslint@10.2.0)(typescript@6.0.2)':
     dependencies:
       '@stylistic/eslint-plugin': 5.10.0(eslint@10.2.0)
       eslint-plugin-perfectionist: 5.8.0(eslint@10.2.0)(typescript@6.0.2)
       eslint-plugin-react-x: 3.0.0(eslint@10.2.0)(typescript@6.0.2)
     optionalDependencies:
-      '@standard-config/oxlint': 1.6.1(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))
+      '@standard-config/oxlint': 1.6.2(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))
       eslint: 10.2.0
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@1.6.1(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))':
+  '@standard-config/oxlint@1.6.2(oxlint-tsgolint@0.17.3)(oxlint@1.57.0(oxlint-tsgolint@0.17.3))':
     dependencies:
       oxlint: 1.57.0(oxlint-tsgolint@0.17.3)
     optionalDependencies:
