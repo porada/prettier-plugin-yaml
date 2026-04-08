@@ -51,8 +51,8 @@
 	},
 	"scripts": {
 		"build": "vp pack",
-		"fix": "pnpm format && pnpm lint",
-		"format": "prettier --write --ignore-unknown .",
+		"fix": "pnpm format && pnpm lint && pnpm format",
+		"format": "prettier --ignore-unknown --log-level=warn --write .",
 		"format:check": "prettier --check --ignore-unknown .",
 		"lint": "vp lint --fix",
 		"lint:check": "vp lint --deny-warnings --type-check",

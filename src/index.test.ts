@@ -125,6 +125,15 @@ test('supports `yamlQuoteKeys`', async () => {
 	});
 
 	expect(output).toMatchSnapshot();
+
+	output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'flow',
+		yamlQuoteValues: true,
+	});
+
+	expect(output).toMatchSnapshot();
 });
 
 test('supports `yamlQuoteValues`', async () => {
