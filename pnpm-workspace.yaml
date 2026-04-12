@@ -1,13 +1,18 @@
 autoInstallPeers: false
 
-onlyBuiltDependencies:
-  - esbuild
+blockExoticSubdeps: true
 
 overrides:
+  '@prettier/plugin-oxc>oxc-parser': '*'
+  prettier-plugin-yaml: '-'
   vite-plus>oxfmt: '-'
 
 peerDependencyRules:
   allowAny:
     - vitest
 
+strictDepBuilds: true
+
 strictPeerDependencies: true
+
+trustPolicy: no-downgrade
