@@ -46,7 +46,7 @@
 		"prettier": "^3.8.2",
 		"publint": "^0.3.18",
 		"typescript": "^6.0.2",
-		"vite-plus": "^0.1.16",
+		"vite-plus": "^0.1.18",
 		"vitest": "^4.1.4"
 	},
 	"scripts": {
