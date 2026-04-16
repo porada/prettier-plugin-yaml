@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@standard-config/eslint": "^2.1.0",
-		"@standard-config/oxlint": "^1.6.2",
+		"@standard-config/oxlint": "^1.8.0",
 		"@standard-config/prettier": "^1.12.1",
 		"@standard-config/tsconfig": "^3.1.0",
 		"@vitest/coverage-v8": "^4.1.4",
@@ -46,7 +46,7 @@
 		"prettier": "^3.8.3",
 		"publint": "^0.3.18",
 		"typescript": "^6.0.2",
-		"vite-plus": "^0.1.16",
+		"vite-plus": "^0.1.18",
 		"vitest": "^4.1.4"
 	},
 	"scripts": {

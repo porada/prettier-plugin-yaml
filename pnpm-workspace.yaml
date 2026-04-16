@@ -3,7 +3,6 @@ autoInstallPeers: false
 blockExoticSubdeps: true
 
 overrides:
-  '@prettier/plugin-oxc>oxc-parser': '*'
   prettier-plugin-yaml: '-'
   vite-plus>oxfmt: '-'
 
