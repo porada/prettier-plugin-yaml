@@ -45,7 +45,7 @@
 		"eslint": "^10.2.1",
 		"prettier": "^3.8.3",
 		"publint": "^0.3.18",
-		"typescript": "^6.0.2",
+		"typescript": "^6.0.3",
 		"vite-plus": "^0.1.18",
 		"vitest": "^4.1.4"
 	},
