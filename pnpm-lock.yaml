@@ -23,8 +23,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0(oxlint@1.60.0)
       '@standard-config/prettier':
-        specifier: ^1.12.1
-        version: 1.12.1(prettier@3.8.3)
+        specifier: ^1.13.0
+        version: 1.13.0(prettier@3.8.3)
       '@standard-config/tsconfig':
         specifier: ^3.1.0
         version: 3.1.0(typescript@6.0.3)
@@ -627,8 +627,8 @@ packages:
       oxlint-tsgolint:
         optional: true
 
-  '@standard-config/prettier@1.12.1':
-    resolution: {integrity: sha512-vUde8x02YWVpzcXS8kKV+BEeh12DhH0xu4CVRHdxa9slNY2WmJ3RnjOJFcZC4eYan5YbRVs9HDcEVe4EkeNKSQ==}
+  '@standard-config/prettier@1.13.0':
+    resolution: {integrity: sha512-6LO2u+f9xLqLX1iLtSOzDjlCssZvfPYLUJbxHzHKOOM2nWA4M+6C23mQ30c5qFmmm6hrWfdY8eu2Fq6n0sB4Ng==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: ^3.8.0
@@ -2022,7 +2022,7 @@ snapshots:
     dependencies:
       oxlint: 1.60.0(oxlint-tsgolint@0.21.1)
 
-  '@standard-config/prettier@1.12.1(prettier@3.8.3)':
+  '@standard-config/prettier@1.13.0(prettier@3.8.3)':
     dependencies:
       '@prettier/plugin-oxc': 0.1.4
       prettier: 3.8.3
