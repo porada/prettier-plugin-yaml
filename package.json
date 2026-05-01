@@ -42,7 +42,7 @@
 		"@standard-config/prettier": "^1.12.1",
 		"@standard-config/tsconfig": "^3.1.0",
 		"@vitest/coverage-v8": "^4.1.4",
-		"eslint": "^10.2.1",
+		"eslint": "^10.3.0",
 		"prettier": "^3.8.3",
 		"publint": "^0.3.18",
 		"typescript": "^6.0.3",
