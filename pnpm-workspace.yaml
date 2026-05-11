@@ -1,6 +1,7 @@
 autoInstallPeers: false
 
-blockExoticSubdeps: true
+minimumReleaseAgeExclude:
+  - '@standard-config/*'
 
 overrides:
   prettier-plugin-yaml: '-'
@@ -8,9 +9,8 @@ overrides:
 
 peerDependencyRules:
   allowAny:
+    - '@vitest/coverage-v8'
     - vitest
-
-strictDepBuilds: true
 
 strictPeerDependencies: true
 
