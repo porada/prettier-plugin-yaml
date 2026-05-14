@@ -23,8 +23,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0(oxlint@1.61.0)
       '@standard-config/prettier':
-        specifier: ^1.13.0
-        version: 1.13.0(prettier@3.8.3)
+        specifier: ^1.13.1
+        version: 1.13.1(prettier@3.8.3)
       '@standard-config/tsconfig':
         specifier: ^3.1.0
         version: 3.1.0(typescript@6.0.3)
@@ -633,8 +633,8 @@ packages:
       oxlint-tsgolint:
         optional: true
 
-  '@standard-config/prettier@1.13.0':
-    resolution: {integrity: sha512-6LO2u+f9xLqLX1iLtSOzDjlCssZvfPYLUJbxHzHKOOM2nWA4M+6C23mQ30c5qFmmm6hrWfdY8eu2Fq6n0sB4Ng==}
+  '@standard-config/prettier@1.13.1':
+    resolution: {integrity: sha512-eO3/sKNEH9VLQE6yLam/WjiT9LfIwEAYAfuFofpVBM1T8CRNvuiyeZzl3jwGbJjnGreJfNVtupB5TACuile91g==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: ^3.8.0
@@ -1365,8 +1365,8 @@ packages:
     peerDependencies:
       prettier: '>=3'
 
-  prettier-plugin-markdown-html@1.4.0:
-    resolution: {integrity: sha512-ZTvFGYVVEKNDhrTqf1Uk/9aQPvzHD1OxpXxpjagdXcQC3lsLf8Z6EccIyIncInhpbzE6mvQ8RvmoIjZdJyx8Og==}
+  prettier-plugin-markdown-html@1.4.1:
+    resolution: {integrity: sha512-//5EVnOcF1xx9kutRzUIPwUuTOSgwJW9X6/+Bh+/lJyk8nPlT/1HISlutWhFqjQo1D2X1tLQdd+d3Dum8pfx5w==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: '>=3'
@@ -2046,12 +2046,12 @@ snapshots:
     dependencies:
       oxlint: 1.61.0(oxlint-tsgolint@0.22.0)
 
-  '@standard-config/prettier@1.13.0(prettier@3.8.3)':
+  '@standard-config/prettier@1.13.1(prettier@3.8.3)':
     dependencies:
       '@prettier/plugin-oxc': 0.1.4
       prettier: 3.8.3
       prettier-plugin-expand-json: 1.0.4(prettier@3.8.3)
-      prettier-plugin-markdown-html: 1.4.0(prettier@3.8.3)
+      prettier-plugin-markdown-html: 1.4.1(prettier@3.8.3)
       prettier-plugin-pkg: 0.22.1(prettier@3.8.3)
       prettier-plugin-sh: 0.18.1(prettier@3.8.3)
       prettier-plugin-sort-json: 4.2.0(prettier@3.8.3)
@@ -2787,7 +2787,7 @@ snapshots:
     dependencies:
       prettier: 3.8.3
 
-  prettier-plugin-markdown-html@1.4.0(prettier@3.8.3):
+  prettier-plugin-markdown-html@1.4.1(prettier@3.8.3):
     dependencies:
       prettier: 3.8.3
 
