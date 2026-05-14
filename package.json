@@ -44,7 +44,7 @@
 		"@vitest/coverage-v8": "^4.1.6",
 		"eslint": "^10.3.0",
 		"prettier": "^3.8.3",
-		"publint": "^0.3.20",
+		"publint": "^0.3.21",
 		"typescript": "^6.0.3",
 		"vite-plus": "^0.1.20",
 		"vitest": "^4.1.6"
