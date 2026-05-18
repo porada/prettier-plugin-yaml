@@ -23,19 +23,19 @@
 <p align="center">Additional YAML formatting options for&nbsp;Prettier.</p>
 
 <p align="center">
-    <a href="https://www.npmjs.com/package/prettier-plugin-yaml"
+    <a href="https://npmx.dev/package/prettier-plugin-yaml"
         ><img
-            src="https://img.shields.io/npm/v/prettier-plugin-yaml"
+            src="https://img.shields.io/npm/v/prettier-plugin-yaml?style=flat-square"
             alt=""
     /></a>
     <a href="https://github.com/porada/prettier-plugin-yaml/actions/workflows/test.yaml"
         ><img
-            src="https://img.shields.io/github/actions/workflow/status/porada/prettier-plugin-yaml/test.yaml"
+            src="https://img.shields.io/github/actions/workflow/status/porada/prettier-plugin-yaml/test.yaml?style=flat-square"
             alt=""
     /></a>
     <a href="https://codecov.io/github/porada/prettier-plugin-yaml"
         ><img
-            src="https://img.shields.io/codecov/c/github/porada/prettier-plugin-yaml"
+            src="https://img.shields.io/codecov/c/github/porada/prettier-plugin-yaml?style=flat-square"
             alt=""
     /></a>
 </p>
