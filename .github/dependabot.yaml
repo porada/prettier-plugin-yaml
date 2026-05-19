@@ -11,3 +11,7 @@ updates:
     schedule:
       interval: weekly
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
+      exclude:
+        - prettier

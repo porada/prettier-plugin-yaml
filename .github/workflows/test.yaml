@@ -34,6 +34,6 @@ jobs:
       - run: node --version
       - uses: pnpm/action-setup@v6
       - run: pnpm install
-      - run: pnpm add --save-dev prettier@~${{ matrix.prettier-version }}
+      - run: pnpm add --save-dev prettier@${{ matrix.prettier-version }}
       - run: pnpm exec prettier --version
       - run: pnpm test

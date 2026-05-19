@@ -1,10 +1,9 @@
 autoInstallPeers: false
 
 minimumReleaseAgeExclude:
-  - '@standard-config/*'
+  - prettier
 
 overrides:
-  prettier-plugin-yaml: '-'
   vite-plus>oxfmt: '-'
 
 peerDependencyRules:
