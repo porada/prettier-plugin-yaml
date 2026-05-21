@@ -141,7 +141,28 @@ test('supports `yamlQuoteKeys`', async () => {
 		parser: 'yaml',
 		plugins: [pluginYAML],
 		yamlCollectionStyle: 'flow',
-		yamlQuoteValues: true,
+		yamlQuoteKeys: true,
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
+});
+
+test('supports `yamlQuoteKeysMatching`', async () => {
+	let output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteKeysMatching: '-',
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
+
+	output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteKeys: true,
+		yamlQuoteKeysMatching: '^\\d+$',
 	});
 
 	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */

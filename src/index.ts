@@ -95,6 +95,7 @@ function process(
 		yamlBlockStyle,
 		yamlCollectionStyle,
 		yamlQuoteKeys,
+		yamlQuoteKeysMatching,
 		yamlQuoteValues,
 		yamlQuoteValuesMatching,
 	}: ParserOptions & PluginOptions
@@ -103,41 +104,45 @@ function process(
 
 	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
+	const matchedKeyExpression = yamlQuoteKeysMatching
+		? new RegExp(yamlQuoteKeysMatching)
+		: undefined;
+
+	const isMatchedKey = matchedKeyExpression
+		? (key: unknown) => matchedKeyExpression.test(String(key))
+		: () => false;
+
 	const matchedValueExpression = yamlQuoteValuesMatching
 		? new RegExp(yamlQuoteValuesMatching)
 		: undefined;
 
 	const isMatchedValue = matchedValueExpression
-		? (value: boolean | number | string | null) =>
-				matchedValueExpression.test(String(value))
+		? (value: unknown) => matchedValueExpression.test(String(value))
 		: () => false;
 
 	visit(document, {
 		Scalar(key, node) {
 			const { type, value } = node;
 
-			if (
-				typeof value === 'boolean' ||
-				typeof value === 'number' ||
-				value === null
-			) {
-				if (key !== 'key' && isMatchedValue(value)) {
+			const isKey = key === 'key';
+			const isQuoted = isKey
+				? isMatchedKey(value)
+				: isMatchedValue(value);
+
+			if (typeof value !== 'string') {
+				if (isQuoted) {
 					node.value = String(value);
 					node.type = QUOTE_DOUBLE;
 				}
 				return;
 			}
 
-			if (typeof value !== 'string') {
+			if (isKey) {
+				node.type = isQuoted || yamlQuoteKeys ? QUOTE_DOUBLE : PLAIN;
 				return;
 			}
 
-			if (key === 'key') {
-				node.type = yamlQuoteKeys ? QUOTE_DOUBLE : PLAIN;
-				return;
-			}
-
-			if (isMatchedValue(value)) {
+			if (isQuoted) {
 				node.type = QUOTE_DOUBLE;
 				return;
 			}
@@ -203,6 +208,11 @@ export const options: Plugin['options'] = {
 			'Quote all mapping keys. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
+	},
+	yamlQuoteKeysMatching: {
+		category: 'Output',
+		description: 'Quote keys that match a specific pattern.',
+		type: 'string',
 	},
 	yamlQuoteValues: {
 		category: 'Output',

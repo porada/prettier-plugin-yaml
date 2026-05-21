@@ -86,6 +86,12 @@ interface PluginOptions {
      */
     yamlQuoteKeys?: boolean | undefined;
     /**
+     * Quote keys that match a specific pattern. Non-string keys are matched
+     * based on their string representation. Doesn’t affect mapping keys that
+     * must be quoted anyway.
+     */
+    yamlQuoteKeysMatching?: string | undefined;
+    /**
      * Quote all string values. Removes unnecessary quotes when disabled.
      * @default false
      */
