@@ -96,15 +96,39 @@ function process(
 		yamlCollectionStyle,
 		yamlQuoteKeys,
 		yamlQuoteValues,
+		yamlQuoteValuesMatching,
 	}: ParserOptions & PluginOptions
 ): string {
 	const document = parseDocument(text);
 
 	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
+	const matchedValueExpression = yamlQuoteValuesMatching
+		? new RegExp(yamlQuoteValuesMatching)
+		: undefined;
+
+	const isMatchedValue = matchedValueExpression
+		? (value: boolean | number | string | null) =>
+				matchedValueExpression.test(String(value))
+		: () => false;
+
 	visit(document, {
 		Scalar(key, node) {
-			if (typeof node.value !== 'string') {
+			const { type, value } = node;
+
+			if (
+				typeof value === 'boolean' ||
+				typeof value === 'number' ||
+				value === null
+			) {
+				if (key !== 'key' && isMatchedValue(value)) {
+					node.value = String(value);
+					node.type = QUOTE_DOUBLE;
+				}
+				return;
+			}
+
+			if (typeof value !== 'string') {
 				return;
 			}
 
@@ -113,7 +137,12 @@ function process(
 				return;
 			}
 
-			if (node.type === BLOCK_FOLDED || node.type === BLOCK_LITERAL) {
+			if (isMatchedValue(value)) {
+				node.type = QUOTE_DOUBLE;
+				return;
+			}
+
+			if (type === BLOCK_FOLDED || type === BLOCK_LITERAL) {
 				if (yamlCollectionStyle === 'flow') {
 					node.type = yamlQuoteValues ? QUOTE_DOUBLE : PLAIN;
 				}
@@ -181,6 +210,11 @@ export const options: Plugin['options'] = {
 			'Quote all string values. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
+	},
+	yamlQuoteValuesMatching: {
+		category: 'Output',
+		description: 'Quote values that match a specific pattern.',
+		type: 'string',
 	},
 };
 

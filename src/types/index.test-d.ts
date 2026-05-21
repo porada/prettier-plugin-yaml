@@ -8,6 +8,7 @@ test('exposes valid types', () => {
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlCollectionStyle');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteKeys');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValues');
+	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValuesMatching');
 
 	expectTypeOf<PluginWithParsers>().toBeObject();
 	expectTypeOf<PluginWithParsers>().toHaveProperty('parsers');
@@ -21,4 +22,5 @@ test('extends Prettier’s `Options`', () => {
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlCollectionStyle');
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteKeys');
 	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteValues');
+	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteValuesMatching');
 });

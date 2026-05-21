@@ -90,6 +90,12 @@ interface PluginOptions {
      * @default false
      */
     yamlQuoteValues?: boolean | undefined;
+    /**
+     * Quote values that match a specific pattern. Non-string values are matched
+     * based on their string representation. Doesn’t affect values that must be
+     * quoted anyway.
+     */
+    yamlQuoteValuesMatching?: string | undefined;
 }
 ```
 

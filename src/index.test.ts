@@ -180,6 +180,36 @@ test('supports `yamlQuoteValues`', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('supports `yamlQuoteValuesMatching`', async () => {
+	let output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteValuesMatching: '[\\s/]',
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
+
+	output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteValuesMatching: '^\\d+(:\\d+)?$',
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
+
+	output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteValues: true,
+		yamlQuoteValuesMatching: '^(\\d+|true|false|null)$',
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
+});
+
 test('works with other plugins', async () => {
 	const testPlugin: Plugin = {
 		parsers: {

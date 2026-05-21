@@ -7,7 +7,11 @@ export default defineConfig({
 			enabled: true,
 		},
 	},
-	lint: defineOxlintConfig(),
+	lint: defineOxlintConfig({
+		rules: {
+			'typescript/no-restricted-types': 'off',
+		},
+	}),
 	pack: {
 		deps: {
 			skipNodeModulesBundle: true,
