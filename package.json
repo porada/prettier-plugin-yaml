@@ -39,15 +39,15 @@
 	"devDependencies": {
 		"@standard-config/eslint": "^2.2.0",
 		"@standard-config/oxlint": "^1.9.0",
-		"@standard-config/prettier": "^1.13.1",
+		"@standard-config/prettier": "^1.13.2",
 		"@standard-config/tsconfig": "^3.1.0",
-		"@vitest/coverage-v8": "^4.1.6",
+		"@vitest/coverage-v8": "^4.1.7",
 		"eslint": "^10.4.0",
 		"prettier": "^3.8.3",
 		"publint": "^0.3.21",
 		"typescript": "^6.0.3",
-		"vite-plus": "^0.1.21",
-		"vitest": "^4.1.6"
+		"vite-plus": "^0.1.22",
+		"vitest": "^4.1.7"
 	},
 	"scripts": {
 		"build": "vp pack",
