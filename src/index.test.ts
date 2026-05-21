@@ -15,16 +15,23 @@ updates:
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
-      { interval: 'weekly' }
+      { interval: 'weekly', time: '12:00' }
 
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: "daily"
     versioning-strategy: "increase"
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 `;
 
 test('exposes correct public API', () => {

@@ -9,16 +9,23 @@ description: >-
 updates:
   - package-ecosystem: github-actions
     directory: /
-    schedule: { interval: weekly }
+    schedule: { interval: weekly, time: 12:00 }
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -31,16 +38,23 @@ description: >-
 updates:
   - package-ecosystem: github-actions
     directory: /
-    schedule: {interval: weekly}
+    schedule: {interval: weekly, time: 12:00}
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -54,16 +68,23 @@ description: >-
 updates:
   - package-ecosystem: github-actions
     directory: /
-    schedule: { interval: weekly }
+    schedule: { interval: weekly, time: 12:00 }
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -76,16 +97,23 @@ description: >-
 updates:
     - package-ecosystem: github-actions
       directory: /
-      schedule: { interval: weekly }
+      schedule: { interval: weekly, time: 12:00 }
 
     - package-ecosystem: npm
       directory: /
       schedule:
           interval: daily
       versioning-strategy: increase
+      cooldown:
+          default-days: 1
       ignore:
           - dependency-name: |-
                 @standard-config/prettier
+
+values:
+    0: true
+    1: false
+    2: null
 "
 `;
 
@@ -98,16 +126,23 @@ description: >-
 updates:
   - package-ecosystem: github-actions
     directory: /
-    schedule: { interval: weekly }
+    schedule: { interval: weekly, time: 12:00 }
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: >-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -120,16 +155,23 @@ description: |-
 updates:
   - package-ecosystem: github-actions
     directory: /
-    schedule: { interval: weekly }
+    schedule: { interval: weekly, time: 12:00 }
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -144,15 +186,23 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      time: 12:00
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
     versioning-strategy: increase
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -167,7 +217,7 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
       {
         package-ecosystem: github-actions,
         directory: /,
-        schedule: { interval: weekly },
+        schedule: { interval: weekly, time: 12:00 },
       },
 
       {
@@ -175,9 +225,12 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
         directory: /,
         schedule: { interval: daily },
         versioning-strategy: increase,
+        cooldown: { default-days: 1 },
         ignore: [{ dependency-name: "@standard-config/prettier" }],
       },
     ],
+
+  values: { 0: true, 1: false, 2: null },
 }
 "
 `;
@@ -193,7 +246,7 @@ exports[`supports \`yamlCollectionStyle\` 3`] = `
       {
         package-ecosystem: github-actions,
         directory: /,
-        schedule: {interval: weekly},
+        schedule: {interval: weekly, time: 12:00},
       },
 
       {
@@ -201,9 +254,12 @@ exports[`supports \`yamlCollectionStyle\` 3`] = `
         directory: /,
         schedule: {interval: daily},
         versioning-strategy: increase,
+        cooldown: {default-days: 1},
         ignore: [{dependency-name: "@standard-config/prettier"}],
       },
     ],
+
+  values: {0: true, 1: false, 2: null},
 }
 "
 `;
@@ -217,16 +273,23 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
 "updates":
   - "package-ecosystem": github-actions
     "directory": /
-    "schedule": { "interval": weekly }
+    "schedule": { "interval": weekly, "time": 12:00 }
 
   - "package-ecosystem": npm
     "directory": /
     "schedule":
       "interval": daily
     "versioning-strategy": increase
+    "cooldown":
+      "default-days": 1
     "ignore":
       - "dependency-name": |-
           @standard-config/prettier
+
+"values":
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -239,16 +302,23 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
 'updates':
   - 'package-ecosystem': github-actions
     'directory': /
-    'schedule': { 'interval': weekly }
+    'schedule': { 'interval': weekly, 'time': 12:00 }
 
   - 'package-ecosystem': npm
     'directory': /
     'schedule':
       'interval': daily
     'versioning-strategy': increase
+    'cooldown':
+      'default-days': 1
     'ignore':
       - 'dependency-name': |-
           @standard-config/prettier
+
+'values':
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -263,7 +333,7 @@ exports[`supports \`yamlQuoteKeys\` 3`] = `
       {
         package-ecosystem: "github-actions",
         directory: "/",
-        schedule: { interval: "weekly" },
+        schedule: { interval: "weekly", time: "12:00" },
       },
 
       {
@@ -271,9 +341,12 @@ exports[`supports \`yamlQuoteKeys\` 3`] = `
         directory: "/",
         schedule: { interval: "daily" },
         versioning-strategy: "increase",
+        cooldown: { default-days: 1 },
         ignore: [{ dependency-name: "@standard-config/prettier" }],
       },
     ],
+
+  values: { 0: true, 1: false, 2: null },
 }
 "
 `;
@@ -287,16 +360,23 @@ description: >-
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule: { interval: "weekly" }
+    schedule: { interval: "weekly", time: "12:00" }
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
     versioning-strategy: "increase"
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -309,16 +389,23 @@ description: >-
 updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
-    schedule: { interval: 'weekly' }
+    schedule: { interval: 'weekly', time: '12:00' }
 
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
     versioning-strategy: 'increase'
+    cooldown:
+      default-days: 1
     ignore:
       - dependency-name: |-
           @standard-config/prettier
+
+values:
+  0: true
+  1: false
+  2: null
 "
 `;
 
@@ -331,16 +418,23 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
 'updates':
   - 'package-ecosystem': 'github-actions'
     'directory': '/'
-    'schedule': { 'interval': 'weekly' }
+    'schedule': { 'interval': 'weekly', 'time': '12:00' }
 
   - 'package-ecosystem': 'npm'
     'directory': '/'
     'schedule':
       'interval': 'daily'
     'versioning-strategy': 'increase'
+    'cooldown':
+      'default-days': 1
     'ignore':
       - 'dependency-name': |-
           @standard-config/prettier
+
+'values':
+  0: true
+  1: false
+  2: null
 "
 `;
 
