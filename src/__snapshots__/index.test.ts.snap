@@ -496,6 +496,35 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
 "
 `;
 
+exports[`supports \`yamlQuoteValues\` 4`] = `
+"{
+  version: 2,
+
+  description: "You can use Dependabot to keep the packages you use updated to the latest versions.",
+
+  updates:
+    [
+      {
+        package-ecosystem: "github-actions",
+        directory: "/",
+        schedule: { interval: "weekly", time: "12:00" },
+      },
+
+      {
+        package-ecosystem: "npm",
+        directory: "/",
+        schedule: { interval: "daily" },
+        versioning-strategy: "increase",
+        cooldown: { default-days: 1 },
+        ignore: [{ dependency-name: "@standard-config/prettier" }],
+      },
+    ],
+
+  values: { 0: true, 1: false, 2: null },
+}
+"
+`;
+
 exports[`supports \`yamlQuoteValuesMatching\` 1`] = `
 "version: 2
 

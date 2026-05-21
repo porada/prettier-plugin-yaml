@@ -199,6 +199,16 @@ test('supports `yamlQuoteValues`', async () => {
 
 	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
+
+	output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'flow',
+		yamlQuoteValues: true,
+	});
+
+	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
+	expect(output).toMatchSnapshot();
 });
 
 test('supports `yamlQuoteValuesMatching`', async () => {
