@@ -105,6 +105,34 @@ interface PluginOptions {
 }
 ```
 
+## FAQ
+
+### How do I automatically quote integer values?
+
+Use `yamlQuoteValuesMatching`. Unlike `yamlQuoteValues`, which only applies to string values, `yamlQuoteValuesMatching` matches all values based on their string representation. For example, to quote integers:
+
+```json
+{
+    "yamlQuoteValuesMatching": "^\\d+$"
+}
+```
+
+You can quote boolean and `null` values similarly:
+
+```json
+{
+    "yamlQuoteValuesMatching": "^(true|false|null)$"
+}
+```
+
+To quote mapping keys, use `yamlQuoteKeys` and `yamlQuoteKeysMatching`.
+
+### Why do `yamlQuoteValuesMatching` and `yamlQuoteKeysMatching` accept strings instead of regular expressions?
+
+This comes from a limitation in how Prettier handles configuration values. `RegExp` is not a supported type, so the pattern must be provided as a string.
+
+Internally, the plugin applies patterns as `new RegExp(pattern)` without flags. Remember to escape backslashes and other special characters accordingly.
+
 ## Related
 
 - [**@standard-config/prettier**](https://github.com/standard-config/prettier)
