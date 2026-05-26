@@ -127,11 +127,11 @@ You can quote boolean and `null` values similarly:
 
 To quote mapping keys, use `yamlQuoteKeys` and `yamlQuoteKeysMatching`.
 
-### Why do `yamlQuoteValuesMatching` and `yamlQuoteKeysMatching` accept strings instead of regular expressions?
+### Why is the pattern a string instead of a regular expression?
 
-This comes from a limitation in how Prettier handles configuration values. `RegExp` is not a supported type, so the pattern must be provided as a string.
+`yamlQuoteValuesMatching` and `yamlQuoteKeysMatching` accept strings due to a limitation in how Prettier handles configuration values. `RegExp` is not a supported type, so the pattern must be provided as a string.
 
-Internally, the plugin applies patterns as `new RegExp(pattern)` without flags. Remember to escape backslashes and other special characters accordingly.
+Internally, the plugin applies the pattern as `new RegExp(pattern)`. Remember to escape backslashes and other special characters accordingly.
 
 ## Related
 
