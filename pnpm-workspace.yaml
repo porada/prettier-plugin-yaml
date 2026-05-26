@@ -14,3 +14,7 @@ peerDependencyRules:
 strictPeerDependencies: true
 
 trustPolicy: no-downgrade
+
+trustPolicyExclude:
+  - ast-v8-to-istanbul@1.0.2
+  - tinyexec@1.2.2
