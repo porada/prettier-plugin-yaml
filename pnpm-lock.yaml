@@ -25,8 +25,8 @@ importers:
         specifier: ^1.13.3
         version: 1.13.3(prettier@3.8.3)
       '@standard-config/tsconfig':
-        specifier: ^3.1.0
-        version: 3.1.0(typescript@6.0.3)
+        specifier: ^3.2.0
+        version: 3.2.0(typescript@6.0.3)
       '@vitest/coverage-v8':
         specifier: ^4.1.8
         version: 4.1.8(vitest@4.1.8)
@@ -640,8 +640,8 @@ packages:
     peerDependencies:
       prettier: ^3.8.0
 
-  '@standard-config/tsconfig@3.1.0':
-    resolution: {integrity: sha512-y+wzCIBI84QITjMHaCbHRXRSQFngafQoH+Nrpd5Fc1vJo8767i9+eR8PwqsKqOZzSBCcy4TOWTtz7wby2VjHfQ==}
+  '@standard-config/tsconfig@3.2.0':
+    resolution: {integrity: sha512-hI4zzQYl8pQOcZzyHZuQnLHFBANXN38k9syrSVAvvWwZ3zcmvvBmuwWDHQuR2SwoCPwN7UfxFCSbSKSBIFTJxg==}
     peerDependencies:
       typescript: '>=6.0.2'
     peerDependenciesMeta:
@@ -2070,7 +2070,7 @@ snapshots:
       prettier-plugin-sort-json: 4.2.0(prettier@3.8.3)
       prettier-plugin-yaml: 1.2.0(prettier@3.8.3)
 
-  '@standard-config/tsconfig@3.1.0(typescript@6.0.3)':
+  '@standard-config/tsconfig@3.2.0(typescript@6.0.3)':
     optionalDependencies:
       typescript: 6.0.3
 
