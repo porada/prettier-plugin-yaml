@@ -29,7 +29,7 @@
 	"engines": {
 		"node": ">=20"
 	},
-	"packageManager": "pnpm@11.3.0",
+	"packageManager": "pnpm@11.5.2",
 	"dependencies": {
 		"yaml": "^2.9.0"
 	},
@@ -37,8 +37,8 @@
 		"prettier": ">=3"
 	},
 	"devDependencies": {
-		"@standard-config/eslint": "^2.2.0",
-		"@standard-config/oxlint": "^1.9.0",
+		"@standard-config/oxlint": "^2.0.1",
+		"@standard-config/oxlint-stylistic": "^2.0.1",
 		"@standard-config/prettier": "^1.13.3",
 		"@standard-config/tsconfig": "^3.2.0",
 		"@vitest/coverage-v8": "^4.1.8",

@@ -1,4 +1,4 @@
-import { defineOxlintConfig } from '@standard-config/eslint/utilities';
+import { defineOxlintConfig } from '@standard-config/oxlint';
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({

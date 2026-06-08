@@ -101,7 +101,6 @@ test('supports `yamlCollectionStyle`', async () => {
 		yamlCollectionStyle: 'block',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	for (const bracketSpacing of [true, false] as const) {
@@ -112,7 +111,6 @@ test('supports `yamlCollectionStyle`', async () => {
 			yamlCollectionStyle: 'flow',
 		});
 
-		/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 		expect(output).toMatchSnapshot();
 	}
 });
@@ -124,7 +122,6 @@ test('supports `yamlQuoteKeys`', async () => {
 		yamlQuoteKeys: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -134,7 +131,6 @@ test('supports `yamlQuoteKeys`', async () => {
 		yamlQuoteKeys: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -144,7 +140,6 @@ test('supports `yamlQuoteKeys`', async () => {
 		yamlQuoteKeys: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 });
 
@@ -155,7 +150,6 @@ test('supports `yamlQuoteKeysMatching`', async () => {
 		yamlQuoteKeysMatching: '-',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -165,7 +159,6 @@ test('supports `yamlQuoteKeysMatching`', async () => {
 		yamlQuoteKeysMatching: '^\\d+$',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 });
 
@@ -176,7 +169,6 @@ test('supports `yamlQuoteValues`', async () => {
 		yamlQuoteValues: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -186,7 +178,6 @@ test('supports `yamlQuoteValues`', async () => {
 		yamlQuoteValues: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -197,7 +188,6 @@ test('supports `yamlQuoteValues`', async () => {
 		yamlQuoteValues: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -207,7 +197,6 @@ test('supports `yamlQuoteValues`', async () => {
 		yamlQuoteValues: true,
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 });
 
@@ -218,7 +207,6 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 		yamlQuoteValuesMatching: '[\\s/]',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -227,7 +215,6 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 		yamlQuoteValuesMatching: '^\\d+(:\\d+)?$',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 
 	output = await format(TEST_YAML, {
@@ -237,7 +224,6 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 		yamlQuoteValuesMatching: '^(\\d+|true|false|null)$',
 	});
 
-	/* oxlint-disable-next-line vitest/prefer-snapshot-hint */
 	expect(output).toMatchSnapshot();
 });
 

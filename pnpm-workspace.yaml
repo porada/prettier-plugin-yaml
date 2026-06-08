@@ -1,10 +1,18 @@
 autoInstallPeers: false
 
+catalog:
+  oxlint: ^1.68.0
+
+color: always
+
+gitChecks: false
+
 minimumReleaseAgeExclude:
   - prettier
 
 overrides:
   vite-plus>oxfmt: '-'
+  vite-plus>oxlint: 'catalog:'
 
 peerDependencyRules:
   allowAny:
@@ -14,7 +22,3 @@ peerDependencyRules:
 strictPeerDependencies: true
 
 trustPolicy: no-downgrade
-
-trustPolicyExclude:
-  - ast-v8-to-istanbul@1.0.2
-  - tinyexec@1.2.2

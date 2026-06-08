@@ -15,13 +15,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
         with:
           cache: true
       - run: pnpm install
@@ -30,31 +30,31 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
         with:
           cache: true
       - run: pnpm install
       - run: pnpm test --coverage
-      - uses: codecov/codecov-action@v6
+      - uses: codecov/codecov-action@v6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
         with:
           cache: true
       - run: pnpm install
@@ -63,13 +63,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
         with:
           cache: true
       - run: pnpm install
@@ -78,13 +78,13 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.3
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 24
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.8
         with:
           cache: true
       - run: pnpm install
