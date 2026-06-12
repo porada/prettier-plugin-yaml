@@ -8,9 +8,13 @@
 		"email": "dom@dom.engineering",
 		"url": "https://dom.engineering"
 	},
+	"homepage": "https://github.com/porada/prettier-plugin-yaml#readme",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/porada/prettier-plugin-yaml.git"
+	},
+	"bugs": {
+		"url": "https://github.com/porada/prettier-plugin-yaml/issues"
 	},
 	"keywords": [
 		"formatting",
