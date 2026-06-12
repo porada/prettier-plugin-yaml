@@ -12,6 +12,10 @@
 		"type": "git",
 		"url": "git+https://github.com/porada/prettier-plugin-yaml.git"
 	},
+	"bugs": {
+		"url": "https://github.com/porada/prettier-plugin-yaml/issues"
+	},
+	"homepage": "https://github.com/porada/prettier-plugin-yaml#readme",
 	"keywords": [
 		"formatting",
 		"prettier",
