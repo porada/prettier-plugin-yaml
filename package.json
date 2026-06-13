@@ -1,64 +1,67 @@
 {
-	"name": "prettier-plugin-yaml",
-	"version": "1.2.0",
-	"description": "Additional YAML formatting options for Prettier",
-	"license": "MIT",
-	"author": {
-		"name": "Dom Porada",
-		"email": "dom@dom.engineering",
-		"url": "https://dom.engineering"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/porada/prettier-plugin-yaml.git"
-	},
-	"keywords": [
-		"formatting",
-		"prettier",
-		"prettier-plugin",
-		"yaml",
-		"yml"
-	],
-	"files": [
-		"dist/**"
-	],
-	"type": "module",
-	"sideEffects": false,
-	"exports": "./dist/index.mjs",
-	"types": "./dist/index.d.mts",
-	"engines": {
-		"node": ">=20"
-	},
-	"packageManager": "pnpm@11.6.0",
-	"dependencies": {
-		"yaml": "^2.9.0"
-	},
-	"peerDependencies": {
-		"prettier": ">=3"
-	},
-	"devDependencies": {
-		"@standard-config/oxlint": "^2.0.2",
-		"@standard-config/oxlint-stylistic": "^2.0.2",
-		"@standard-config/prettier": "^1.13.3",
-		"@standard-config/tsconfig": "^3.2.0",
-		"@vitest/coverage-v8": "^4.1.8",
-		"eslint": "^10.4.1",
-		"prettier": "^3.8.4",
-		"publint": "^0.3.21",
-		"typescript": "^6.0.3",
-		"vite-plus": "^0.1.24",
-		"vitest": "^4.1.8"
-	},
-	"scripts": {
-		"build": "vp pack",
-		"fix": "pnpm format && pnpm lint && pnpm format",
-		"format": "prettier --ignore-unknown --log-level=warn --write .",
-		"format:check": "prettier --check --ignore-unknown .",
-		"lint": "vp lint --fix",
-		"lint:check": "vp lint --deny-warnings --type-check",
-		"prepack": "pnpm run '/^(format:check|lint:check|test|typecheck)$/' && pnpm build",
-		"prepare": "vp config",
-		"test": "vitest run",
-		"typecheck": "tsc --noEmit"
-	}
+  "name": "prettier-plugin-yaml",
+  "version": "1.2.0",
+  "bugs": {
+    "url": "https://github.com/porada/prettier-plugin-yaml/issues"
+  },
+  "description": "Additional YAML formatting options for Prettier",
+  "license": "MIT",
+  "author": {
+    "name": "Dom Porada",
+    "email": "dom@dom.engineering",
+    "url": "https://dom.engineering"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/porada/prettier-plugin-yaml.git"
+  },
+  "keywords": [
+    "formatting",
+    "prettier",
+    "prettier-plugin",
+    "yaml",
+    "yml"
+  ],
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.6.0",
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "peerDependencies": {
+    "prettier": ">=3"
+  },
+  "devDependencies": {
+    "@standard-config/oxlint": "^2.0.2",
+    "@standard-config/oxlint-stylistic": "^2.0.2",
+    "@standard-config/prettier": "^1.13.3",
+    "@standard-config/tsconfig": "^3.2.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^10.4.1",
+    "prettier": "^3.8.4",
+    "publint": "^0.3.21",
+    "typescript": "^6.0.3",
+    "vite-plus": "^0.1.24",
+    "vitest": "^4.1.8"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "fix": "pnpm format && pnpm lint && pnpm format",
+    "format": "prettier --ignore-unknown --log-level=warn --write .",
+    "format:check": "prettier --check --ignore-unknown .",
+    "lint": "vp lint --fix",
+    "lint:check": "vp lint --deny-warnings --type-check",
+    "prepack": "pnpm run '/^(format:check|lint:check|test|typecheck)$/' && pnpm build",
+    "prepare": "vp config",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  }
 }
