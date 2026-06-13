@@ -23,4 +23,4 @@ jobs:
           registry-url: https://registry.npmjs.org
       - uses: pnpm/action-setup@v6.0.8
       - run: pnpm install
-      - run: pnpm publish --access=public --no-git-checks --provenance
+      - run: pnpm stage publish --access=public --provenance
