@@ -21,6 +21,6 @@ jobs:
           node-version: 24
           package-manager-cache: false
           registry-url: https://registry.npmjs.org
-      - uses: pnpm/action-setup@v6.0.8
+      - uses: pnpm/action-setup@v6.0.9
       - run: pnpm install
       - run: pnpm stage publish --access=public --provenance
