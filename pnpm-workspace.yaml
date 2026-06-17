@@ -1,7 +1,7 @@
 autoInstallPeers: false
 
 catalog:
-  oxlint: ^1.69.0
+  oxlint: ^1.70.0
 
 color: always
 
