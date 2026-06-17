@@ -41,7 +41,7 @@
 		"@standard-config/oxlint-stylistic": "^2.0.2",
 		"@standard-config/prettier": "^1.13.3",
 		"@standard-config/tsconfig": "^3.2.0",
-		"@vitest/coverage-v8": "^4.1.8",
+		"@vitest/coverage-v8": "^4.1.9",
 		"eslint": "^10.5.0",
 		"prettier": "^3.8.4",
 		"publint": "^0.3.21",
