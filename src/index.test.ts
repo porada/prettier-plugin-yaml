@@ -2,7 +2,7 @@ import type { Plugin } from 'prettier';
 import type { PluginOptions } from './index.ts';
 import { format } from 'prettier';
 import { parsers as prettierParsers } from 'prettier/plugins/yaml';
-import { expect, expectTypeOf, test } from 'vitest';
+import { expect, expectTypeOf, test } from 'vite-plus/test';
 import * as pluginYAML from './index.ts';
 
 const TEST_YAML = `

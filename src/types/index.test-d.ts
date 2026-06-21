@@ -1,6 +1,6 @@
 import type { Options as PrettierOptions } from 'prettier';
 import type { PluginOptions, PluginWithParsers } from './index.d.ts';
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, test } from 'vite-plus/test';
 
 test('exposes valid types', () => {
 	expectTypeOf<PluginOptions>().toBeObject();

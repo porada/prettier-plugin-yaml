@@ -29,7 +29,7 @@
 	"engines": {
 		"node": ">=20"
 	},
-	"packageManager": "pnpm@11.6.0",
+	"packageManager": "pnpm@11.8.0",
 	"dependencies": {
 		"yaml": "^2.9.0"
 	},
@@ -46,8 +46,7 @@
 		"prettier": "^3.8.4",
 		"publint": "^0.3.21",
 		"typescript": "^6.0.3",
-		"vite-plus": "^0.2.1",
-		"vitest": "^4.1.9"
+		"vite-plus": "^0.2.1"
 	},
 	"scripts": {
 		"build": "vp pack",
@@ -58,7 +57,7 @@
 		"lint:check": "vp lint --deny-warnings --type-check",
 		"prepack": "pnpm run '/^(format:check|lint:check|test|typecheck)$/' && pnpm build",
 		"prepare": "vp config",
-		"test": "vitest run",
+		"test": "vp test",
 		"typecheck": "tsc --noEmit"
 	}
 }
