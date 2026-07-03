@@ -5,6 +5,8 @@ color: always
 gitChecks: false
 
 minimumReleaseAgeExclude:
+  - '@prettier/*'
+  - '@standard-config/*'
   - prettier
 
 overrides:

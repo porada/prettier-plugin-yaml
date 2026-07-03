@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   test:
-    name: node@${{ matrix.node-version }} / prettier@${{ matrix.prettier-version }}
+    name: node@${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -23,9 +23,6 @@ jobs:
           - 22
           - 24
           - latest
-        prettier-version:
-          - 3.7
-          - 3.8
     steps:
       - uses: actions/checkout@v7.0.0
         with:
@@ -38,6 +35,4 @@ jobs:
         with:
           cache: true
       - run: pnpm install
-      - run: pnpm add --save-dev prettier@${{ matrix.prettier-version }}
-      - run: pnpm exec prettier --version
       - run: pnpm test

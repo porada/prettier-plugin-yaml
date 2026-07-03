@@ -16,4 +16,6 @@ updates:
     cooldown:
       default-days: 1
       exclude:
+        - '@prettier/*'
+        - '@standard-config/*'
         - prettier

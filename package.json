@@ -37,8 +37,8 @@
 		"prettier": ">=3"
 	},
 	"devDependencies": {
-		"@standard-config/oxlint": "^2.2.2",
-		"@standard-config/oxlint-stylistic": "^2.2.2",
+		"@standard-config/oxlint": "^2.3.1",
+		"@standard-config/oxlint-stylistic": "^2.3.1",
 		"@standard-config/prettier": "^1.15.0",
 		"@standard-config/tsconfig": "^3.2.0",
 		"@vitest/coverage-v8": "^4.1.9",
@@ -46,7 +46,7 @@
 		"prettier": "^3.9.4",
 		"publint": "^0.3.21",
 		"typescript": "^6.0.3",
-		"vite-plus": "^0.2.1"
+		"vite-plus": "^0.2.2"
 	},
 	"scripts": {
 		"build": "vp pack",
