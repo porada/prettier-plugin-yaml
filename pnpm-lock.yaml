@@ -20,7 +20,7 @@ importers:
         version: 2.3.1(@standard-config/oxlint-stylistic@2.3.1)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))
       '@standard-config/oxlint-stylistic':
         specifier: ^2.3.1
-        version: 2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.6.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+        version: 2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.15.0
         version: 1.15.0(prettier@3.9.5)
@@ -31,8 +31,8 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
       eslint:
-        specifier: ^10.6.0
-        version: 10.6.0
+        specifier: ^10.7.0
+        version: 10.7.0
       prettier:
         specifier: ^3.9.5
         version: 3.9.5
@@ -959,8 +959,8 @@ packages:
     resolution: {integrity: sha512-tD40eHxA35h0PEIZNeIjkHoDR4YjjJp34biM0mDvplBe//mB+IHCqHDGV7pxF+7MklTvighcCPPZC7ynWyjdTA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  eslint@10.6.0:
-    resolution: {integrity: sha512-6lVbcqSodALYo+4ELD0heG6lFiFxnLMuLkiMi2qV8LMp54N8tE8FT1GMH+ev4Ti00nFjNze2+Su6DsV5OQW3Dg==}
+  eslint@10.7.0:
+    resolution: {integrity: sha512-GVTD7s1vdIl6UYvAfriOPeY1Df8LIZjfofLvHwde+erDHGGuHyuM6xoxRxmHiebhYuD2p1vN4wWh0XzPARSGDQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     hasBin: true
     peerDependencies:
@@ -1609,9 +1609,9 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@eslint-community/eslint-utils@4.9.1(eslint@10.6.0)':
+  '@eslint-community/eslint-utils@4.9.1(eslint@10.7.0)':
     dependencies:
-      eslint: 10.6.0
+      eslint: 10.7.0
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
@@ -1902,10 +1902,10 @@ snapshots:
   '@rolldown/pluginutils@1.0.1':
     optional: true
 
-  '@standard-config/oxlint-stylistic@2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.6.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
     dependencies:
-      '@stylistic/eslint-plugin': 5.10.0(eslint@10.6.0)
-      eslint-plugin-perfectionist: 5.10.0(eslint@10.6.0)(typescript@6.0.3)
+      '@stylistic/eslint-plugin': 5.10.0(eslint@10.7.0)
+      eslint-plugin-perfectionist: 5.10.0(eslint@10.7.0)(typescript@6.0.3)
       oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0))
     optionalDependencies:
       '@standard-config/oxlint': 2.3.1(@standard-config/oxlint-stylistic@2.3.1)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))
@@ -1919,7 +1919,7 @@ snapshots:
       oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0))
       oxlint-tsgolint: 0.24.0
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.6.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.3.1(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.15.0(prettier@3.9.5)':
     dependencies:
@@ -1938,11 +1938,11 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@stylistic/eslint-plugin@5.10.0(eslint@10.6.0)':
+  '@stylistic/eslint-plugin@5.10.0(eslint@10.7.0)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.6.0)
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0)
       '@typescript-eslint/types': 8.63.0
-      eslint: 10.6.0
+      eslint: 10.7.0
       eslint-visitor-keys: 4.2.1
       espree: 10.4.0
       estraverse: 5.3.0
@@ -2018,13 +2018,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.63.0(eslint@10.6.0)(typescript@6.0.3)':
+  '@typescript-eslint/utils@8.63.0(eslint@10.7.0)(typescript@6.0.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.6.0)
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0)
       '@typescript-eslint/scope-manager': 8.63.0
       '@typescript-eslint/types': 8.63.0
       '@typescript-eslint/typescript-estree': 8.63.0(typescript@6.0.3)
-      eslint: 10.6.0
+      eslint: 10.7.0
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -2217,10 +2217,10 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-perfectionist@5.10.0(eslint@10.6.0)(typescript@6.0.3):
+  eslint-plugin-perfectionist@5.10.0(eslint@10.7.0)(typescript@6.0.3):
     dependencies:
-      '@typescript-eslint/utils': 8.63.0(eslint@10.6.0)(typescript@6.0.3)
-      eslint: 10.6.0
+      '@typescript-eslint/utils': 8.63.0(eslint@10.7.0)(typescript@6.0.3)
+      eslint: 10.7.0
       natural-orderby: 5.0.0
     transitivePeerDependencies:
       - supports-color
@@ -2239,9 +2239,9 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint@10.6.0:
+  eslint@10.7.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.6.0)
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0)
       '@eslint-community/regexpp': 4.12.2
       '@eslint/config-array': 0.23.5
       '@eslint/config-helpers': 0.6.0
