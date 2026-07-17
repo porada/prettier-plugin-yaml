@@ -17,10 +17,10 @@ importers:
     devDependencies:
       '@standard-config/oxlint':
         specifier: ^2.3.1
-        version: 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))
+        version: 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
       '@standard-config/oxlint-stylistic':
         specifier: ^2.4.3
-        version: 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+        version: 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.16.0
         version: 1.16.0(prettier@3.9.5)
@@ -44,7 +44,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: ^0.2.4
-        version: 0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)
+        version: 0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)
 
 packages:
 
@@ -882,8 +882,8 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
-  ast-v8-to-istanbul@1.0.4:
-    resolution: {integrity: sha512-0bC0/4bTSrnwdhU3IsZDwEdojvuPrSg59OYZfKsLRtJZ0u8VBx9DebfqqG8bRdCC0I7vjgxmPi41P0lpkhJHtA==}
+  ast-v8-to-istanbul@1.0.5:
+    resolution: {integrity: sha512-UPAgKJFSEGMWSDr3LX4tqnAb4f7KGT8O40Tyx8wbYmmZ/yn58lNCm8h3svs3eXgiGd5AXxz8NDOvXWvicq+rJA==}
 
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
@@ -1280,8 +1280,8 @@ packages:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
     engines: {node: '>=14.19.0'}
 
-  postcss@8.5.16:
-    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
+  postcss@8.5.19:
+    resolution: {integrity: sha512-Mz8SaolMd8nB+G13WkORcxQKHZ/NE4xXevtkJHVuG+guo9/wYKlIMTKAqGdEmYOXR2ijPjTYNHssizdaVSUNdQ==}
     engines: {node: ^10 || ^12 || >=14}
 
   prelude-ls@1.2.1:
@@ -1445,8 +1445,8 @@ packages:
       '@vitest/browser-webdriverio':
         optional: true
 
-  vite@8.1.4:
-    resolution: {integrity: sha512-bTT9PsdWO+MQMNG9ZXIP/qM9wGh37DFxTV/sPq9cFpHr3w4jkgef032PkAL9jAqhk3Nz8NQw3O8n6/xFkqO4QQ==}
+  vite@8.1.5:
+    resolution: {integrity: sha512-7ULLwsCdYx/nRyrpiEwvqb5TFHrMVZyBt+rg/OAXT7rgj/z+DtTDyKFeLAdDkubDVDKD8jOsndmy7m55XcfUsw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -1896,24 +1896,24 @@ snapshots:
   '@rolldown/pluginutils@1.0.1':
     optional: true
 
-  '@standard-config/oxlint-stylistic@2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
     dependencies:
       '@stylistic/eslint-plugin': 5.10.0(eslint@10.7.0)
       eslint-plugin-perfectionist: 5.10.0(eslint@10.7.0)(typescript@6.0.3)
-      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0))
+      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0))
     optionalDependencies:
-      '@standard-config/oxlint': 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))
+      '@standard-config/oxlint': 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
     transitivePeerDependencies:
       - eslint
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))':
+  '@standard-config/oxlint@2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))':
     dependencies:
-      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0))
+      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0))
       oxlint-tsgolint: 0.24.0
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.16.0(prettier@3.9.5)':
     dependencies:
@@ -2028,28 +2028,28 @@ snapshots:
       '@typescript-eslint/types': 8.64.0
       eslint-visitor-keys: 5.0.1
 
-  '@vitest/browser-preview@4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)':
+  '@vitest/browser-preview@4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)':
     dependencies:
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
-      '@vitest/browser': 4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)
-      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(yaml@2.9.0))
+      '@vitest/browser': 4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)
+      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.5(yaml@2.9.0))
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)':
+  '@vitest/browser@4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)':
     dependencies:
       '@blazediff/core': 1.9.1
-      '@vitest/mocker': 4.1.10(vite@8.1.4(yaml@2.9.0))
+      '@vitest/mocker': 4.1.10(vite@8.1.5(yaml@2.9.0))
       '@vitest/utils': 4.1.10
       magic-string: 0.30.21
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(yaml@2.9.0))
+      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.5(yaml@2.9.0))
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
@@ -2061,7 +2061,7 @@ snapshots:
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.1.10
-      ast-v8-to-istanbul: 1.0.4
+      ast-v8-to-istanbul: 1.0.5
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-report: 3.0.1
       istanbul-reports: 3.2.0
@@ -2069,9 +2069,9 @@ snapshots:
       obug: 2.1.3
       std-env: 4.2.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(yaml@2.9.0))
+      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.5(yaml@2.9.0))
     optionalDependencies:
-      '@vitest/browser': 4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser': 4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)
 
   '@vitest/expect@4.1.10':
     dependencies:
@@ -2082,13 +2082,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.10(vite@8.1.4(yaml@2.9.0))':
+  '@vitest/mocker@4.1.10(vite@8.1.5(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.10
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.4(yaml@2.9.0)
+      vite: 8.1.5(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
@@ -2119,7 +2119,7 @@ snapshots:
       '@oxc-project/runtime': 0.138.0
       '@oxc-project/types': 0.138.0
       lightningcss: 1.32.0
-      postcss: 8.5.16
+      postcss: 8.5.19
     optionalDependencies:
       fsevents: 2.3.3
       publint: 0.3.21
@@ -2173,7 +2173,7 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
-  ast-v8-to-istanbul@1.0.4:
+  ast-v8-to-istanbul@1.0.5:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       estree-walker: 3.0.3
@@ -2509,7 +2509,7 @@ snapshots:
       '@oxlint-tsgolint/win32-arm64': 0.24.0
       '@oxlint-tsgolint/win32-x64': 0.24.0
 
-  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)):
+  oxlint@1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.72.0
       '@oxlint/binding-android-arm64': 1.72.0
@@ -2531,7 +2531,7 @@ snapshots:
       '@oxlint/binding-win32-ia32-msvc': 1.72.0
       '@oxlint/binding-win32-x64-msvc': 1.72.0
       oxlint-tsgolint: 0.24.0
-      vite-plus: 0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0)
+      vite-plus: 0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)
 
   p-limit@3.1.0:
     dependencies:
@@ -2555,7 +2555,7 @@ snapshots:
 
   pngjs@7.0.0: {}
 
-  postcss@8.5.16:
+  postcss@8.5.19:
     dependencies:
       nanoid: 3.3.15
       picocolors: 1.1.1
@@ -2693,23 +2693,23 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0):
+  vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0):
     dependencies:
       '@oxc-project/types': 0.138.0
       '@oxlint/plugins': 1.68.0
-      '@vitest/browser': 4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)
-      '@vitest/browser-preview': 4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser': 4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser-preview': 4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)
       '@vitest/expect': 4.1.10
-      '@vitest/mocker': 4.1.10(vite@8.1.4(yaml@2.9.0))
+      '@vitest/mocker': 4.1.10(vite@8.1.5(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.10
       '@vitest/runner': 4.1.10
       '@vitest/snapshot': 4.1.10
       '@vitest/spy': 4.1.10
       '@vitest/utils': 4.1.10
       '@voidzero-dev/vite-plus-core': 0.2.4(publint@0.3.21)(typescript@6.0.3)(yaml@2.9.0)
-      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.4(yaml@2.9.0))(yaml@2.9.0))
+      oxlint: 1.72.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.4(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0))
       oxlint-tsgolint: 0.24.0
-      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(yaml@2.9.0))
+      vitest: 4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.5(yaml@2.9.0))
     optionalDependencies:
       '@voidzero-dev/vite-plus-darwin-arm64': 0.2.4
       '@voidzero-dev/vite-plus-darwin-x64': 0.2.4
@@ -2749,11 +2749,11 @@ snapshots:
       - vite
       - yaml
 
-  vite@8.1.4(yaml@2.9.0):
+  vite@8.1.5(yaml@2.9.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.5
-      postcss: 8.5.16
+      postcss: 8.5.19
       rolldown: 1.1.5
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -2761,10 +2761,10 @@ snapshots:
       yaml: 2.9.0
     optional: true
 
-  vitest@4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.4(yaml@2.9.0)):
+  vitest@4.1.10(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(vite@8.1.5(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.10
-      '@vitest/mocker': 4.1.10(vite@8.1.4(yaml@2.9.0))
+      '@vitest/mocker': 4.1.10(vite@8.1.5(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.10
       '@vitest/runner': 4.1.10
       '@vitest/snapshot': 4.1.10
@@ -2783,7 +2783,7 @@ snapshots:
       tinyrainbow: 3.1.0
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@vitest/browser-preview': 4.1.10(vite@8.1.4(yaml@2.9.0))(vitest@4.1.10)
+      '@vitest/browser-preview': 4.1.10(vite@8.1.5(yaml@2.9.0))(vitest@4.1.10)
       '@vitest/coverage-v8': 4.1.10(@vitest/browser@4.1.10)(vitest@4.1.10)
     transitivePeerDependencies:
       - msw
