@@ -16,11 +16,11 @@ importers:
         version: 2.9.0
     devDependencies:
       '@standard-config/oxlint':
-        specifier: ^2.3.1
-        version: 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
+        specifier: ^2.4.3
+        version: 2.4.3(@standard-config/oxlint-stylistic@2.4.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
       '@standard-config/oxlint-stylistic':
         specifier: ^2.4.3
-        version: 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+        version: 2.4.3(@standard-config/oxlint@2.4.3)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.16.0
         version: 1.16.0(prettier@3.9.5)
@@ -589,14 +589,13 @@ packages:
       '@standard-config/oxlint':
         optional: true
 
-  '@standard-config/oxlint@2.3.1':
-    resolution: {integrity: sha512-mN45UCU0LXva8nmVBdxWZC1ggrycpZD3QYSo0prZX8bNRpRqn4uptFBDcnZ4+PoloEp8My0oWfuQK6604G0x6A==}
+  '@standard-config/oxlint@2.4.3':
+    resolution: {integrity: sha512-7kIV3hDxZZwArH6B1xeW4AJrcwVWg6l+e0tSTNF9mi6E1grttmnl3SLgkTMK/49OElt2Zqc/XtjGRbDRJAEMnA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@standard-config/oxlint-react': ^2.0.1
       '@standard-config/oxlint-stylistic': ^2.0.1
-      oxlint: ^1.71.0
-      oxlint-tsgolint: '>=0.23.0 <1.0.0'
+      oxlint: ^1.73.0
     peerDependenciesMeta:
       '@standard-config/oxlint-react':
         optional: true
@@ -2022,24 +2021,23 @@ snapshots:
   '@rolldown/pluginutils@1.0.1':
     optional: true
 
-  '@standard-config/oxlint-stylistic@2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.4.3(@standard-config/oxlint@2.4.3)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)':
     dependencies:
       '@stylistic/eslint-plugin': 5.10.0(eslint@10.7.0)
       eslint-plugin-perfectionist: 5.10.0(eslint@10.7.0)(typescript@6.0.3)
       oxlint: 1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0))
     optionalDependencies:
-      '@standard-config/oxlint': 2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
+      '@standard-config/oxlint': 2.4.3(@standard-config/oxlint-stylistic@2.4.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))
     transitivePeerDependencies:
       - eslint
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@2.3.1(@standard-config/oxlint-stylistic@2.4.3)(oxlint-tsgolint@0.24.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))':
+  '@standard-config/oxlint@2.4.3(@standard-config/oxlint-stylistic@2.4.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))':
     dependencies:
       oxlint: 1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0))
-      oxlint-tsgolint: 0.24.0
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.4.3(@standard-config/oxlint@2.3.1)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.4.3(@standard-config/oxlint@2.4.3)(eslint@10.7.0)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@vitest/coverage-v8@4.1.10)(publint@0.3.21)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.16.0(prettier@3.9.5)':
     dependencies:
