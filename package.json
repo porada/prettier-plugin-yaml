@@ -39,7 +39,7 @@
 	"devDependencies": {
 		"@standard-config/oxlint": "^2.4.3",
 		"@standard-config/oxlint-stylistic": "^2.4.3",
-		"@standard-config/prettier": "^1.16.0",
+		"@standard-config/prettier": "^1.17.0",
 		"@standard-config/tsconfig": "^3.2.0",
 		"@vitest/coverage-v8": "^4.1.10",
 		"eslint": "^10.7.0",
