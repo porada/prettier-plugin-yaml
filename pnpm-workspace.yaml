@@ -11,6 +11,8 @@ minimumReleaseAgeExclude:
 
 overrides:
   vite-plus>oxfmt: '-'
+  vite-plus>oxlint: latest
+  vite-plus>oxlint-tsgolint: latest
 
 peerDependencyRules:
   allowAny:
