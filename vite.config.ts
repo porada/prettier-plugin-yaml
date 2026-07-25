@@ -14,7 +14,7 @@ export default defineConfig({
 	}),
 	pack: {
 		deps: {
-			skipNodeModulesBundle: true,
+			neverBundle: true,
 		},
 		dts: {
 			sourcemap: true,
