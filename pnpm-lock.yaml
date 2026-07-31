@@ -24,8 +24,8 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0(@standard-config/oxlint@2.6.0)(eslint@10.8.0(supports-color@7.2.0))(oxlint@1.76.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.6(@vitest/coverage-v8@4.1.10)(publint@0.3.22)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
       '@standard-config/prettier':
-        specifier: ^1.17.0
-        version: 1.17.0(prettier@3.9.6)
+        specifier: ^1.18.0
+        version: 1.18.0(prettier@3.9.6)
       '@standard-config/tsconfig':
         specifier: ^3.2.0
         version: 3.2.0(typescript@6.0.3)
@@ -151,11 +151,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@napi-rs/wasm-runtime@1.1.6':
-    resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
+  '@napi-rs/wasm-runtime@1.2.1':
+    resolution: {integrity: sha512-KjZdi8Q1wh89gsVmghvbrMgWl6ZWmRmHV6wjB7/g4Zf0dyO+hH3neZUtuDNPO00qq5YE5RITVWvrIZKRaAmzGQ==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
     peerDependencies:
-      '@emnapi/core': ^1.7.1
-      '@emnapi/runtime': ^1.7.1
+      '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.3
+      '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.3
 
   '@oxc-parser/binding-android-arm-eabi@0.139.0':
     resolution: {integrity: sha512-22EsXTA3Vc7OvrF4bfT48PFln2UbxkVgrp/Tm32qLw76Dv7SmcInfClJe6yPYamnli6HiqasnESZ5ezN+X4ybg==}
@@ -607,8 +608,8 @@ packages:
       '@standard-config/oxlint-stylistic':
         optional: true
 
-  '@standard-config/prettier@1.17.0':
-    resolution: {integrity: sha512-XTbk9CogLZ0awecO6a50U6dBNwICyRZueGe7tGS/7BQEjbcD03CzSSHtO03hP0eXOSrpbDNUugyuf5+x9DqEOg==}
+  '@standard-config/prettier@1.18.0':
+    resolution: {integrity: sha512-aUMZWUqchK2jYV3azUbvgiURN+XzZUEwSeq05o2mgpIOW7WIsuIQcThzF1AA+JjfaS0RqlAca6Knn6qqwnL+3Q==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: ^3.9.0
@@ -1793,7 +1794,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
+  '@napi-rs/wasm-runtime@1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
@@ -1852,7 +1853,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
-      '@napi-rs/wasm-runtime': 1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     optional: true
 
   '@oxc-parser/binding-win32-arm64-msvc@0.139.0':
@@ -2016,7 +2017,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
-      '@napi-rs/wasm-runtime': 1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.2.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     optional: true
 
   '@rolldown/binding-win32-arm64-msvc@1.1.5':
@@ -2045,7 +2046,7 @@ snapshots:
     optionalDependencies:
       '@standard-config/oxlint-stylistic': 2.6.0(@standard-config/oxlint@2.6.0)(eslint@10.8.0(supports-color@7.2.0))(oxlint@1.76.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.6(@vitest/coverage-v8@4.1.10)(publint@0.3.22)(typescript@6.0.3)(vite@8.1.5(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
 
-  '@standard-config/prettier@1.17.0(prettier@3.9.6)':
+  '@standard-config/prettier@1.18.0(prettier@3.9.6)':
     dependencies:
       '@prettier/plugin-oxc': 0.2.2
       prettier: 3.9.6
