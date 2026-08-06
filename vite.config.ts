@@ -16,13 +16,9 @@ export default defineConfig({
 		deps: {
 			neverBundle: true,
 		},
-		dts: {
-			sourcemap: true,
-		},
 		entry: 'src/index.ts',
 		failOnWarn: true,
 		publint: true,
-		sourcemap: true,
 	},
 	staged: {
 		'*': [
