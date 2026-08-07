@@ -1,10 +1,39 @@
 import type { ParserOptions } from 'prettier';
-import type { PluginOptions } from '../types/index.d.ts';
+import type { PluginOptions, PreprocessState } from '../types/index.d.ts';
+import { printers as prettierPrinters } from 'prettier/plugins/yaml';
 import { parseAllDocuments, Scalar, visit } from 'yaml';
+
+const YAML_PRAGMA_PREFIX = prettierPrinters.yaml.insertPragma?.('') ?? '';
+
+export function createPreprocessState(
+	text: string,
+	options: ParserOptions
+): PreprocessState {
+	return {
+		preserveSourcePositions: requiresSourcePositionPreservation(
+			text,
+			options
+		),
+	};
+}
 
 export default function preprocessYAML(
 	text: string,
-	{
+	options: ParserOptions & PluginOptions,
+	state: PreprocessState = createPreprocessState(text, options)
+): string {
+	if (state.preserveSourcePositions) {
+		return text;
+	}
+
+	const documents = parseAllDocuments(text);
+
+	if (documents.some(hasPrettierIgnore)) {
+		// Whole-document serialization cannot preserve ignored source ranges.
+		return text;
+	}
+
+	const {
 		singleQuote,
 		yamlBlockStyle,
 		yamlCollectionStyle,
@@ -12,9 +41,7 @@ export default function preprocessYAML(
 		yamlQuoteKeysMatching,
 		yamlQuoteValues,
 		yamlQuoteValuesMatching,
-	}: ParserOptions & PluginOptions
-): string {
-	const documents = parseAllDocuments(text);
+	} = options;
 
 	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
@@ -55,6 +82,7 @@ export default function preprocessYAML(
 					node.value = String(value);
 					node.type = QUOTE_DOUBLE;
 				}
+
 				return;
 			}
 
@@ -65,6 +93,7 @@ export default function preprocessYAML(
 					node.type =
 						isQuoted || yamlQuoteKeys ? QUOTE_DOUBLE : PLAIN;
 				}
+
 				return;
 			}
 
@@ -79,6 +108,7 @@ export default function preprocessYAML(
 				} else if (yamlCollectionStyle === 'flow') {
 					node.type = PLAIN;
 				}
+
 				return;
 			}
 
@@ -117,4 +147,74 @@ export default function preprocessYAML(
 			})
 		)
 		.join('');
+}
+
+function requiresSourcePositionPreservation(
+	text: string,
+	options: ParserOptions
+): boolean {
+	const { cursorOffset, rangeEnd, rangeStart } = options;
+	const sourceLength = getOriginalSourceLength(text, options);
+
+	// Parser preprocessors cannot return source maps, so plugin-owned text
+	// changes are unsafe while Prettier is tracking original source positions.
+	return (
+		(typeof cursorOffset === 'number' && cursorOffset >= 0) ||
+		(typeof rangeStart === 'number' && rangeStart > 0) ||
+		(typeof rangeEnd === 'number' && rangeEnd < sourceLength)
+	);
+}
+
+function getOriginalSourceLength(
+	text: string,
+	{
+		insertPragma,
+		originalText,
+		rangeEnd,
+		rangeStart,
+		requirePragma,
+	}: ParserOptions
+): number {
+	if (typeof originalText === 'string') {
+		return originalText.length;
+	}
+
+	const sourceWithoutPragma = text.slice(YAML_PRAGMA_PREFIX.length);
+	const hasInsertedPragma =
+		insertPragma &&
+		!requirePragma &&
+		rangeStart === 0 &&
+		typeof rangeEnd === 'number' &&
+		YAML_PRAGMA_PREFIX.length > 0 &&
+		sourceWithoutPragma.length === rangeEnd &&
+		prettierPrinters.yaml.insertPragma?.(sourceWithoutPragma) === text;
+
+	return hasInsertedPragma ? rangeEnd : text.length;
+}
+
+function hasPrettierIgnore(
+	document: ReturnType<typeof parseAllDocuments>[number]
+): boolean {
+	let hasIgnoreComment = hasPrettierIgnoreComment(document);
+
+	visit(document, {
+		Node(_key, node) {
+			if (hasPrettierIgnoreComment(node)) {
+				hasIgnoreComment = true;
+				return visit.BREAK;
+			}
+
+			return undefined;
+		},
+	});
+
+	return hasIgnoreComment;
+}
+
+function hasPrettierIgnoreComment({
+	commentBefore,
+}: {
+	commentBefore?: string | null;
+}): boolean {
+	return commentBefore?.split('\n').at(-1)?.trim() === 'prettier-ignore';
 }

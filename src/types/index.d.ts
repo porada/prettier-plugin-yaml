@@ -1,4 +1,4 @@
-import type { Plugin } from 'prettier';
+import type { Parser, ParserOptions, Plugin } from 'prettier';
 
 export interface PluginOptions {
 	/**
@@ -42,6 +42,26 @@ declare module 'prettier' {
 	interface Options extends PluginOptions {}
 }
 
+export type ParserHookName = 'parse' | 'preprocess';
+
+export type ParserInitializer = () => Parser | Promise<Parser>;
+
+export type ParseWithCompatibility = (
+	this: Parser,
+	text: string,
+	options: ParserOptions,
+	optionsForCompatibility: ParserOptions
+) => unknown;
+
 export type PluginWithParsers = Omit<Plugin, 'parsers'> & {
-	parsers: NonNullable<Plugin['parsers']>;
+	parsers: Record<string, Parser | ParserInitializer>;
+};
+
+export type PreprocessState = {
+	preserveSourcePositions: boolean;
+};
+
+export type ResolvedPriorParser = {
+	parser: Parser;
+	plugins: ParserOptions['plugins'];
 };

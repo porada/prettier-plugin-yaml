@@ -1,9 +1,19 @@
 import type { Plugin } from 'prettier';
 import type { PluginOptions } from './index.ts';
-import { format } from 'prettier';
-import { parsers as prettierParsers } from 'prettier/plugins/yaml';
+import { format, formatWithCursor } from 'prettier';
+import * as prettierPluginYAML from 'prettier/plugins/yaml';
+import { format as standaloneFormat } from 'prettier/standalone';
 import { expect, expectTypeOf, test } from 'vite-plus/test';
 import * as pluginYAML from './index.ts';
+
+test('exposes correct public API', () => {
+	expectTypeOf(pluginYAML).toExtend<Plugin>();
+
+	expect(pluginYAML).toHaveProperty('parsers');
+	expect(pluginYAML.parsers).toHaveProperty('yaml');
+
+	expectTypeOf<PluginOptions>().toBeObject();
+});
 
 const TEST_YAML = `
 version: 2
@@ -34,15 +44,6 @@ values:
   2: null
 `;
 
-test('exposes correct public API', () => {
-	expectTypeOf(pluginYAML).toExtend<Plugin>();
-
-	expect(pluginYAML).toHaveProperty('parsers');
-	expect(pluginYAML.parsers).toHaveProperty('yaml');
-
-	expectTypeOf<PluginOptions>().toBeObject();
-});
-
 test('formats YAML', async () => {
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',
@@ -62,6 +63,135 @@ test('respects `bracketSpacing`', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('respects `checkIgnorePragma`', async () => {
+	const input = '# @noformat\nfoo: [bar,baz]\n';
+	const options = {
+		checkIgnorePragma: true,
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+	};
+
+	const output = await format(input, options);
+
+	expect(output).toMatchInlineSnapshot(`
+		"# @noformat
+		foo: [bar,baz]
+		"
+	`);
+
+	await expect(format(output, options)).resolves.toBe(output);
+});
+
+test('respects `cursorOffset`', async () => {
+	const input = `foo:
+  - bar
+  - baz
+`;
+	const cursorOffset = input.indexOf('baz') + 1;
+
+	const expectedResult = await formatWithCursor(input, {
+		cursorOffset,
+		parser: 'yaml',
+	});
+	const result = await formatWithCursor(input, {
+		cursorOffset,
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'flow',
+	});
+
+	expect(result).toStrictEqual(expectedResult);
+});
+
+test('respects `embeddedLanguageFormatting`', async () => {
+	const input = `\`\`\`yaml
+foo: [bar,baz]
+\`\`\`
+`;
+
+	const output = await format(input, {
+		embeddedLanguageFormatting: 'off',
+		parser: 'markdown',
+		plugins: [pluginYAML],
+	});
+
+	expect(output).toBe(input);
+});
+
+test('respects `endOfLine`', async () => {
+	const output = await format('foo: bar\nbaz: qux\n', {
+		endOfLine: 'crlf',
+		parser: 'yaml',
+		plugins: [pluginYAML],
+	});
+
+	expect(output).toBe('foo: bar\r\nbaz: qux\r\n');
+});
+
+test('respects `insertPragma`', async () => {
+	const input = 'foo: [bar,baz]\n';
+	const options = {
+		insertPragma: true,
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		yamlQuoteValues: true,
+	};
+
+	const output = await format(input, options);
+
+	expect(output).toMatchInlineSnapshot(`
+		"# @format
+
+		foo: ["bar", "baz"]
+		"
+	`);
+
+	await expect(format(output, options)).resolves.toBe(output);
+});
+
+test('respects `prettier-ignore` comments', async () => {
+	const input = `foo:
+  # prettier-ignore
+  ignored: [foo,bar]
+formatted: [baz,qux]
+`;
+
+	const expectedOutput = await format(input, { parser: 'yaml' });
+	const output = await format(input, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		yamlQuoteValues: true,
+	});
+
+	expect(output).toBe(expectedOutput);
+	expect(output).toMatchInlineSnapshot(`
+		"foo:
+		  # prettier-ignore
+		  ignored: [foo,bar]
+		formatted: [baz, qux]
+		"
+	`);
+});
+
+test('respects `printWidth`', async () => {
+	const output = await format('foo: [alpha, beta, gamma, delta]\n', {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		printWidth: 12,
+	});
+
+	expect(output).toMatchInlineSnapshot(`
+		"foo:
+		  [
+		    alpha,
+		    beta,
+		    gamma,
+		    delta,
+		  ]
+		"
+	`);
+});
+
 test('respects `proseWrap`', async () => {
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',
@@ -72,6 +202,66 @@ test('respects `proseWrap`', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('respects `rangeStart` and `rangeEnd`', async () => {
+	const input = 'first: [alpha,beta]\nsecond: [gamma,delta]\n';
+
+	for (const [rangeStart, rangeEnd] of [
+		[0, input.indexOf('second')],
+		[input.indexOf('second'), input.length],
+	]) {
+		const expectedOutput = await format(input, {
+			parser: 'yaml',
+			rangeEnd,
+			rangeStart,
+		});
+		const output = await format(input, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+			rangeEnd,
+			rangeStart,
+			yamlQuoteValues: true,
+		});
+
+		expect(output).toBe(expectedOutput);
+	}
+});
+
+test('respects `requirePragma`', async () => {
+	const input = '# @format\nfoo: [bar,baz]\n';
+	const unformattedInput = 'foo: [bar,baz]\n';
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		requirePragma: true,
+	};
+
+	const output = await format(input, options);
+
+	expect(output).toMatchInlineSnapshot(`
+		"# @format
+		foo: [bar, baz]
+		"
+	`);
+
+	await expect(format(output, options)).resolves.toBe(output);
+	await expect(format(unformattedInput, options)).resolves.toBe(
+		unformattedInput
+	);
+});
+
+test('respects `singleQuote`', async () => {
+	const output = await format('foo: "bar: baz"\n', {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		singleQuote: true,
+	});
+
+	expect(output).toMatchInlineSnapshot(`
+		"foo: 'bar: baz'
+		"
+	`);
+});
+
 test('respects `tabWidth`', async () => {
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',
@@ -80,6 +270,39 @@ test('respects `tabWidth`', async () => {
 	});
 
 	expect(output).toMatchSnapshot();
+});
+
+test('respects `trailingComma`', async () => {
+	const output = await format('{ foo: [bar, baz], qux: { quux: corge } }\n', {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		printWidth: 20,
+		trailingComma: 'none',
+	});
+
+	expect(output).toMatchInlineSnapshot(`
+		"{
+		  foo: [bar, baz],
+		  qux:
+		    { quux: corge }
+		}
+		"
+	`);
+});
+
+test('respects `useTabs`', async () => {
+	const output = await format('foo:\n  bar:\n    baz: qux\n', {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+		useTabs: true,
+	});
+
+	expect(output).toMatchInlineSnapshot(`
+		"foo:
+		  bar:
+		    baz: qux
+		"
+	`);
 });
 
 test('supports `yamlBlockStyle`', async () => {
@@ -231,7 +454,7 @@ test('works with other plugins', async () => {
 	const testPlugin: Plugin = {
 		parsers: {
 			yaml: {
-				...prettierParsers.yaml,
+				...prettierPluginYAML.parsers.yaml,
 				parse: () => {},
 				preprocess: async () => {
 					await new Promise((resolve) => setTimeout(resolve));
@@ -251,7 +474,10 @@ test('works with other plugins', async () => {
 		plugins: [testPlugin, emptyPlugin, pluginYAML],
 	});
 
-	expect(output).toMatchSnapshot();
+	expect(output).toMatchInlineSnapshot(`
+		"foo: [bar, baz]
+		"
+	`);
 });
 
 test('handles empty files', async () => {
@@ -265,10 +491,20 @@ test('handles empty files', async () => {
 
 test('preserves comment-only files', async () => {
 	const input = '# Comment\n';
+
 	const output = await format(input, {
 		parser: 'yaml',
 		plugins: [pluginYAML],
 	});
 
 	expect(output).toBe(input);
+});
+
+test('formats in standalone mode', async () => {
+	const output = await standaloneFormat(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [prettierPluginYAML, pluginYAML],
+	});
+
+	expect(output).toMatchSnapshot();
 });

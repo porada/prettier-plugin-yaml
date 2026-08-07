@@ -1,5 +1,13 @@
 import type { Options as PrettierOptions } from 'prettier';
-import type { PluginOptions, PluginWithParsers } from './index.d.ts';
+import type {
+	ParserHookName,
+	ParserInitializer,
+	ParseWithCompatibility,
+	PluginOptions,
+	PluginWithParsers,
+	PreprocessState,
+	ResolvedPriorParser,
+} from './index.d.ts';
 import { expectTypeOf, test } from 'vite-plus/test';
 
 test('exposes valid types', () => {
@@ -11,8 +19,21 @@ test('exposes valid types', () => {
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValues');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValuesMatching');
 
+	expectTypeOf<ParserHookName>().toEqualTypeOf<'parse' | 'preprocess'>();
+
+	expectTypeOf<ParserInitializer>().toBeFunction();
+
+	expectTypeOf<ParseWithCompatibility>().toBeFunction();
+
 	expectTypeOf<PluginWithParsers>().toBeObject();
 	expectTypeOf<PluginWithParsers>().toHaveProperty('parsers');
+
+	expectTypeOf<PreprocessState>().toBeObject();
+	expectTypeOf<PreprocessState>().toHaveProperty('preserveSourcePositions');
+
+	expectTypeOf<ResolvedPriorParser>().toBeObject();
+	expectTypeOf<ResolvedPriorParser>().toHaveProperty('parser');
+	expectTypeOf<ResolvedPriorParser>().toHaveProperty('plugins');
 });
 
 test('extends Prettier’s `Options`', () => {

@@ -1,90 +1,88 @@
 import type { Parser, ParserOptions, Plugin } from 'prettier';
-import type { PluginOptions, PluginWithParsers } from './types/index.d.ts';
+import type { PluginOptions } from './types/index.d.ts';
 import { parsers as prettierParsers } from 'prettier/plugins/yaml';
-import preprocessYAML from './preprocess-yaml/index.ts';
+import {
+	callParserWithCompatibility,
+	createPriorParserResolver,
+	markParserAsYAML,
+	withPriorParserOptions,
+} from './plugin-hooks/index.ts';
+import preprocessYAML, {
+	createPreprocessState,
+} from './preprocess-yaml/index.ts';
 
 function createParser(): Parser {
-	const parse: Parser['parse'] = async (
+	async function parse(
 		text: string,
 		options: ParserOptions
-	) => {
-		const priorParser = findPriorParser(options, parse);
+	): Promise<unknown> {
+		const resolvedPriorParser = await resolvePriorParser(options, 'parse');
+		const priorParser = resolvedPriorParser?.parser;
 
-		/* oxlint-disable-next-line typescript/no-unsafe-return */
-		return typeof priorParser?.parse === 'function'
-			? await priorParser.parse(text, omitCurrentParser(options, parse))
-			: prettierParsers.yaml.parse(text, options);
-	};
+		if (
+			resolvedPriorParser &&
+			priorParser &&
+			typeof priorParser.parse === 'function' &&
+			priorParser.parse !== parse
+		) {
+			return withPriorParserOptions(
+				options,
+				resolvedPriorParser,
+				(delegatedOptions) =>
+					callParserWithCompatibility(
+						priorParser,
+						text,
+						delegatedOptions
+					)
+			);
+		}
+
+		return await prettierParsers.yaml.parse(text, options);
+	}
 
 	const preprocess: NonNullable<Parser['preprocess']> = async (
 		text: string,
 		options: ParserOptions
 	) => {
-		const priorParser = findPriorParser(options, parse);
+		const preprocessState = createPreprocessState(text, options);
+		const resolvedPriorParser = await resolvePriorParser(
+			options,
+			'preprocess'
+		);
+		const priorParser = resolvedPriorParser?.parser;
+		const priorPreprocess = priorParser?.preprocess;
+		const preprocessedText =
+			resolvedPriorParser &&
+			priorParser &&
+			typeof priorPreprocess === 'function' &&
+			priorPreprocess !== preprocess
+				? await withPriorParserOptions(
+						options,
+						resolvedPriorParser,
+						(delegatedOptions): Promise<string> | string =>
+							priorPreprocess.call(
+								priorParser,
+								text,
+								delegatedOptions
+							)
+					)
+				: text;
 
-		if (typeof priorParser?.preprocess === 'function') {
-			/* oxlint-disable-next-line eslint/no-param-reassign */
-			text = await priorParser.preprocess(
-				text,
-				omitCurrentParser(options, parse)
-			);
-		}
-
-		return preprocessYAML(text, options);
+		return preprocessYAML(preprocessedText, options, preprocessState);
 	};
 
-	return {
+	const parser: Parser = {
 		...prettierParsers.yaml,
 		astFormat: 'yaml',
 		parse,
 		preprocess,
 	};
-}
+	const resolvePriorParser = createPriorParserResolver(
+		prettierParsers.yaml.astFormat,
+		parser
+	);
 
-function findPriorParser(
-	options: ParserOptions,
-	currentParse: Parser['parse']
-): Parser | undefined {
-	for (const plugin of options.plugins.toReversed()) {
-		if (!hasParsers(plugin)) {
-			continue;
-		}
-
-		const parser = plugin.parsers.yaml;
-
-		if (parser && parser.parse !== currentParse) {
-			return parser;
-		}
-	}
-
-	/* v8 ignore next -- @preserve */
-	return undefined;
-}
-
-function hasParsers(plugin: unknown): plugin is PluginWithParsers {
-	/* v8 ignore if -- @preserve */
-	if (!plugin) {
-		return false;
-	}
-
-	return typeof plugin === 'object' && Object.hasOwn(plugin, 'parsers');
-}
-
-function omitCurrentParser(
-	options: ParserOptions,
-	currentParse: Parser['parse']
-): ParserOptions {
-	return {
-		...options,
-		plugins: options.plugins.filter((plugin) => {
-			if (!hasParsers(plugin)) {
-				return true;
-			}
-
-			const parser = plugin.parsers.yaml;
-			return !(parser && parser.parse === currentParse);
-		}),
-	};
+	return markParserAsYAML(parser);
 }
 
 export const parsers: Plugin['parsers'] = {
@@ -126,14 +124,14 @@ export const options: Plugin['options'] = {
 	yamlQuoteKeys: {
 		category: 'Output',
 		description:
-			'Quote all mapping keys. Removes unnecessary quotes when disabled.',
+			'Quote all scalar mapping keys. Leaves YAML merge keys and explicitly tagged non-string keys unchanged. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteKeysMatching: {
 		category: 'Output',
 		description:
-			'Quote keys that match a specific pattern. Matches non-string keys based on their string representation.',
+			'Quote scalar mapping keys that match a specific pattern. Matches non-string keys based on their string representation. Leaves YAML merge keys and explicitly tagged non-string keys unchanged.',
 		type: 'string',
 	},
 	yamlQuoteValues: {
@@ -146,7 +144,7 @@ export const options: Plugin['options'] = {
 	yamlQuoteValuesMatching: {
 		category: 'Output',
 		description:
-			'Quote values that match a specific pattern. Matches non-string values based on their string representation. Takes precedence over `yamlBlockStyle`.',
+			'Quote values that match a specific pattern. Matches non-string values based on their string representation. Leaves explicitly tagged non-string values unchanged. Takes precedence over `yamlBlockStyle`.',
 		type: 'string',
 	},
 };
