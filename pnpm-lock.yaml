@@ -24,8 +24,8 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0(@standard-config/oxlint@2.6.0)(eslint@10.8.0(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@vitest/coverage-v8@4.1.10)(publint@0.3.23)(typescript@6.0.3)(vite@8.2.0(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
       '@standard-config/prettier':
-        specifier: ^1.19.1
-        version: 1.19.1(prettier@3.9.6)
+        specifier: ^1.19.2
+        version: 1.19.2(prettier@3.9.6)
       '@standard-config/tsconfig':
         specifier: ^3.2.0
         version: 3.2.0(typescript@6.0.3)
@@ -606,8 +606,8 @@ packages:
       '@standard-config/oxlint-stylistic':
         optional: true
 
-  '@standard-config/prettier@1.19.1':
-    resolution: {integrity: sha512-KN1V0gSgoPXa2BwvP+mI6oWs6yRZZvCi9O/PoKUAJyVwJ0TZDWAL5du7/W8/vP7DB/Y30LjehzA36LmE5crVgA==}
+  '@standard-config/prettier@1.19.2':
+    resolution: {integrity: sha512-yCysQsmSGEEZQNoZ9r/+sX8nVrt+cp224526LIAmiyDGP0Ze8Y1vmExpCfzJGVa2xJQtYLgVJKWjd+eXOqdoMQ==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: ^3.9.0
@@ -1419,8 +1419,8 @@ packages:
     peerDependencies:
       prettier: '>=3'
 
-  prettier-plugin-markdown-html@1.4.1:
-    resolution: {integrity: sha512-//5EVnOcF1xx9kutRzUIPwUuTOSgwJW9X6/+Bh+/lJyk8nPlT/1HISlutWhFqjQo1D2X1tLQdd+d3Dum8pfx5w==}
+  prettier-plugin-markdown-html@1.5.0:
+    resolution: {integrity: sha512-fcUypi9KD70B4WgpRe8rdXjRb4wIgat0Y3bWOu/auvsXWKTKBBAwtqAJde42t1yEN63A4CncA31vqG27QTni/g==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: '>=3'
@@ -2039,12 +2039,12 @@ snapshots:
     optionalDependencies:
       '@standard-config/oxlint-stylistic': 2.6.0(@standard-config/oxlint@2.6.0)(eslint@10.8.0(supports-color@7.2.0))(oxlint@1.77.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.8(@vitest/coverage-v8@4.1.10)(publint@0.3.23)(typescript@6.0.3)(vite@8.2.0(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
 
-  '@standard-config/prettier@1.19.1(prettier@3.9.6)':
+  '@standard-config/prettier@1.19.2(prettier@3.9.6)':
     dependencies:
       '@prettier/plugin-oxc': 0.2.2
       prettier: 3.9.6
       prettier-plugin-expand-json: 1.0.5(prettier@3.9.6)
-      prettier-plugin-markdown-html: 1.4.1(prettier@3.9.6)
+      prettier-plugin-markdown-html: 1.5.0(prettier@3.9.6)
       prettier-plugin-pkg: 0.22.1(prettier@3.9.6)
       prettier-plugin-sh: 0.19.0(prettier@3.9.6)
       prettier-plugin-sort-json: 4.2.0(prettier@3.9.6)
@@ -2771,7 +2771,7 @@ snapshots:
     dependencies:
       prettier: 3.9.6
 
-  prettier-plugin-markdown-html@1.4.1(prettier@3.9.6):
+  prettier-plugin-markdown-html@1.5.0(prettier@3.9.6):
     dependencies:
       prettier: 3.9.6
 
