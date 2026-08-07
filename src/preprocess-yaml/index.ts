@@ -1,6 +1,6 @@
 import type { ParserOptions } from 'prettier';
 import type { PluginOptions } from '../types/index.d.ts';
-import { parseDocument, Scalar, visit } from 'yaml';
+import { parseAllDocuments, Scalar, visit } from 'yaml';
 
 export default function preprocessYAML(
 	text: string,
@@ -14,7 +14,7 @@ export default function preprocessYAML(
 		yamlQuoteValuesMatching,
 	}: ParserOptions & PluginOptions
 ): string {
-	const document = parseDocument(text);
+	const documents = parseAllDocuments(text);
 
 	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
@@ -36,7 +36,7 @@ export default function preprocessYAML(
 		? (value: unknown) => matchedValueExpression.test(String(value))
 		: () => false;
 
-	visit(document, {
+	const scalarVisitor: Parameters<typeof visit>[1] = {
 		Scalar(key, node) {
 			const { type, value } = node;
 
@@ -95,12 +95,26 @@ export default function preprocessYAML(
 				node.type = PLAIN;
 			}
 		},
-	});
+	};
 
-	return document.toString({
-		...(yamlBlockStyle && { blockQuote: yamlBlockStyle }),
-		...(yamlCollectionStyle && { collectionStyle: yamlCollectionStyle }),
-		lineWidth: 0,
-		singleQuote,
-	});
+	for (const document of documents) {
+		visit(document, scalarVisitor);
+	}
+
+	if (documents.length === 0) {
+		return text;
+	}
+
+	return documents
+		.map((document) =>
+			document.toString({
+				...(yamlBlockStyle && { blockQuote: yamlBlockStyle }),
+				...(yamlCollectionStyle && {
+					collectionStyle: yamlCollectionStyle,
+				}),
+				lineWidth: 0,
+				singleQuote,
+			})
+		)
+		.join('');
 }

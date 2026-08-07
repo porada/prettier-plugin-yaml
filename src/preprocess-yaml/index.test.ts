@@ -1,7 +1,7 @@
 import type { ParserOptions } from 'prettier';
 import type { PluginOptions } from '../types/index.d.ts';
 import { expect, test } from 'vite-plus/test';
-import { parseDocument } from 'yaml';
+import { parseAllDocuments, parseDocument } from 'yaml';
 import preprocessYAML from './index.ts';
 
 function preprocess(
@@ -10,6 +10,38 @@ function preprocess(
 ): string {
 	return preprocessYAML(text, options as ParserOptions & PluginOptions);
 }
+
+test('supports multi-document YAML streams', () => {
+	const input = `---
+# Comment 1️⃣
+foo: bar
+...
+---
+# Comment 2️⃣
+baz: qux
+...
+`;
+	const expectedOutput = `---
+# Comment 1️⃣
+foo: "bar"
+...
+---
+# Comment 2️⃣
+baz: "qux"
+...
+`;
+	const options = { yamlQuoteValues: true };
+	const output = preprocess(input, options);
+	const inputDocuments = parseAllDocuments(input);
+	const outputDocuments = parseAllDocuments(output);
+
+	expect(output).toBe(expectedOutput);
+	expect(outputDocuments).toHaveLength(2);
+	expect(outputDocuments.map((document) => document.toJS())).toStrictEqual(
+		inputDocuments.map((document) => document.toJS())
+	);
+	expect(preprocess(output, options)).toBe(output);
+});
 
 test('supports `yamlBlockStyle` with plain multiline values', () => {
 	const input = `foo: bar

@@ -262,3 +262,13 @@ test('handles empty files', async () => {
 
 	expect(output).toBe('');
 });
+
+test('preserves comment-only files', async () => {
+	const input = '# Comment\n';
+	const output = await format(input, {
+		parser: 'yaml',
+		plugins: [pluginYAML],
+	});
+
+	expect(output).toBe(input);
+});
