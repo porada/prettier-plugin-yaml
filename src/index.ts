@@ -1,7 +1,7 @@
 import type { Parser, ParserOptions, Plugin } from 'prettier';
 import type { PluginOptions, PluginWithParsers } from './types/index.d.ts';
 import { parsers as prettierParsers } from 'prettier/plugins/yaml';
-import { parseDocument, Scalar, visit } from 'yaml';
+import preprocessYAML from './preprocess-yaml/index.ts';
 
 function createParser(): Parser {
 	const parse: Parser['parse'] = async (
@@ -30,7 +30,7 @@ function createParser(): Parser {
 			);
 		}
 
-		return process(text, options);
+		return preprocessYAML(text, options);
 	};
 
 	return {
@@ -87,86 +87,6 @@ function omitCurrentParser(
 	};
 }
 
-function process(
-	text: string,
-	{
-		singleQuote,
-		tabWidth,
-		yamlBlockStyle,
-		yamlCollectionStyle,
-		yamlQuoteKeys,
-		yamlQuoteKeysMatching,
-		yamlQuoteValues,
-		yamlQuoteValuesMatching,
-	}: ParserOptions & PluginOptions
-): string {
-	const document = parseDocument(text);
-
-	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
-
-	const matchedKeyExpression = yamlQuoteKeysMatching
-		? new RegExp(yamlQuoteKeysMatching)
-		: undefined;
-
-	const isMatchedKey = matchedKeyExpression
-		? (key: unknown) => matchedKeyExpression.test(String(key))
-		: () => false;
-
-	const matchedValueExpression = yamlQuoteValuesMatching
-		? new RegExp(yamlQuoteValuesMatching)
-		: undefined;
-
-	const isMatchedValue = matchedValueExpression
-		? (value: unknown) => matchedValueExpression.test(String(value))
-		: () => false;
-
-	visit(document, {
-		Scalar(key, node) {
-			const { type, value } = node;
-
-			const isKey = key === 'key';
-			const isQuoted = isKey
-				? isMatchedKey(value)
-				: isMatchedValue(value);
-
-			if (typeof value !== 'string') {
-				if (isQuoted) {
-					node.value = String(value);
-					node.type = QUOTE_DOUBLE;
-				}
-				return;
-			}
-
-			if (isKey) {
-				node.type = isQuoted || yamlQuoteKeys ? QUOTE_DOUBLE : PLAIN;
-				return;
-			}
-
-			if (isQuoted) {
-				node.type = QUOTE_DOUBLE;
-				return;
-			}
-
-			if (type === BLOCK_FOLDED || type === BLOCK_LITERAL) {
-				if (yamlCollectionStyle === 'flow') {
-					node.type = yamlQuoteValues ? QUOTE_DOUBLE : PLAIN;
-				}
-				return;
-			}
-
-			node.type = yamlQuoteValues ? QUOTE_DOUBLE : PLAIN;
-		},
-	});
-
-	return document.toString({
-		...(yamlBlockStyle && { blockQuote: yamlBlockStyle }),
-		...(yamlCollectionStyle && { collectionStyle: yamlCollectionStyle }),
-		...(tabWidth && { indent: tabWidth }),
-		lineWidth: 0,
-		singleQuote,
-	});
-}
-
 export const parsers: Plugin['parsers'] = {
 	yaml: createParser(),
 };
@@ -174,7 +94,8 @@ export const parsers: Plugin['parsers'] = {
 export const options: Plugin['options'] = {
 	yamlBlockStyle: {
 		category: 'Output',
-		description: 'Enforce a block style for multi-line string values.',
+		description:
+			'Enforce a block style for multi-line string values. Does not apply to flow collections.',
 		type: 'choice',
 		choices: [
 			{
@@ -211,19 +132,21 @@ export const options: Plugin['options'] = {
 	},
 	yamlQuoteKeysMatching: {
 		category: 'Output',
-		description: 'Quote keys that match a specific pattern.',
+		description:
+			'Quote keys that match a specific pattern. Matches non-string keys based on their string representation.',
 		type: 'string',
 	},
 	yamlQuoteValues: {
 		category: 'Output',
 		description:
-			'Quote all string values. Removes unnecessary quotes when disabled.',
+			'Quote all string values. Takes precedence over `yamlBlockStyle`. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteValuesMatching: {
 		category: 'Output',
-		description: 'Quote values that match a specific pattern.',
+		description:
+			'Quote values that match a specific pattern. Matches non-string values based on their string representation. Takes precedence over `yamlBlockStyle`.',
 		type: 'string',
 	},
 };
