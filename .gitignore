@@ -1,4 +1,6 @@
+.agent-*
 .DS_Store
+.pnpm-store
 .vite-hooks/_
 coverage
 dist
