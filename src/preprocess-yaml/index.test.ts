@@ -1,8 +1,8 @@
 import type { ParserOptions } from 'prettier';
 import type { PluginOptions } from '../types/index.d.ts';
-import { expect, test } from 'vite-plus/test';
+import { expect, test, vi } from 'vite-plus/test';
 import { parseAllDocuments, parseDocument } from 'yaml';
-import preprocessYAML from './index.ts';
+import preprocessYAML, { createPreprocessState } from './index.ts';
 
 function preprocess(
 	text: string,
@@ -47,6 +47,18 @@ baz: qux
 	expect(preprocess(output, options)).toBe(output);
 });
 
+test('respects `originalText` when preserving source positions', () => {
+	const text = 'foo: bar\n';
+	const originalText = `${text}baz: qux\n`;
+
+	expect(
+		createPreprocessState(text, {
+			originalText,
+			rangeEnd: text.length,
+		} as ParserOptions)
+	).toStrictEqual({ preserveSourcePositions: true });
+});
+
 test('respects `prettier-ignore` comments', () => {
 	const input = `# prettier-ignore
 foo: [bar,baz]
@@ -54,6 +66,31 @@ baz: qux
 `;
 
 	expect(preprocess(input, { yamlQuoteValues: true })).toBe(input);
+});
+
+test('respects `rangeStart` and `rangeEnd` without a native pragma inserter', async () => {
+	const text = 'foo: bar\n';
+
+	vi.resetModules();
+	vi.doMock('prettier/plugins/yaml', () => ({
+		printers: { yaml: {} },
+	}));
+
+	try {
+		const { createPreprocessState: createState } =
+			await import('./index.ts');
+
+		expect(
+			createState(text, {
+				insertPragma: true,
+				rangeEnd: text.length,
+				rangeStart: 0,
+			} as ParserOptions)
+		).toStrictEqual({ preserveSourcePositions: false });
+	} finally {
+		vi.doUnmock('prettier/plugins/yaml');
+		vi.resetModules();
+	}
 });
 
 test('supports empty quote-matching patterns', () => {

@@ -62,6 +62,7 @@ export type PreprocessState = {
 };
 
 export type ResolvedPriorParser = {
+	locationState: Partial<Pick<ParserOptions, 'locEnd' | 'locStart'>>;
 	parser: Parser;
 	plugins: ParserOptions['plugins'];
 };

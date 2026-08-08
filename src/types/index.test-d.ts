@@ -32,6 +32,7 @@ test('exposes valid types', () => {
 	expectTypeOf<PreprocessState>().toHaveProperty('preserveSourcePositions');
 
 	expectTypeOf<ResolvedPriorParser>().toBeObject();
+	expectTypeOf<ResolvedPriorParser>().toHaveProperty('locationState');
 	expectTypeOf<ResolvedPriorParser>().toHaveProperty('parser');
 	expectTypeOf<ResolvedPriorParser>().toHaveProperty('plugins');
 });

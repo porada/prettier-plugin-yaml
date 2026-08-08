@@ -9,6 +9,8 @@ import type {
 const YAML_PARSER_MARKER = Symbol.for('prettier-plugin-yaml.parser');
 
 type ResolverState = {
+	locationState: ResolvedPriorParser['locationState'];
+	name: string;
 	parserByPluginIndex: Map<number, Promise<Parser>>;
 	plugins: ParserOptions['plugins'];
 	priorParserByHook: Map<
@@ -17,18 +19,26 @@ type ResolverState = {
 	>;
 };
 
+/**
+ * Marks a parser so resolver chains can recognize this plugin’s wrappers.
+ */
 export function markParserAsYAML(parser: Parser): Parser {
 	Object.defineProperty(parser, YAML_PARSER_MARKER, { value: true });
 	return parser;
 }
 
+/**
+ * Checks whether a parser carries this plugin’s marker directly
+ * or through inheritance.
+ */
 function isYAMLParser(parser: Parser): boolean {
-	return (
-		Object.getOwnPropertyDescriptor(parser, YAML_PARSER_MARKER)?.value ===
-		true
-	);
+	return Reflect.get(parser, YAML_PARSER_MARKER) === true;
 }
 
+/**
+ * Invokes a parser with options available through both Prettier’s current
+ * two-argument and legacy three-argument parse signatures.
+ */
 export function callParserWithCompatibility(
 	parser: Parser,
 	text: string,
@@ -38,6 +48,9 @@ export function callParserWithCompatibility(
 	return parse.call(parser, text, options, options);
 }
 
+/**
+ * Creates a resolver that finds and caches the prior compatible parser.
+ */
 export function createPriorParserResolver(
 	expectedAstFormat: string,
 	currentParser: Parser
@@ -45,28 +58,23 @@ export function createPriorParserResolver(
 	options: ParserOptions,
 	hook: ParserHookName
 ) => Promise<ResolvedPriorParser | undefined> {
-	const resolverStateByOptions = new WeakMap<
-		ParserOptions,
-		WeakMap<ParserOptions['plugins'], ResolverState>
-	>();
+	const resolverStateByOptions = new WeakMap<ParserOptions, ResolverState>();
 
 	return async (options, hook) => {
-		let resolverStateByPlugins = resolverStateByOptions.get(options);
-
-		if (!resolverStateByPlugins) {
-			resolverStateByPlugins = new WeakMap();
-			resolverStateByOptions.set(options, resolverStateByPlugins);
-		}
-
-		let state = resolverStateByPlugins.get(options.plugins);
+		let state = resolverStateByOptions.get(options);
 
 		if (!state) {
 			state = {
+				locationState: {},
+				name:
+					typeof options.parser === 'string'
+						? options.parser
+						: 'yaml',
 				parserByPluginIndex: new Map(),
 				plugins: options.plugins,
 				priorParserByHook: new Map(),
 			};
-			resolverStateByPlugins.set(options.plugins, state);
+			resolverStateByOptions.set(options, state);
 		}
 
 		const cachedParser = state.priorParserByHook.get(hook);
@@ -78,10 +86,12 @@ export function createPriorParserResolver(
 
 		const parser = findPriorParser(
 			state,
+			state.name,
 			hook,
 			currentParser,
 			expectedAstFormat
 		);
+
 		state.priorParserByHook.set(hook, parser);
 
 		const resolvedParser = await parser;
@@ -89,8 +99,13 @@ export function createPriorParserResolver(
 	};
 }
 
+/**
+ * Finds the nearest prior compatible parser with a distinct implementation
+ * of the requested hook.
+ */
 async function findPriorParser(
 	state: ResolverState,
+	name: string,
 	hook: ParserHookName,
 	currentParser: Parser,
 	expectedAstFormat: string
@@ -100,11 +115,11 @@ async function findPriorParser(
 	for (let index = state.plugins.length - 1; index >= 0; index -= 1) {
 		const plugin = state.plugins[index];
 
-		if (!hasParsers(plugin) || !Object.hasOwn(plugin.parsers, 'yaml')) {
+		if (!hasParsers(plugin) || !Object.hasOwn(plugin.parsers, name)) {
 			continue;
 		}
 
-		const parserOrInitializer = plugin.parsers.yaml;
+		const parserOrInitializer = plugin.parsers[name];
 
 		if (!parserOrInitializer) {
 			continue;
@@ -117,6 +132,8 @@ async function findPriorParser(
 			continue;
 		}
 
+		assertCompatibleParser(name, parser, expectedAstFormat);
+
 		const parserHook = parser[hook];
 
 		if (parserHook === currentParser[hook]) {
@@ -128,9 +145,8 @@ async function findPriorParser(
 			return undefined;
 		}
 
-		assertCompatibleParser(parser, expectedAstFormat);
-
 		return {
+			locationState: state.locationState,
 			parser,
 			plugins: state.plugins.filter(
 				(_, index) => !omittedPluginIndexes.has(index)
@@ -141,6 +157,9 @@ async function findPriorParser(
 	return undefined;
 }
 
+/**
+ * Resolves and caches a parser or initializer by plugin index.
+ */
 async function resolveParser(
 	state: ResolverState,
 	index: number,
@@ -160,6 +179,9 @@ async function resolveParser(
 	return resolvedParser;
 }
 
+/**
+ * Returns a direct parser or initializes a lazy parser.
+ */
 async function initializeParser(
 	parserOrInitializer: PluginWithParsers['parsers']['yaml']
 ): Promise<Parser> {
@@ -171,17 +193,24 @@ async function initializeParser(
 	return parserOrInitializer;
 }
 
+/**
+ * Throws when a parser’s AST format is incompatible with this plugin.
+ */
 function assertCompatibleParser(
+	name: string,
 	parser: Parser,
 	expectedAstFormat: string
 ): void {
 	if (parser.astFormat !== expectedAstFormat) {
 		throw new TypeError(
-			`prettier-plugin-yaml cannot compose with the \`yaml\` parser because it uses the \`${parser.astFormat}\` AST format instead of \`${expectedAstFormat}\`.`
+			`[prettier-plugin-yaml] Unsupported AST format for the \`${name}\` parser. Expected \`${expectedAstFormat}\`, received \`${parser.astFormat}\``
 		);
 	}
 }
 
+/**
+ * Checks whether a value exposes a parser map.
+ */
 function hasParsers(plugin: unknown): plugin is PluginWithParsers {
 	if (!plugin || typeof plugin !== 'object') {
 		return false;
@@ -191,23 +220,44 @@ function hasParsers(plugin: unknown): plugin is PluginWithParsers {
 	return typeof parsers === 'object' && parsers !== null;
 }
 
+/**
+ * Invokes a callback with options configured for the prior parser.
+ */
 export async function withPriorParserOptions<T>(
 	options: ParserOptions,
 	priorParser: ResolvedPriorParser,
 	callback: (options: ParserOptions) => T
 ): Promise<Awaited<T>> {
 	const { astFormat, locEnd, locStart, plugins } = options;
+
+	const delegatedLocEnd =
+		priorParser.locationState.locEnd ?? priorParser.parser.locEnd;
+	const delegatedLocStart =
+		priorParser.locationState.locStart ?? priorParser.parser.locStart;
+	const delegatedPlugins = priorParser.plugins;
+
 	options.astFormat = priorParser.parser.astFormat;
-	options.locEnd = priorParser.parser.locEnd;
-	options.locStart = priorParser.parser.locStart;
-	options.plugins = priorParser.plugins;
+	options.locEnd = delegatedLocEnd;
+	options.locStart = delegatedLocStart;
+	options.plugins = delegatedPlugins;
 
 	try {
 		return await callback(options);
 	} finally {
+		if (options.locEnd !== delegatedLocEnd) {
+			priorParser.locationState.locEnd = options.locEnd;
+		}
+
+		if (options.locStart !== delegatedLocStart) {
+			priorParser.locationState.locStart = options.locStart;
+		}
+
 		options.astFormat = astFormat;
-		options.locEnd = locEnd;
-		options.locStart = locStart;
-		options.plugins = plugins;
+		options.locEnd = priorParser.locationState.locEnd ?? locEnd;
+		options.locStart = priorParser.locationState.locStart ?? locStart;
+
+		if (options.plugins === delegatedPlugins) {
+			options.plugins = plugins;
+		}
 	}
 }

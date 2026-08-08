@@ -29,7 +29,6 @@ export default function preprocessYAML(
 	const documents = parseAllDocuments(text);
 
 	if (documents.some(hasPrettierIgnore)) {
-		// Whole-document serialization cannot preserve ignored source ranges.
 		return text;
 	}
 
@@ -73,7 +72,6 @@ export default function preprocessYAML(
 				: isMatchedValue(value);
 
 			if (typeof value !== 'string') {
-				// Tag-specific stringifiers require the resolved runtime value
 				if (node.tag) {
 					return;
 				}
@@ -156,8 +154,8 @@ function requiresSourcePositionPreservation(
 	const { cursorOffset, rangeEnd, rangeStart } = options;
 	const sourceLength = getOriginalSourceLength(text, options);
 
-	// Parser preprocessors cannot return source maps, so plugin-owned text
-	// changes are unsafe while Prettier is tracking original source positions.
+	// Parser preprocessors can’t return source maps, so plugin-owned text
+	// changes are unsafe while Prettier is tracking original source positions
 	return (
 		(typeof cursorOffset === 'number' && cursorOffset >= 0) ||
 		(typeof rangeStart === 'number' && rangeStart > 0) ||
