@@ -109,13 +109,31 @@ foo: [bar,baz]
 \`\`\`
 `;
 
-	const output = await format(input, {
-		embeddedLanguageFormatting: 'off',
-		parser: 'markdown',
-		plugins: [pluginYAML],
-	});
+	const outputs: string[] = [];
 
-	expect(output).toBe(input);
+	for (const embeddedLanguageFormatting of ['auto', 'off'] as const) {
+		outputs.push(
+			await format(input, {
+				embeddedLanguageFormatting,
+				parser: 'markdown',
+				plugins: [pluginYAML],
+				yamlQuoteValues: true,
+			})
+		);
+	}
+
+	expect(outputs).toMatchInlineSnapshot(`
+		[
+		  "\`\`\`yaml
+		foo: ["bar", "baz"]
+		\`\`\`
+		",
+		  "\`\`\`yaml
+		foo: [bar,baz]
+		\`\`\`
+		",
+		]
+	`);
 });
 
 test('respects `endOfLine`', async () => {
