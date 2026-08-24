@@ -24,8 +24,8 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0(@standard-config/oxlint@2.8.0)(eslint@10.9.0(supports-color@7.2.0))(oxlint@1.79.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.9(@vitest/coverage-v8@4.1.10)(publint@0.3.24)(typescript@6.0.3)(vite@8.2.1(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
       '@standard-config/prettier':
-        specifier: ^1.20.0
-        version: 1.20.0(prettier@3.9.6)
+        specifier: ^1.21.0
+        version: 1.21.0(prettier@3.9.6)
       '@standard-config/tsconfig':
         specifier: ^3.2.0
         version: 3.2.0(typescript@6.0.3)
@@ -603,8 +603,8 @@ packages:
       '@standard-config/oxlint-stylistic':
         optional: true
 
-  '@standard-config/prettier@1.20.0':
-    resolution: {integrity: sha512-ppiSw1PPNYSaoesuF830Zqrt5t/m1leamv5UffCfcY5tahv22OVqd/yrcDRE45INttz3ksKNWumfXOHECeAgaQ==}
+  '@standard-config/prettier@1.21.0':
+    resolution: {integrity: sha512-W1cpycBcllYl1/oCLEG4Mnk25U1yef3v5RDdLAtFgtCN9orX2O/gBVWj/H4ctCTmh/+Oz78y9zEcZ/mCCex/AQ==}
     engines: {node: '>=20'}
     peerDependencies:
       prettier: ^3.9.0
@@ -2034,7 +2034,7 @@ snapshots:
     optionalDependencies:
       '@standard-config/oxlint-stylistic': 2.8.0(@standard-config/oxlint@2.8.0)(eslint@10.9.0(supports-color@7.2.0))(oxlint@1.79.0(oxlint-tsgolint@7.0.2001)(vite-plus@0.2.9(@vitest/coverage-v8@4.1.10)(publint@0.3.24)(typescript@6.0.3)(vite@8.2.1(yaml@2.9.0))(yaml@2.9.0)))(supports-color@7.2.0)(typescript@6.0.3)
 
-  '@standard-config/prettier@1.20.0(prettier@3.9.6)':
+  '@standard-config/prettier@1.21.0(prettier@3.9.6)':
     dependencies:
       '@prettier/plugin-oxc': 0.2.2
       prettier: 3.9.6
