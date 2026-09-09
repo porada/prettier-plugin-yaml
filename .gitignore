@@ -1,7 +1,5 @@
-.agent-*
 .DS_Store
 .hooks/_
-.pnpm-store
 coverage
 dist
 node_modules
