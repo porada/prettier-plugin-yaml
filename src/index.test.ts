@@ -53,6 +53,49 @@ test('formats YAML', async () => {
 	expect(output).toMatchSnapshot();
 });
 
+test('preserves numeric precision with YAML formatting options', async () => {
+	const input = `foo:
+  - 9007199254740993
+  - 0.1234567890123456789
+bar: baz
+`;
+
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'flow' as const,
+		yamlQuoteValues: true,
+	};
+
+	const expectedOutput =
+		'{ foo: [9007199254740993, 0.1234567890123456789], bar: "baz" }\n';
+
+	const output = await format(input, options);
+
+	expect(output).toBe(expectedOutput);
+
+	await expect(format(output, options)).resolves.toBe(output);
+});
+
+test('preserves strings with explicit numeric tags', async () => {
+	for (const tag of ['!!float', '!!int']) {
+		const input = `foo: ${tag} "bar: baz"
+qux: ${tag} "# Comment"
+`;
+		const options = {
+			parser: 'yaml' as const,
+			plugins: [pluginYAML],
+		};
+
+		const expectedOutput = await format(input, { parser: 'yaml' });
+		const output = await format(input, options);
+
+		expect(output).toBe(expectedOutput);
+
+		await expect(format(output, options)).resolves.toBe(output);
+	}
+});
+
 test('respects `bracketSpacing`', async () => {
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',

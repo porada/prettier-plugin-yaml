@@ -4,6 +4,7 @@ import { parsers as prettierParsers } from 'prettier/plugins/yaml';
 import {
 	callParserWithCompatibility,
 	createPriorParserResolver,
+	getParserDelegation,
 	markParserAsYAML,
 	withPriorParserOptions,
 } from './plugin-hooks/index.ts';
@@ -44,7 +45,11 @@ function createParser(): Parser {
 		text: string,
 		options: ParserOptions
 	) => {
-		const preprocessState = createPreprocessState(text, options);
+		const isDelegated =
+			getParserDelegation(options, 'preprocess') !== undefined;
+		const preprocessState = isDelegated
+			? undefined
+			: createPreprocessState(text, options);
 		const resolvedPriorParser = await resolvePriorParser(
 			options,
 			'preprocess'
@@ -68,7 +73,9 @@ function createParser(): Parser {
 					)
 				: text;
 
-		return preprocessYAML(preprocessedText, options, preprocessState);
+		return isDelegated
+			? preprocessedText
+			: preprocessYAML(preprocessedText, options, preprocessState);
 	};
 
 	const parser: Parser = {

@@ -1,7 +1,8 @@
 import type { ParserOptions } from 'prettier';
 import type { PluginOptions, PreprocessState } from '../types/index.d.ts';
 import { printers as prettierPrinters } from 'prettier/plugins/yaml';
-import { parseAllDocuments, Scalar, visit } from 'yaml';
+import { isScalar, parseAllDocuments, Scalar, visit } from 'yaml';
+import { stringTag } from 'yaml/util';
 
 const YAML_PRAGMA_PREFIX = prettierPrinters.yaml.insertPragma?.('') ?? '';
 
@@ -26,7 +27,40 @@ export default function preprocessYAML(
 		return text;
 	}
 
-	const documents = parseAllDocuments(text);
+	const documents = parseAllDocuments(text, {
+		// Keep numeric source text instead of reserializing rounded values
+		customTags: (tags) =>
+			tags.map((tag) => {
+				if (
+					typeof tag === 'string' ||
+					!tag.stringify ||
+					![
+						'tag:yaml.org,2002:float',
+						'tag:yaml.org,2002:int',
+					].includes(tag.tag)
+				) {
+					return tag;
+				}
+
+				const { stringify } = tag;
+
+				return {
+					...tag,
+					stringify: (...args: Parameters<typeof stringify>) =>
+						typeof args[0].value === 'string'
+							? stringTag.stringify!(...args)
+							: (args[0].source ?? stringify(...args)),
+				};
+			}),
+		// Distinct numeric keys can resolve to the same JavaScript number
+		uniqueKeys: (left, right) =>
+			left === right ||
+			(isScalar(left) &&
+				isScalar(right) &&
+				left.value === right.value &&
+				(typeof left.value !== 'number' ||
+					left.source === right.source)),
+	});
 
 	if (documents.some(hasPrettierIgnore)) {
 		return text;
@@ -65,11 +99,15 @@ export default function preprocessYAML(
 	const scalarVisitor: Parameters<typeof visit>[1] = {
 		Scalar(key, node) {
 			const { type, value } = node;
+			const stringValue =
+				typeof value === 'number' && node.source !== undefined
+					? node.source
+					: String(value);
 
 			const isKey = key === 'key';
 			const isQuoted = isKey
-				? isMatchedKey(value)
-				: isMatchedValue(value);
+				? isMatchedKey(stringValue)
+				: isMatchedValue(stringValue);
 
 			if (typeof value !== 'string') {
 				if (node.tag) {
@@ -77,7 +115,7 @@ export default function preprocessYAML(
 				}
 
 				if (isQuoted || (isKey && yamlQuoteKeys)) {
-					node.value = String(value);
+					node.value = stringValue;
 					node.type = QUOTE_DOUBLE;
 				}
 

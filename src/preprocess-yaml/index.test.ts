@@ -1,4 +1,5 @@
 import type { ParserOptions } from 'prettier';
+import type * as YAML from 'yaml';
 import type { PluginOptions } from '../types/index.d.ts';
 import { expect, test, vi } from 'vite-plus/test';
 import { parseAllDocuments, parseDocument } from 'yaml';
@@ -291,6 +292,184 @@ baz: "qux"
 `;
 
 	expect(preprocess(input, { yamlQuoteValues: true })).toBe(expectedOutput);
+});
+
+test('preserves numeric precision', () => {
+	for (const value of [
+		'-0',
+		'-9007199254740993',
+		'.inf',
+		'.nan',
+		'0.1234567890123456789',
+		'0o400000000000000001',
+		'0x20000000000001',
+		'1e-400',
+		'1e400',
+		'9007199254740993',
+	]) {
+		const input = `foo: ${value}\n`;
+		const output = preprocess(input);
+
+		expect(output).toBe(input);
+
+		expect(preprocess(output)).toBe(output);
+	}
+});
+
+test('stringifies numeric scalars without source text', async () => {
+	const input = 'foo: 1\nbar: 0.5\n';
+
+	vi.resetModules();
+	vi.doMock('yaml', async (importOriginal) => {
+		const yaml = await importOriginal<typeof YAML>();
+
+		return {
+			...yaml,
+			parseAllDocuments: (
+				...args: Parameters<typeof parseAllDocuments>
+			) => {
+				const documents = yaml.parseAllDocuments(...args);
+
+				for (const document of documents) {
+					yaml.visit(document, {
+						Scalar(_key, node) {
+							if (typeof node.value === 'number') {
+								delete node.source;
+							}
+						},
+					});
+				}
+
+				return documents;
+			},
+		};
+	});
+
+	try {
+		const { default: preprocessWithoutSource } = await import('./index.ts');
+		const options = {} as ParserOptions;
+		const output = preprocessWithoutSource(input, options);
+
+		expect(output).toBe(input);
+
+		expect(preprocessWithoutSource(output, options)).toBe(output);
+	} finally {
+		vi.doUnmock('yaml');
+		vi.resetModules();
+	}
+});
+
+test('preserves numeric precision in distinct mapping keys', () => {
+	const input = `9007199254740992: foo
+9007199254740993: bar
+0.1234567890123456788: baz
+0.1234567890123456789: qux
+`;
+
+	const output = preprocess(input);
+
+	expect(output).toBe(input);
+
+	expect(preprocess(output)).toBe(output);
+});
+
+test('preserves numeric precision in tagged scalars and aliases', () => {
+	const input = `foo: &foo !!int 9007199254740993
+bar: *foo
+baz: !!float 0.1234567890123456789
+`;
+
+	const options = {
+		yamlQuoteKeysMatching: '.*',
+		yamlQuoteValuesMatching: '.*',
+	};
+
+	const expectedOutput = `"foo": &foo !!int 9007199254740993
+"bar": *foo
+"baz": !!float 0.1234567890123456789
+`;
+
+	const output = preprocess(input, options);
+
+	expect(output).toBe(expectedOutput);
+
+	expect(preprocess(output, options)).toBe(output);
+});
+
+test('preserves strings with explicit numeric tags', () => {
+	for (const tag of ['!!float', '!!int']) {
+		const input = `foo: ${tag} "bar: baz"
+qux: ${tag} "# Comment"
+`;
+
+		for (const options of [{}, { yamlQuoteValues: true }]) {
+			const output = preprocess(input, options);
+
+			expect(output).toBe(input);
+			expect(parseDocument(output).toJS()).toStrictEqual(
+				parseDocument(input).toJS()
+			);
+
+			expect(preprocess(output, options)).toBe(output);
+		}
+	}
+});
+
+test('preserves numeric precision in YAML 1.1 documents', () => {
+	const input = `%YAML 1.1
+---
+foo: 9_007_199_254_740_993
+bar: 0b100000000000000000000000000000000000000000000000000001
+baz: 0.123_456_789_012_345_678_9
+qux: 9007199254740993:00
+`;
+
+	const output = preprocess(input);
+
+	expect(output).toBe(input);
+
+	expect(preprocess(output)).toBe(output);
+});
+
+test('preserves numeric precision when quoting keys and values', () => {
+	const input = '9007199254740993: 0.1234567890123456789\n';
+
+	for (const [options, expectedOutput] of [
+		[
+			{
+				yamlQuoteKeys: true,
+			},
+			'"9007199254740993": 0.1234567890123456789\n',
+		],
+		[
+			{
+				yamlQuoteKeysMatching: '^9007199254740993$',
+			},
+			'"9007199254740993": 0.1234567890123456789\n',
+		],
+		[
+			{
+				yamlQuoteValuesMatching: '^0\\.1234567890123456789$',
+			},
+			'9007199254740993: "0.1234567890123456789"\n',
+		],
+	] as const) {
+		const output = preprocess(input, options);
+
+		expect(output).toBe(expectedOutput);
+
+		expect(preprocess(output, options)).toBe(output);
+	}
+});
+
+test('rejects duplicate mapping keys', () => {
+	for (const key of ['0.1234567890123456789', '9007199254740993', 'foo']) {
+		const input = `${key}: bar\n${key}: baz\n`;
+
+		expect(() => preprocess(input)).toThrow(
+			'Document with errors cannot be stringified'
+		);
+	}
 });
 
 test('preserves quoted merge-like keys', () => {

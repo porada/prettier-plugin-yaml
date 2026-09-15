@@ -42,6 +42,12 @@ declare module 'prettier' {
 	interface Options extends PluginOptions {}
 }
 
+export type ParserDelegation = {
+	hook: ParserHookName;
+	parserName: 'yaml';
+	resolveNext: () => Promise<ResolvedPriorParser | undefined>;
+};
+
 export type ParserHookName = 'parse' | 'preprocess';
 
 export type ParserInitializer = () => Parser | Promise<Parser>;
@@ -62,7 +68,11 @@ export type PreprocessState = {
 };
 
 export type ResolvedPriorParser = {
-	locationState: Partial<Pick<ParserOptions, 'locEnd' | 'locStart'>>;
+	delegation?: ParserDelegation;
+	entryOptions?: Pick<ParserOptions, 'locEnd' | 'locStart' | 'plugins'>;
+	lifecycleState: Partial<
+		Pick<ParserOptions, 'locEnd' | 'locStart' | 'plugins'>
+	>;
 	parser: Parser;
 	plugins: ParserOptions['plugins'];
 };

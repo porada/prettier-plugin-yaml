@@ -1,5 +1,6 @@
-import type { Options as PrettierOptions } from 'prettier';
+import type { ParserOptions, Options as PrettierOptions } from 'prettier';
 import type {
+	ParserDelegation,
 	ParserHookName,
 	ParserInitializer,
 	ParseWithCompatibility,
@@ -19,6 +20,12 @@ test('exposes valid types', () => {
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValues');
 	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValuesMatching');
 
+	expectTypeOf<ParserDelegation>().toEqualTypeOf<{
+		hook: ParserHookName;
+		parserName: 'yaml';
+		resolveNext: () => Promise<ResolvedPriorParser | undefined>;
+	}>();
+
 	expectTypeOf<ParserHookName>().toEqualTypeOf<'parse' | 'preprocess'>();
 
 	expectTypeOf<ParserInitializer>().toBeFunction();
@@ -32,7 +39,13 @@ test('exposes valid types', () => {
 	expectTypeOf<PreprocessState>().toHaveProperty('preserveSourcePositions');
 
 	expectTypeOf<ResolvedPriorParser>().toBeObject();
-	expectTypeOf<ResolvedPriorParser>().toHaveProperty('locationState');
+	expectTypeOf<
+		Pick<ResolvedPriorParser, 'delegation' | 'entryOptions'>
+	>().toEqualTypeOf<{
+		delegation?: ParserDelegation;
+		entryOptions?: Pick<ParserOptions, 'locEnd' | 'locStart' | 'plugins'>;
+	}>();
+	expectTypeOf<ResolvedPriorParser>().toHaveProperty('lifecycleState');
 	expectTypeOf<ResolvedPriorParser>().toHaveProperty('parser');
 	expectTypeOf<ResolvedPriorParser>().toHaveProperty('plugins');
 });
