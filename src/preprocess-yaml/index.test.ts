@@ -472,6 +472,58 @@ test('rejects duplicate mapping keys', () => {
 	}
 });
 
+test('rejects equivalent numeric mapping keys', () => {
+	for (const [left, right] of [
+		['0', '-0'],
+		['1', '0o1'],
+		['1', '0x1'],
+		['1.0', '1e0'],
+	]) {
+		const input = `${left}: foo\n${right}: bar\n`;
+
+		expect(() =>
+			preprocess(input, { yamlCollectionStyle: 'flow' })
+		).toThrow('Document with errors cannot be stringified');
+	}
+});
+
+test('rejects equivalent numeric mapping keys in YAML 1.1 documents', () => {
+	const input = `%YAML 1.1
+---
+9007199254740993:00: foo
+540431955284459580: bar
+`;
+
+	expect(() => preprocess(input)).toThrow(
+		'Document with errors cannot be stringified'
+	);
+});
+
+test('preserves distinct numeric mapping keys in YAML 1.1 documents', () => {
+	const input = `%YAML 1.1
+---
+9007199254740992:00: foo
+9007199254740993:00: bar
+`;
+
+	const output = preprocess(input);
+
+	expect(output).toBe(input);
+
+	expect(preprocess(output)).toBe(output);
+});
+
+test('preserves NaN mapping keys', () => {
+	for (const version of ['1.1', '1.2']) {
+		const input = `%YAML ${version}\n---\n.nan: foo\n.nan: bar\n`;
+		const output = preprocess(input);
+
+		expect(output).toBe(input);
+
+		expect(preprocess(output)).toBe(output);
+	}
+});
+
 test('preserves quoted merge-like keys', () => {
 	const input = `foo: &foo
   bar: baz

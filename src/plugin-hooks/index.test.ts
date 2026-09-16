@@ -67,6 +67,103 @@ test('doesn’t resolve canonical parsers for aliased exports', async () => {
 	expect(initializeCanonicalParser).not.toHaveBeenCalled();
 });
 
+test.each([
+	['after this plugin', 'after'],
+	['alone', 'alone'],
+	['before this plugin', 'before'],
+] as const)('runs lazy copied hooks once %s', async (_, placement) => {
+	const parser = getDirectParser(pluginYAML);
+	const parse = vi.fn(function (
+		this: Parser,
+		text: string,
+		options: ParserOptions
+	) {
+		return parser.parse.call(this, text, options);
+	});
+	const preprocess = vi.fn(function (
+		this: Parser,
+		text: string,
+		options: ParserOptions
+	): Promise<string> | string {
+		return parser.preprocess!.call(
+			this,
+			text.replace('[', '[baz, '),
+			options
+		);
+	});
+
+	const wrapperPlugin = {
+		parsers: {
+			yaml: async () => {
+				await Promise.resolve();
+				return { ...parser, parse, preprocess };
+			},
+		},
+	} as unknown as Plugin;
+
+	const expectedOutput = 'foo: [baz, bar]\n';
+
+	const plugins = {
+		after: [pluginYAML, wrapperPlugin],
+		alone: [wrapperPlugin],
+		before: [wrapperPlugin, pluginYAML],
+	}[placement];
+
+	const output = await format(TEST_YAML, { parser: 'yaml', plugins });
+
+	expect(parse).toHaveBeenCalledTimes(1);
+	expect(preprocess).toHaveBeenCalledTimes(1);
+	expect(output).toBe(expectedOutput);
+});
+
+test.each(['parse', 'preprocess'] as const)(
+	'runs a copied `%s` hook after plugin list replacement with this plugin last',
+	async (hook) => {
+		for (const preserveReceiver of [false, true]) {
+			const parser = getDirectParser(pluginYAML);
+			const priorHook = vi.fn((text: string, options: ParserOptions) =>
+				parser[hook]!(text, options)
+			);
+
+			const innerPlugin: Plugin = {
+				parsers: {
+					yaml: {
+						...parser,
+						[hook]: priorHook,
+					},
+				},
+			};
+
+			const outerPlugin: Plugin = {
+				parsers: {
+					yaml: {
+						...parser,
+						preprocess(text, options): Promise<string> | string {
+							options.plugins = [innerPlugin];
+
+							if (hook === 'parse') {
+								return text;
+							}
+
+							return preserveReceiver
+								? parser.preprocess!.call(this, text, options)
+								: parser.preprocess!(text, options);
+						},
+					},
+				},
+			};
+
+			const output = await format(TEST_YAML, {
+				parser: 'yaml',
+				plugins: [innerPlugin, outerPlugin, pluginYAML],
+			});
+
+			expect(priorHook).toHaveBeenCalledTimes(1);
+			expect(output).toBe(TEST_YAML);
+		}
+	}
+);
+
 test('preserves the selected parser name between hooks', async () => {
 	const currentParser = getDirectParser(pluginYAML);
 	const priorParser: Parser = {

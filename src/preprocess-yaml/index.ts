@@ -1,8 +1,9 @@
 import type { ParserOptions } from 'prettier';
 import type { PluginOptions, PreprocessState } from '../types/index.d.ts';
 import { printers as prettierPrinters } from 'prettier/plugins/yaml';
-import { isScalar, parseAllDocuments, Scalar, visit } from 'yaml';
+import { parseAllDocuments, Scalar, visit } from 'yaml';
 import { stringTag } from 'yaml/util';
+import compareYAMLKeys from '../compare-yaml-keys/index.ts';
 
 const YAML_PRAGMA_PREFIX = prettierPrinters.yaml.insertPragma?.('') ?? '';
 
@@ -52,14 +53,8 @@ export default function preprocessYAML(
 							: (args[0].source ?? stringify(...args)),
 				};
 			}),
-		// Distinct numeric keys can resolve to the same JavaScript number
-		uniqueKeys: (left, right) =>
-			left === right ||
-			(isScalar(left) &&
-				isScalar(right) &&
-				left.value === right.value &&
-				(typeof left.value !== 'number' ||
-					left.source === right.source)),
+		// Compare equivalent numeric keys without rounding distinct source values
+		uniqueKeys: compareYAMLKeys,
 	});
 
 	if (documents.some(hasPrettierIgnore)) {

@@ -201,7 +201,8 @@ async function findPriorParser(
 		const origin = Reflect.get(parser, YAML_PARSER_ORIGIN) as
 			ParserOrigin | undefined;
 
-		// Prettier has already invoked a copied wrapper in the selected slot
+		// Treat the selected copied wrapper as entered, even for lazy parsers
+		// This assumes the plugin list has not changed before first entry
 		if (
 			(isSelectedParser && origin !== undefined) ||
 			parserHook === currentParser[hook] ||

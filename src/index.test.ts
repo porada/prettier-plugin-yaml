@@ -77,6 +77,65 @@ bar: baz
 	await expect(format(output, options)).resolves.toBe(output);
 });
 
+test('preserves numeric precision in distinct mapping keys', async () => {
+	const input = `9007199254740992: foo
+9007199254740993: bar
+0.1234567890123456788: baz
+0.1234567890123456789: qux
+`;
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		yamlQuoteValues: true,
+	};
+
+	const expectedOutput = `9007199254740992: "foo"
+9007199254740993: "bar"
+0.1234567890123456788: "baz"
+0.1234567890123456789: "qux"
+`;
+
+	const output = await format(input, options);
+
+	expect(output).toBe(expectedOutput);
+
+	await expect(format(output, options)).resolves.toBe(output);
+});
+
+test('rejects equivalent numeric mapping keys', async () => {
+	for (const [left, right] of [
+		['0', '-0'],
+		['1', '0o1'],
+		['1', '0x1'],
+		['1.0', '1e0'],
+	]) {
+		const input = `${left}: foo\n${right}: bar\n`;
+
+		await expect(
+			format(input, {
+				parser: 'yaml',
+				plugins: [pluginYAML],
+				yamlCollectionStyle: 'flow',
+			})
+		).rejects.toThrow('Document with errors cannot be stringified');
+	}
+});
+
+test('rejects equivalent numeric mapping keys in YAML 1.1 documents', async () => {
+	const input = `%YAML 1.1
+---
+9007199254740993:00: foo
+540431955284459580: bar
+`;
+
+	await expect(
+		format(input, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		})
+	).rejects.toThrow('Document with errors cannot be stringified');
+});
+
 test('preserves strings with explicit numeric tags', async () => {
 	for (const tag of ['!!float', '!!int']) {
 		const input = `foo: ${tag} "bar: baz"
