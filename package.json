@@ -46,7 +46,7 @@
 		"prettier": "^3.9.6",
 		"publint": "^0.3.24",
 		"typescript": "^6.0.3",
-		"vite-plus": "^0.3.1"
+		"vite-plus": "^0.3.2"
 	},
 	"scripts": {
 		"build": "vp pack",
