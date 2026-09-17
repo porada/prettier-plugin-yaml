@@ -35,7 +35,7 @@ jobs:
           cache: true
           runtime: node@24
       - run: pnpm test --coverage
-      - uses: codecov/codecov-action@v7.1.0
+      - uses: codecov/codecov-action@v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
