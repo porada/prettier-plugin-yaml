@@ -178,10 +178,10 @@ importers:
     devDependencies:
       '@standard-config/oxlint':
         specifier: ^2.9.0
-        version: 2.9.0(@standard-config/oxlint-stylistic@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))
+        version: 2.9.0(@standard-config/oxlint-stylistic@2.10.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))
       '@standard-config/oxlint-stylistic':
-        specifier: ^2.9.0
-        version: 2.9.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+        specifier: ^2.10.0
+        version: 2.10.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.21.1
         version: 1.21.1(prettier@3.9.9)
@@ -629,8 +629,8 @@ packages:
     engines: {node: ^v12.20.0 || ^14.13.0 || >=16.0.0}
     hasBin: true
 
-  '@standard-config/oxlint-stylistic@2.9.0':
-    resolution: {integrity: sha512-IVD5BZ8CThcOxWoLYLg78zHRnJTAI++1Ma+IhWSPK+NhzRbnv8c3hVhax8ELBZ2TO6UJCRNo/MIcz7iocaeynw==}
+  '@standard-config/oxlint-stylistic@2.10.0':
+    resolution: {integrity: sha512-0SMKCsfrsb8qcLNghBhyHjjoyNtQ/D7qLmbDRw3j3WIaD/eoYZ65nP9f0N+tTumHbgiOdRjHZuX7zvqQCQ+ieA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@standard-config/oxlint': ^2.0.1
@@ -1096,11 +1096,14 @@ packages:
   es-module-lexer@2.3.2:
     resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
-  eslint-plugin-perfectionist@5.12.0:
-    resolution: {integrity: sha512-1S1Vgb9b3AIxlJoVMbGKB5PwOCtA0PTvDIiGhIoT9CzZa5aZ6BhgGywIj3ONJ5vrH7gTDjgsLgJ1gPUbDI6UUQ==}
+  eslint-plugin-perfectionist@5.12.1:
+    resolution: {integrity: sha512-krdSE7Dz+TCtcVr2+rfNhlOIFFBJcUdoRvjaN7JQnsaVnxJw+BZh9wMkY3MSLCJat+yW+UPTQLKS82Epc7MGZA==}
     engines: {node: ^20.0.0 || >=22.0.0}
     peerDependencies:
       eslint: ^8.45.0 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
@@ -1775,23 +1778,23 @@ snapshots:
       '@reteps/dockerfmt-linux-arm64': 0.5.4
       '@reteps/dockerfmt-linux-x64': 0.5.4
 
-  '@standard-config/oxlint-stylistic@2.9.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.10.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
     dependencies:
       '@stylistic/eslint-plugin': 5.10.0
-      eslint-plugin-perfectionist: 5.12.0(typescript@6.0.3)
+      eslint-plugin-perfectionist: 5.12.1(typescript@6.0.3)
       oxlint: 1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint': 2.9.0(@standard-config/oxlint-stylistic@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))
+      '@standard-config/oxlint': 2.9.0(@standard-config/oxlint-stylistic@2.10.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))
     transitivePeerDependencies:
       - eslint
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@2.9.0(@standard-config/oxlint-stylistic@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))':
+  '@standard-config/oxlint@2.9.0(@standard-config/oxlint-stylistic@2.10.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))':
     dependencies:
       oxlint: 1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.9.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.10.0(@standard-config/oxlint@2.9.0)(oxlint@1.85.0(oxlint-tsgolint@7.0.2002)(vite-plus@1.0.0(@vitest/coverage-v8@5.0.1)(@vitest/ui@5.0.1)(publint@0.3.24)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.21.1(prettier@3.9.9)':
     dependencies:
@@ -2199,7 +2202,7 @@ snapshots:
 
   es-module-lexer@2.3.2: {}
 
-  eslint-plugin-perfectionist@5.12.0(typescript@6.0.3):
+  eslint-plugin-perfectionist@5.12.1(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/types': 8.70.1
       '@typescript-eslint/utils': 8.70.1(typescript@6.0.3)
