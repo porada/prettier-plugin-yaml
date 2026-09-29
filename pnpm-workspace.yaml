@@ -20,6 +20,8 @@ overrides:
   vite: npm:@voidzero-dev/vite-plus-core@latest
 
 peerDependencyRules:
+  allowAny:
+    - typescript
   ignoreMissing:
     - eslint
     - vitest

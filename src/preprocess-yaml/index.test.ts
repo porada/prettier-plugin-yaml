@@ -188,7 +188,6 @@ test('supports `yamlBlockStyle` with plain multiline values', () => {
 		const output = preprocess(input, options);
 
 		expect(output).toBe(expectedOutput);
-
 		expect(preprocess(output, options)).toBe(output);
 	}
 });
@@ -392,7 +391,6 @@ baz: !!float 0.1234567890123456789
 	const output = preprocess(input, options);
 
 	expect(output).toBe(expectedOutput);
-
 	expect(preprocess(output, options)).toBe(output);
 });
 
@@ -457,7 +455,6 @@ test('preserves numeric precision when quoting keys and values', () => {
 		const output = preprocess(input, options);
 
 		expect(output).toBe(expectedOutput);
-
 		expect(preprocess(output, options)).toBe(output);
 	}
 });

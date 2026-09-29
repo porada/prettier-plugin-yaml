@@ -22,7 +22,7 @@ export default defineConfig({
 	},
 	staged: {
 		'*': [
-			() => 'pnpm install --ignore-scripts',
+			() => 'pnpm install --frozen-lockfile --ignore-scripts',
 			'prettier --ignore-unknown --write',
 			() => 'pnpm prepack',
 		],
