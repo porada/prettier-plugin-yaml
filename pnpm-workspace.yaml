@@ -8,6 +8,9 @@ engineStrict: true
 
 gitChecks: false
 
+lockfile:
+  includeResolutionSettings: true
+
 minimumReleaseAgeExclude:
   - '@prettier/*'
   - '@standard-config/*'
@@ -17,7 +20,7 @@ overrides:
   vite-plus>oxfmt: '-'
   vite-plus>oxlint: latest
   vite-plus>oxlint-tsgolint: latest
-  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vite: npm:@voidzero-dev/vite-plus-core@1.1.0
 
 peerDependencyRules:
   allowAny:

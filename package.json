@@ -29,7 +29,7 @@
 	"engines": {
 		"node": ">=20"
 	},
-	"packageManager": "pnpm@12.8.1",
+	"packageManager": "pnpm@12.10.1",
 	"dependencies": {
 		"yaml": "^2.9.1"
 	},
@@ -41,11 +41,11 @@
 		"@standard-config/oxlint-stylistic": "^2.10.0",
 		"@standard-config/prettier": "^1.22.0",
 		"@standard-config/tsconfig": "^3.2.0",
-		"@vitest/coverage-v8": "5.0.1",
+		"@vitest/coverage-v8": "5.0.3",
 		"prettier": "^3.9.9",
 		"publint": "^0.3.25",
 		"typescript": "^6.0.3",
-		"vite-plus": "^1.0.0"
+		"vite-plus": "^1.1.0"
 	},
 	"scripts": {
 		"build": "vp pack",
