@@ -499,6 +499,7 @@ test('supports `yamlQuoteKeysMatching`', async () => {
 		parser: 'yaml',
 		plugins: [pluginYAML],
 		yamlQuoteKeys: true,
+		/* oxlint-disable-next-line unicorn/prefer-string-raw */
 		yamlQuoteKeysMatching: '^\\d+$',
 	});
 
@@ -547,6 +548,7 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 	let output = await format(TEST_YAML, {
 		parser: 'yaml',
 		plugins: [pluginYAML],
+		/* oxlint-disable-next-line unicorn/prefer-string-raw */
 		yamlQuoteValuesMatching: '[\\s/]',
 	});
 
@@ -555,6 +557,7 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 	output = await format(TEST_YAML, {
 		parser: 'yaml',
 		plugins: [pluginYAML],
+		/* oxlint-disable-next-line unicorn/prefer-string-raw */
 		yamlQuoteValuesMatching: '^\\d+(:\\d+)?$',
 	});
 
@@ -564,6 +567,7 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 		parser: 'yaml',
 		plugins: [pluginYAML],
 		yamlQuoteValues: true,
+		/* oxlint-disable-next-line unicorn/prefer-string-raw */
 		yamlQuoteValuesMatching: '^(\\d+|true|false|null)$',
 	});
 
