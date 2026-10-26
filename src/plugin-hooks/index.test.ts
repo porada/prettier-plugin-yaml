@@ -67,100 +67,109 @@ test('doesn’t resolve canonical parsers for aliased exports', async () => {
 	expect(initializeCanonicalParser).not.toHaveBeenCalled();
 });
 
-test.each([
-	['after this plugin', 'after'],
-	['alone', 'alone'],
-	['before this plugin', 'before'],
-] as const)('runs lazy copied hooks once %s', async (_, placement) => {
-	const parser = getDirectParser(pluginYAML);
-	const parse = vi.fn(function (
-		this: Parser,
-		text: string,
-		options: ParserOptions
-	) {
-		return parser.parse.call(this, text, options);
-	});
-	const preprocess = vi.fn(function (
-		this: Parser,
-		text: string,
-		options: ParserOptions
-	): Promise<string> | string {
-		return parser.preprocess!.call(
-			this,
-			text.replace('[', '[baz, '),
-			options
-		);
-	});
-
-	const wrapperPlugin = {
-		parsers: {
-			yaml: async () => {
-				await Promise.resolve();
-				return { ...parser, parse, preprocess };
-			},
-		},
-	} as unknown as Plugin;
-
-	const expectedOutput = 'foo: [baz, bar]\n';
-
-	const plugins = {
-		after: [pluginYAML, wrapperPlugin],
-		alone: [wrapperPlugin],
-		before: [wrapperPlugin, pluginYAML],
-	}[placement];
-
-	const output = await format(TEST_YAML, { parser: 'yaml', plugins });
-
-	expect(parse).toHaveBeenCalledTimes(1);
-	expect(preprocess).toHaveBeenCalledTimes(1);
-	expect(output).toBe(expectedOutput);
-});
-
-test.each(['parse', 'preprocess'] as const)(
-	'runs a copied `%s` hook after plugin list replacement with this plugin last',
-	async (hook) => {
-		for (const preserveReceiver of [false, true]) {
-			const parser = getDirectParser(pluginYAML);
-			const priorHook = vi.fn((text: string, options: ParserOptions) =>
-				parser[hook]!(text, options)
+test.each(['after this plugin', 'alone', 'before this plugin'] as const)(
+	'runs lazy copied hooks once when placed %s',
+	async (placement) => {
+		const parser = getDirectParser(pluginYAML);
+		const parse = vi.fn(function (
+			this: Parser,
+			text: string,
+			options: ParserOptions
+		) {
+			return parser.parse.call(this, text, options);
+		});
+		const preprocess = vi.fn(function (
+			this: Parser,
+			text: string,
+			options: ParserOptions
+		): Promise<string> | string {
+			return parser.preprocess!.call(
+				this,
+				text.replace('[', '[baz, '),
+				options
 			);
+		});
 
-			const innerPlugin: Plugin = {
-				parsers: {
-					yaml: {
-						...parser,
-						[hook]: priorHook,
+		const wrapperPlugin = {
+			parsers: {
+				yaml: async () => {
+					await Promise.resolve();
+					return { ...parser, parse, preprocess };
+				},
+			},
+		} as unknown as Plugin;
+
+		const expectedOutput = 'foo: [baz, bar]\n';
+
+		const plugins = {
+			'after this plugin': [pluginYAML, wrapperPlugin],
+			'alone': [wrapperPlugin],
+			'before this plugin': [wrapperPlugin, pluginYAML],
+		}[placement];
+
+		const output = await format(TEST_YAML, { parser: 'yaml', plugins });
+
+		expect(parse).toHaveBeenCalledTimes(1);
+		expect(preprocess).toHaveBeenCalledTimes(1);
+		expect(output).toBe(expectedOutput);
+	}
+);
+
+test.each([
+	['a copied `parse` hook', 'parse', true],
+	[
+		'a copied `preprocess` hook through a wrapper that calls this plugin’s parser',
+		'preprocess',
+		false,
+	],
+	[
+		'a copied `preprocess` hook through a wrapper that forwards its receiver',
+		'preprocess',
+		true,
+	],
+] as const)(
+	'runs %s after plugin list replacement',
+	async (_, hook, preserveReceiver) => {
+		const parser = getDirectParser(pluginYAML);
+		const priorHook = vi.fn((text: string, options: ParserOptions) =>
+			parser[hook]!(text, options)
+		);
+
+		const innerPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					[hook]: priorHook,
+				},
+			},
+		};
+
+		const outerPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					preprocess(text, options): Promise<string> | string {
+						options.plugins = [innerPlugin];
+
+						if (hook === 'parse') {
+							return text;
+						}
+
+						return preserveReceiver
+							? parser.preprocess!.call(this, text, options)
+							: parser.preprocess!(text, options);
 					},
 				},
-			};
+			},
+		};
 
-			const outerPlugin: Plugin = {
-				parsers: {
-					yaml: {
-						...parser,
-						preprocess(text, options): Promise<string> | string {
-							options.plugins = [innerPlugin];
+		const output = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins: [innerPlugin, outerPlugin, pluginYAML],
+		});
 
-							if (hook === 'parse') {
-								return text;
-							}
-
-							return preserveReceiver
-								? parser.preprocess!.call(this, text, options)
-								: parser.preprocess!(text, options);
-						},
-					},
-				},
-			};
-
-			const output = await format(TEST_YAML, {
-				parser: 'yaml',
-				plugins: [innerPlugin, outerPlugin, pluginYAML],
-			});
-
-			expect(priorHook).toHaveBeenCalledTimes(1);
-			expect(output).toBe(TEST_YAML);
-		}
+		expect(priorHook).toHaveBeenCalledTimes(1);
+		expect(output).toBe(TEST_YAML);
 	}
 );
 
@@ -183,15 +192,14 @@ test('preserves the selected parser name between hooks', async () => {
 		plugins: [priorPlugin, pluginYAML],
 	} as unknown as ParserOptions;
 
-	await expect(
-		resolvePriorParser(options, 'preprocess')
-	).resolves.toMatchObject({ parser: priorParser });
+	let result = await resolvePriorParser(options, 'preprocess');
+
+	expect(result?.parser).toBe(priorParser);
 
 	options.parser = 'yaml-alias';
+	result = await resolvePriorParser(options, 'parse');
 
-	await expect(resolvePriorParser(options, 'parse')).resolves.toMatchObject({
-		parser: priorParser,
-	});
+	expect(result?.parser).toBe(priorParser);
 });
 
 test('sets and restores prior parser location functions', async () => {
@@ -218,17 +226,19 @@ test('sets and restores prior parser location functions', async () => {
 	} as unknown as ParserOptions;
 
 	const originalPlugins = options.plugins;
+	const callback = vi.fn(async (delegatedOptions: ParserOptions) => {
+		await Promise.resolve();
+		expect(delegatedOptions.locEnd).toBe(locEnd);
+		expect(delegatedOptions.locStart).toBe(locStart);
+	});
 
 	await withPriorParserOptions(
 		options,
 		{ lifecycleState: {}, parser: priorParser, plugins },
-		async (delegatedOptions) => {
-			await Promise.resolve();
-			expect(delegatedOptions.locEnd).toBe(locEnd);
-			expect(delegatedOptions.locStart).toBe(locStart);
-		}
+		callback
 	);
 
+	expect(callback).toHaveBeenCalledTimes(1);
 	expect(options.locEnd).toBe(currentParser.locEnd);
 	expect(options.locStart).toBe(currentParser.locStart);
 	expect(options.plugins).toBe(originalPlugins);
@@ -267,20 +277,19 @@ test('doesn’t treat delegated options as entry changes for another hook', asyn
 
 	expect(resolvedPriorParser?.parser).toBe(priorParser);
 
-	await withPriorParserOptions(
-		options,
-		resolvedPriorParser!,
-		async (delegatedOptions) => {
-			const resolvedPreprocess = await resolvePriorParser(
-				delegatedOptions,
-				'preprocess'
-			);
+	const callback = vi.fn(async (delegatedOptions: ParserOptions) => {
+		const resolvedPreprocess = await resolvePriorParser(
+			delegatedOptions,
+			'preprocess'
+		);
 
-			expect(resolvedPreprocess?.parser).toBe(priorParser);
-			expect(resolvedPreprocess?.lifecycleState).toStrictEqual({});
-		}
-	);
+		expect(resolvedPreprocess?.parser).toBe(priorParser);
+		expect(resolvedPreprocess?.lifecycleState).toStrictEqual({});
+	});
 
+	await withPriorParserOptions(options, resolvedPriorParser!, callback);
+
+	expect(callback).toHaveBeenCalledTimes(1);
 	expect(options.locEnd).toBe(priorParser.locEnd);
 	expect(options.locStart).toBe(priorParser.locStart);
 	expect(options.plugins).toBe(originalPlugins);
@@ -327,16 +336,16 @@ test('works with independently loaded plugin copies', async () => {
 
 	expect(firstParser.parse).not.toBe(secondParser.parse);
 
-	const singleCopyOutput = await format(TEST_YAML, {
+	const expectedOutput = await format(TEST_YAML, {
 		parser: 'yaml',
 		plugins: [secondPlugin],
 	});
-	const duplicateCopyOutput = await format(TEST_YAML, {
+	const output = await format(TEST_YAML, {
 		parser: 'yaml',
 		plugins: [firstPlugin, secondPlugin],
 	});
 
-	expect(duplicateCopyOutput).toBe(singleCopyOutput);
+	expect(output).toBe(expectedOutput);
 });
 
 test('works with Prettier’s CommonJS YAML parser', async () => {
@@ -396,8 +405,8 @@ test('rejects incompatible wrappers before skipping shared hooks', async () => {
 });
 
 test('passes compatible options to prior parsers', async () => {
-	let hasMatchingParser = false;
 	let observedAstFormat: unknown;
+	let observedPlugins: ParserOptions['plugins'] | undefined;
 	let observedPrintWidth: number | undefined;
 
 	const observingPlugin: Plugin = {
@@ -406,10 +415,8 @@ test('passes compatible options to prior parsers', async () => {
 				...prettierParsers.yaml,
 				parse: (text, options) => {
 					observedAstFormat = options.astFormat;
+					observedPlugins = options.plugins;
 					observedPrintWidth = options.printWidth;
-					hasMatchingParser =
-						options.astFormat === 'yaml' &&
-						options.plugins.includes(observingPlugin);
 					return prettierParsers.yaml.parse(text, options);
 				},
 			},
@@ -422,13 +429,15 @@ test('passes compatible options to prior parsers', async () => {
 		printWidth: 80,
 	});
 
-	expect(hasMatchingParser).toBe(true);
 	expect(observedAstFormat).toBe('yaml');
+	expect(observedPlugins).toContain(observingPlugin);
 	expect(observedPrintWidth).toBe(80);
 });
 
 test('shares options between prior `preprocess` and `parse` hooks', async () => {
-	let observedState = false;
+	let observedLocEnd: Parser['locEnd'] | undefined;
+	let observedLocStart: Parser['locStart'] | undefined;
+	let observedState: unknown;
 
 	const locEnd: Parser['locEnd'] = (node) =>
 		prettierParsers.yaml.locEnd(node);
@@ -440,10 +449,9 @@ test('shares options between prior `preprocess` and `parse` hooks', async () => 
 			yaml: {
 				...prettierParsers.yaml,
 				parse: (text, options) => {
-					observedState =
-						options.yamlState === true &&
-						options.locEnd === locEnd &&
-						options.locStart === locStart;
+					observedLocEnd = options.locEnd;
+					observedLocStart = options.locStart;
+					observedState = options.yamlState;
 					return prettierParsers.yaml.parse(text, options);
 				},
 				preprocess: async (text, options) => {
@@ -462,6 +470,8 @@ test('shares options between prior `preprocess` and `parse` hooks', async () => 
 		plugins: [statefulPlugin, pluginYAML],
 	});
 
+	expect(observedLocEnd).toBe(locEnd);
+	expect(observedLocStart).toBe(locStart);
 	expect(observedState).toBe(true);
 });
 
@@ -509,39 +519,40 @@ test('ignores plugins with an `undefined` parser map', async () => {
 });
 
 test('preserves parser lifecycle state after plugin list reassignment', async () => {
-	let initializationCount = 0;
-	let observedLifecycleState = false;
+	let observedLocEnd: Parser['locEnd'] | undefined;
+	let observedLocStart: Parser['locStart'] | undefined;
+	let observedPreprocessed: boolean | undefined;
 
 	const locEnd: Parser['locEnd'] = (node) =>
 		prettierParsers.yaml.locEnd(node);
 	const locStart: Parser['locStart'] = (node) =>
 		prettierParsers.yaml.locStart(node);
 
+	const initializeParser = vi.fn(async () => {
+		let preprocessed = false;
+		await Promise.resolve();
+
+		return {
+			...prettierParsers.yaml,
+			parse: (text: string, options: ParserOptions) => {
+				observedLocEnd = options.locEnd;
+				observedLocStart = options.locStart;
+				observedPreprocessed = preprocessed;
+				return prettierParsers.yaml.parse(text, options);
+			},
+			preprocess: (text: string, options: ParserOptions) => {
+				preprocessed = true;
+				options.locEnd = locEnd;
+				options.locStart = locStart;
+				options.plugins = [...options.plugins];
+				return text;
+			},
+		};
+	});
+
 	const lazyPlugin = {
 		parsers: {
-			yaml: async () => {
-				initializationCount += 1;
-				let preprocessed = false;
-				await Promise.resolve();
-
-				return {
-					...prettierParsers.yaml,
-					parse: (text: string, options: ParserOptions) => {
-						observedLifecycleState =
-							preprocessed &&
-							options.locEnd === locEnd &&
-							options.locStart === locStart;
-						return prettierParsers.yaml.parse(text, options);
-					},
-					preprocess: (text: string, options: ParserOptions) => {
-						preprocessed = true;
-						options.locEnd = locEnd;
-						options.locStart = locStart;
-						options.plugins = [...options.plugins];
-						return text;
-					},
-				};
-			},
+			yaml: initializeParser,
 		},
 	} as unknown as Plugin;
 
@@ -550,23 +561,25 @@ test('preserves parser lifecycle state after plugin list reassignment', async ()
 		plugins: [lazyPlugin, pluginYAML],
 	});
 
-	expect(initializationCount).toBe(1);
-	expect(observedLifecycleState).toBe(true);
+	expect(initializeParser).toHaveBeenCalledTimes(1);
+	expect(observedPreprocessed).toBe(true);
+	expect(observedLocEnd).toBe(locEnd);
+	expect(observedLocStart).toBe(locStart);
 });
 
 test('omits resolved lazy plugin copies from prior parser options', async () => {
 	const parser = getDirectParser(pluginYAML);
 
-	let initializationCount = 0;
-	let observedDuplicate = false;
+	let observedPlugins: ParserOptions['plugins'] | undefined;
+
+	const initializeParser = vi.fn(async () => {
+		await Promise.resolve();
+		return parser;
+	});
 
 	const lazyPlugin = {
 		parsers: {
-			yaml: async () => {
-				initializationCount += 1;
-				await Promise.resolve();
-				return parser;
-			},
+			yaml: initializeParser,
 		},
 	} as unknown as Plugin;
 
@@ -575,7 +588,7 @@ test('omits resolved lazy plugin copies from prior parser options', async () => 
 			yaml: {
 				...prettierParsers.yaml,
 				parse: (text, options) => {
-					observedDuplicate = options.plugins.includes(lazyPlugin);
+					observedPlugins = options.plugins;
 					return prettierParsers.yaml.parse(text, options);
 				},
 			},
@@ -587,20 +600,19 @@ test('omits resolved lazy plugin copies from prior parser options', async () => 
 		plugins: [observingPlugin, lazyPlugin, pluginYAML],
 	});
 
-	expect(initializationCount).toBe(1);
-	expect(observedDuplicate).toBe(false);
+	expect(initializeParser).toHaveBeenCalledTimes(1);
+	expect(observedPlugins).not.toContain(lazyPlugin);
 });
 
 test('doesn’t initialize shadowed lazy parsers', async () => {
-	let initializationCount = 0;
+	const initializeParser = vi.fn(async () => {
+		await Promise.resolve();
+		return prettierParsers.yaml;
+	});
 
 	const lazyPlugin = {
 		parsers: {
-			yaml: async () => {
-				initializationCount += 1;
-				await Promise.resolve();
-				return prettierParsers.yaml;
-			},
+			yaml: initializeParser,
 		},
 	} as unknown as Plugin;
 
@@ -615,28 +627,23 @@ test('doesn’t initialize shadowed lazy parsers', async () => {
 		plugins: [lazyPlugin, priorPlugin, pluginYAML],
 	});
 
-	expect(initializationCount).toBe(0);
+	expect(initializeParser).not.toHaveBeenCalled();
 });
 
 test('passes the compatibility options argument to prior parsers', async () => {
-	let receivedDuplicatedOptions = false;
+	const parse = vi.fn(
+		(
+			text: string,
+			options: ParserOptions,
+			compatibilityOptions?: ParserOptions
+		) => prettierParsers.yaml.parse(text, compatibilityOptions ?? options)
+	);
 
 	const legacyPlugin: Plugin = {
 		parsers: {
 			yaml: {
 				...prettierParsers.yaml,
-				parse: (
-					text: string,
-					options: ParserOptions,
-					compatibilityOptions?: ParserOptions
-				) => {
-					receivedDuplicatedOptions =
-						compatibilityOptions === options;
-					return prettierParsers.yaml.parse(
-						text,
-						compatibilityOptions ?? options
-					);
-				},
+				parse,
 			},
 		},
 	};
@@ -646,7 +653,11 @@ test('passes the compatibility options argument to prior parsers', async () => {
 		plugins: [legacyPlugin, pluginYAML],
 	});
 
-	expect(receivedDuplicatedOptions).toBe(true);
+	expect(parse).toHaveBeenCalledTimes(1);
+
+	const [, options, compatibilityOptions] = parse.mock.calls[0]!;
+
+	expect(compatibilityOptions).toBe(options);
 });
 
 test('handles wrappers that copy the current parser hooks', async () => {
@@ -677,7 +688,7 @@ test('continues to prior parsers through copied wrappers', async () => {
 		parsers: {
 			yaml: {
 				...prettierParsers.yaml,
-				preprocess: () => 'foo: qux\n',
+				preprocess: () => 'foo: baz\n',
 			},
 		},
 	};
@@ -739,106 +750,97 @@ test('avoids recursion through wrappers that inherit from the current parser', a
 	expect(parseCallCount).toBe(1);
 });
 
-test.each(['parse', 'preprocess'] as const)(
-	'runs a delegating `%s` wrapper once with a prior parser',
-	async (hook) => {
-		for (const placement of [
-			'alone',
-			'before another instance',
-			'before this plugin',
-		] as const) {
+test.each([
+	['parse', 'alone'],
+	['parse', 'before an independent plugin instance'],
+	['parse', 'before this plugin'],
+	['preprocess', 'alone'],
+	['preprocess', 'before an independent plugin instance'],
+	['preprocess', 'before this plugin'],
+] as const)(
+	'runs a delegating `%s` wrapper once when placed %s with a prior parser',
+	async (hook, placement) => {
+		vi.resetModules();
+
+		const firstPlugin = await import('../index.ts');
+		const parser = getDirectParser(firstPlugin);
+
+		if (placement === 'before an independent plugin instance') {
 			vi.resetModules();
-
-			const firstPlugin = await import('../index.ts');
-			const parser = getDirectParser(firstPlugin);
-
-			if (placement === 'before another instance') {
-				vi.resetModules();
-			}
-
-			const secondPlugin = await import('../index.ts');
-
-			let initializationCount = 0;
-			let parseCallCount = 0;
-			let preprocessCallCount = 0;
-			let wrapperCallCount = 0;
-
-			const priorPlugin = {
-				parsers: {
-					yaml: async () => {
-						initializationCount += 1;
-						await Promise.resolve();
-						return {
-							...prettierParsers.yaml,
-							parse: (text: string, options: ParserOptions) => {
-								parseCallCount += 1;
-								expect(options.yamlState).toBe(true);
-								return prettierParsers.yaml.parse(
-									text,
-									options
-								);
-							},
-							preprocess: (text: string) => {
-								preprocessCallCount += 1;
-								return text.replace('[', '[baz, ');
-							},
-						};
-					},
-				},
-			} as unknown as Plugin;
-
-			const wrapperPlugin: Plugin = {
-				parsers: {
-					yaml: {
-						...parser,
-						[hook]: async (
-							text: string,
-							options: ParserOptions
-						) => {
-							wrapperCallCount += 1;
-
-							if (wrapperCallCount > 1) {
-								throw new Error();
-							}
-
-							await Promise.resolve();
-							options.yamlState = true;
-							return parser[hook]!(
-								hook === 'preprocess'
-									? text.replace('[', '[qux, ')
-									: text,
-								options
-							);
-						},
-					},
-				},
-			};
-
-			const expectedOutput = await format(
-				hook === 'parse'
-					? 'foo: [baz, bar]\n'
-					: 'foo: [baz, qux, bar]\n',
-				{ parser: 'yaml', plugins: [secondPlugin] }
-			);
-
-			const plugins =
-				placement === 'alone'
-					? [priorPlugin, wrapperPlugin]
-					: [priorPlugin, wrapperPlugin, secondPlugin];
-
-			const output = await format(TEST_YAML, { parser: 'yaml', plugins });
-
-			expect(initializationCount).toBe(1);
-			expect(parseCallCount).toBe(1);
-			expect(preprocessCallCount).toBe(1);
-			expect(wrapperCallCount).toBe(1);
-			expect(output).toBe(expectedOutput);
 		}
+
+		const secondPlugin = await import('../index.ts');
+
+		let wrapperCallCount = 0;
+
+		const priorParse = vi.fn((text: string, options: ParserOptions) => {
+			expect(options.yamlState).toBe(true);
+			return prettierParsers.yaml.parse(text, options);
+		});
+		const priorPreprocess = vi.fn((text: string) =>
+			text.replace('[', '[baz, ')
+		);
+		const initializePriorParser = vi.fn(async () => {
+			await Promise.resolve();
+			return {
+				...prettierParsers.yaml,
+				parse: priorParse,
+				preprocess: priorPreprocess,
+			};
+		});
+
+		const priorPlugin = {
+			parsers: {
+				yaml: initializePriorParser,
+			},
+		} as unknown as Plugin;
+
+		const wrapperPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					[hook]: async (text: string, options: ParserOptions) => {
+						wrapperCallCount += 1;
+
+						if (wrapperCallCount > 1) {
+							throw new Error();
+						}
+
+						await Promise.resolve();
+						options.yamlState = true;
+						return parser[hook]!(
+							hook === 'preprocess'
+								? text.replace('[', '[qux, ')
+								: text,
+							options
+						);
+					},
+				},
+			},
+		};
+
+		const expectedOutput = await format(
+			hook === 'parse' ? 'foo: [baz, bar]\n' : 'foo: [baz, qux, bar]\n',
+			{ parser: 'yaml', plugins: [secondPlugin] }
+		);
+
+		const plugins =
+			placement === 'alone'
+				? [priorPlugin, wrapperPlugin]
+				: [priorPlugin, wrapperPlugin, secondPlugin];
+
+		const output = await format(TEST_YAML, { parser: 'yaml', plugins });
+
+		expect(initializePriorParser).toHaveBeenCalledTimes(1);
+		expect(priorParse).toHaveBeenCalledTimes(1);
+		expect(priorPreprocess).toHaveBeenCalledTimes(1);
+		expect(wrapperCallCount).toBe(1);
+		expect(output).toBe(expectedOutput);
 	}
 );
 
 test.each(['alone', 'before this plugin'] as const)(
-	'runs wrapped hooks once %s without a prior parser',
+	'runs wrapped hooks once when placed %s without a prior parser',
 	async (placement) => {
 		const parser = getDirectParser(pluginYAML);
 		let parseCallCount = 0;
@@ -940,31 +942,32 @@ test('preserves removed plugins across prior parser hooks', async () => {
 		},
 	};
 
-	let initializationCount = 0;
 	let replacementPlugins: ParserOptions['plugins'] | undefined;
+
+	const priorParse = vi.fn((text: string, options: ParserOptions) => {
+		expect(options.plugins).toBe(replacementPlugins);
+		expect(options.plugins).not.toContain(removedPlugin);
+		return prettierParsers.yaml.parse(text, options);
+	});
+	const initializePriorParser = vi.fn(async () => {
+		await Promise.resolve();
+		return {
+			...prettierParsers.yaml,
+			parse: priorParse,
+			preprocess: (text: string, options: ParserOptions) => {
+				replacementPlugins = options.plugins.filter(
+					(plugin) => plugin !== removedPlugin
+				);
+
+				options.plugins = replacementPlugins;
+				return text;
+			},
+		};
+	});
 
 	const priorPlugin = {
 		parsers: {
-			yaml: async () => {
-				initializationCount += 1;
-				await Promise.resolve();
-				return {
-					...prettierParsers.yaml,
-					parse: (text: string, options: ParserOptions) => {
-						expect(options.plugins).toBe(replacementPlugins);
-						expect(options.plugins).not.toContain(removedPlugin);
-						return prettierParsers.yaml.parse(text, options);
-					},
-					preprocess: (text: string, options: ParserOptions) => {
-						replacementPlugins = options.plugins.filter(
-							(plugin) => plugin !== removedPlugin
-						);
-
-						options.plugins = replacementPlugins;
-						return text;
-					},
-				};
-			},
+			yaml: initializePriorParser,
 		},
 	} as unknown as Plugin;
 
@@ -975,7 +978,8 @@ test('preserves removed plugins across prior parser hooks', async () => {
 		plugins: [removedPlugin, priorPlugin, pluginYAML],
 	});
 
-	expect(initializationCount).toBe(1);
+	expect(initializePriorParser).toHaveBeenCalledTimes(1);
+	expect(priorParse).toHaveBeenCalledTimes(1);
 	expect(removedParse).not.toHaveBeenCalled();
 	expect(output).toBe(expectedOutput);
 });
@@ -994,7 +998,7 @@ test('retains prior parser location functions for cursor formatting', async () =
 		},
 	};
 
-	const expectedOutput = await formatWithCursor(TEST_YAML, {
+	const expectedResult = await formatWithCursor(TEST_YAML, {
 		cursorOffset: TEST_YAML.indexOf('bar'),
 		parser: 'yaml',
 		plugins: [priorPlugin],
@@ -1003,78 +1007,73 @@ test('retains prior parser location functions for cursor formatting', async () =
 	locEnd.mockClear();
 	locStart.mockClear();
 
-	const output = await formatWithCursor(TEST_YAML, {
+	const result = await formatWithCursor(TEST_YAML, {
 		cursorOffset: TEST_YAML.indexOf('bar'),
 		parser: 'yaml',
 		plugins: [priorPlugin, pluginYAML],
 	});
 
-	expect(output).toStrictEqual(expectedOutput);
+	expect(result).toStrictEqual(expectedResult);
 	expect(locEnd).toHaveBeenCalled();
 	expect(locStart).toHaveBeenCalled();
 });
 
-test('uses copied wrapper location fields only when selected by Prettier', async () => {
-	const parser = getDirectParser(pluginYAML);
+test.each(['after this plugin', 'alone', 'before this plugin'] as const)(
+	'uses location fields from a copied wrapper placed %s only when Prettier selects it',
+	async (placement) => {
+		const parser = getDirectParser(pluginYAML);
 
-	const locEnd = vi.fn(prettierParsers.yaml.locEnd);
-	const locStart = vi.fn(prettierParsers.yaml.locStart);
-	const parse = vi.fn(parser.parse);
-	const priorLocEnd = vi.fn(prettierParsers.yaml.locEnd);
-	const priorLocStart = vi.fn(prettierParsers.yaml.locStart);
+		const locEnd = vi.fn(prettierParsers.yaml.locEnd);
+		const locStart = vi.fn(prettierParsers.yaml.locStart);
+		const parse = vi.fn(parser.parse);
+		const priorLocEnd = vi.fn(prettierParsers.yaml.locEnd);
+		const priorLocStart = vi.fn(prettierParsers.yaml.locStart);
 
-	const priorPlugin: Plugin = {
-		parsers: {
-			yaml: {
-				...prettierParsers.yaml,
-				locEnd: priorLocEnd,
-				locStart: priorLocStart,
+		const priorPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...prettierParsers.yaml,
+					locEnd: priorLocEnd,
+					locStart: priorLocStart,
+				},
 			},
-		},
-	};
+		};
 
-	const wrapperPlugin: Plugin = {
-		parsers: {
-			yaml: {
-				...parser,
-				locEnd,
-				locStart,
-				parse,
+		const wrapperPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					locEnd,
+					locStart,
+					parse,
+				},
 			},
-		},
-	};
+		};
 
-	const options = {
-		cursorOffset: TEST_YAML.indexOf('bar'),
-		parser: 'yaml',
-	};
+		const options = {
+			cursorOffset: TEST_YAML.indexOf('bar'),
+			parser: 'yaml',
+		};
 
-	const expectedOutput = await formatWithCursor(TEST_YAML, {
-		...options,
-		plugins: [pluginYAML],
-	});
+		const expectedResult = await formatWithCursor(TEST_YAML, {
+			...options,
+			plugins: [pluginYAML],
+		});
 
-	for (const placement of ['after', 'alone', 'before'] as const) {
 		const plugins = {
-			after: [priorPlugin, pluginYAML, wrapperPlugin],
-			alone: [priorPlugin, wrapperPlugin],
-			before: [priorPlugin, wrapperPlugin, pluginYAML],
+			'after this plugin': [priorPlugin, pluginYAML, wrapperPlugin],
+			'alone': [priorPlugin, wrapperPlugin],
+			'before this plugin': [priorPlugin, wrapperPlugin, pluginYAML],
 		}[placement];
 
-		const isSelectedParser = placement !== 'before';
+		const isSelectedParser = placement !== 'before this plugin';
 
-		locEnd.mockClear();
-		locStart.mockClear();
-		parse.mockClear();
-		priorLocEnd.mockClear();
-		priorLocStart.mockClear();
-
-		const output = await formatWithCursor(TEST_YAML, {
+		const result = await formatWithCursor(TEST_YAML, {
 			...options,
 			plugins,
 		});
 
-		expect(output).toStrictEqual(expectedOutput);
+		expect(result).toStrictEqual(expectedResult);
 		expect(parse).toHaveBeenCalledTimes(1);
 		expect(isSelectedParser ? locEnd : priorLocEnd).toHaveBeenCalled();
 		expect(isSelectedParser ? locStart : priorLocStart).toHaveBeenCalled();
@@ -1083,11 +1082,16 @@ test('uses copied wrapper location fields only when selected by Prettier', async
 			isSelectedParser ? priorLocStart : locStart
 		).not.toHaveBeenCalled();
 	}
-});
+);
 
-test.each(['parser fields', 'preprocess'] as const)(
-	'retains selected copied parser locations from %s',
-	async (source) => {
+test.each([
+	['parser fields', 'after this plugin'],
+	['parser fields', 'alone'],
+	['the `preprocess` hook', 'after this plugin'],
+	['the `preprocess` hook', 'alone'],
+] as const)(
+	'preserves wrapper location overrides from %s when placed %s',
+	async (source, placement) => {
 		const parser = getDirectParser(pluginYAML);
 		const locEnd = vi.fn(prettierParsers.yaml.locEnd);
 		const locStart = vi.fn(prettierParsers.yaml.locStart);
@@ -1117,151 +1121,192 @@ test.each(['parser fields', 'preprocess'] as const)(
 			},
 		};
 
-		const expectedOutput = await formatWithCursor(TEST_YAML, {
+		const expectedResult = await formatWithCursor(TEST_YAML, {
 			cursorOffset: TEST_YAML.indexOf('bar'),
 			parser: 'yaml',
 		});
 
-		for (const plugins of [
-			[priorPlugin, copiedPlugin],
-			[priorPlugin, pluginYAML, copiedPlugin],
-		]) {
-			locEnd.mockClear();
-			locStart.mockClear();
+		const plugins = {
+			'after this plugin': [priorPlugin, pluginYAML, copiedPlugin],
+			'alone': [priorPlugin, copiedPlugin],
+		}[placement];
 
-			const output = await formatWithCursor(TEST_YAML, {
-				cursorOffset: TEST_YAML.indexOf('bar'),
-				parser: 'yaml',
-				plugins,
-			});
+		const result = await formatWithCursor(TEST_YAML, {
+			cursorOffset: TEST_YAML.indexOf('bar'),
+			parser: 'yaml',
+			plugins,
+		});
 
-			expect(output).toStrictEqual(expectedOutput);
-			expect(locEnd).toHaveBeenCalled();
-			expect(locStart).toHaveBeenCalled();
-		}
+		expect(result).toStrictEqual(expectedResult);
+		expect(locEnd).toHaveBeenCalled();
+		expect(locStart).toHaveBeenCalled();
 	}
 );
 
-test.each(['parse', 'preprocess'] as const)(
-	'preserves option changes before a wrapped `%s` delegates',
-	async (hook) => {
+test.each([
+	['parse', 'after this plugin'],
+	['parse', 'alone'],
+	['parse', 'before this plugin'],
+	['preprocess', 'after this plugin'],
+	['preprocess', 'alone'],
+	['preprocess', 'before this plugin'],
+] as const)(
+	'passes location overrides from `%s` wrappers to the prior parser when placed %s',
+	async (hook, placement) => {
 		const parser = getDirectParser(pluginYAML);
-		const addedPlugin: Plugin = {};
-		const removedPlugin: Plugin = {};
-
 		const locEnd: Parser['locEnd'] = (node) =>
 			prettierParsers.yaml.locEnd(node);
 		const locStart: Parser['locStart'] = (node) =>
 			prettierParsers.yaml.locStart(node);
 
-		const priorParser: Parser = {
-			...prettierParsers.yaml,
-			locEnd: (node) => prettierParsers.yaml.locEnd(node),
-			locStart: (node) => prettierParsers.yaml.locStart(node),
+		let observedLocEnd: Parser['locEnd'] | undefined;
+		let observedLocStart: Parser['locStart'] | undefined;
+		let observedOptions: ParserOptions | undefined;
+		let wrapperCallCount = 0;
+
+		const priorHook = vi.fn((text: string, options: ParserOptions) => {
+			observedLocEnd = options.locEnd;
+			observedLocStart = options.locStart;
+			observedOptions = options;
+
+			return hook === 'parse'
+				? prettierParsers.yaml.parse(text, options)
+				: text;
+		});
+
+		const priorPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...prettierParsers.yaml,
+					[hook]: priorHook,
+				},
+			},
 		};
 
-		const expectedOutput = await format(TEST_YAML, { parser: 'yaml' });
+		const wrapperPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					[hook]: async (text: string, options: ParserOptions) => {
+						wrapperCallCount += 1;
 
-		for (const override of ['locations', 'plugins']) {
-			for (const placement of ['after', 'alone', 'before']) {
-				let observedOptions: ParserOptions | undefined;
-				let wrapperCallCount = 0;
+						if (wrapperCallCount > 1) {
+							throw new Error();
+						}
 
-				const priorHook = vi.fn(
-					(text: string, options: ParserOptions) => {
-						observedOptions = options;
+						await Promise.resolve();
+						options.locEnd = locEnd;
+						options.locStart = locStart;
 
-						expect(options.locEnd).toBe(
-							override === 'locations'
-								? locEnd
-								: priorParser.locEnd
-						);
-						expect(options.locStart).toBe(
-							override === 'locations'
-								? locStart
-								: priorParser.locStart
-						);
-						expect(options.plugins.includes(addedPlugin)).toBe(
-							override === 'plugins'
-						);
-						expect(options.plugins.includes(removedPlugin)).toBe(
-							override === 'locations'
-						);
-
-						return hook === 'parse'
-							? priorParser.parse(text, options)
-							: text;
-					}
-				);
-
-				const priorPlugin: Plugin = {
-					parsers: {
-						yaml: {
-							...priorParser,
-							[hook]: priorHook,
-						},
+						return parser[hook]!(text, options);
 					},
-				};
+				},
+			},
+		};
 
-				const wrapperPlugin: Plugin = {
-					parsers: {
-						yaml: {
-							...parser,
-							[hook]: async (
-								text: string,
-								options: ParserOptions
-							) => {
-								wrapperCallCount += 1;
+		const plugins = {
+			'after this plugin': [priorPlugin, pluginYAML, wrapperPlugin],
+			'alone': [priorPlugin, wrapperPlugin],
+			'before this plugin': [priorPlugin, wrapperPlugin, pluginYAML],
+		}[placement];
 
-								if (wrapperCallCount > 1) {
-									throw new Error();
-								}
+		const expectedOutput = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		});
 
-								if (override === 'locations') {
-									options.locEnd = locEnd;
-									options.locStart = locStart;
-								} else {
-									options.plugins = [
-										...options.plugins.filter(
-											(plugin) => plugin !== removedPlugin
-										),
-										addedPlugin,
-									];
-								}
+		const output = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins,
+		});
 
-								await Promise.resolve();
-								return parser[hook]!(text, options);
-							},
-						},
+		expect(observedLocEnd).toBe(locEnd);
+		expect(observedLocStart).toBe(locStart);
+		expect(priorHook).toHaveBeenCalledTimes(1);
+		expect(wrapperCallCount).toBe(1);
+		expect(output).toBe(expectedOutput);
+		expect(observedOptions?.locEnd).toBe(locEnd);
+		expect(observedOptions?.locStart).toBe(locStart);
+	}
+);
+
+test.each([
+	['parse', 'after this plugin'],
+	['parse', 'alone'],
+	['parse', 'before this plugin'],
+	['preprocess', 'after this plugin'],
+	['preprocess', 'alone'],
+	['preprocess', 'before this plugin'],
+] as const)(
+	'passes plugin list overrides from `%s` wrappers to the prior parser when placed %s',
+	async (hook, placement) => {
+		const parser = getDirectParser(pluginYAML);
+
+		let observedOptions: ParserOptions | undefined;
+		let observedPlugins: ParserOptions['plugins'] | undefined;
+		let wrapperCallCount = 0;
+
+		const priorHook = vi.fn((text: string, options: ParserOptions) => {
+			observedOptions = options;
+			observedPlugins = options.plugins;
+
+			return hook === 'parse'
+				? prettierParsers.yaml.parse(text, options)
+				: text;
+		});
+
+		const priorPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...prettierParsers.yaml,
+					[hook]: priorHook,
+				},
+			},
+		};
+
+		const reassignedPlugins: ParserOptions['plugins'] = [priorPlugin];
+
+		const wrapperPlugin: Plugin = {
+			parsers: {
+				yaml: {
+					...parser,
+					[hook]: async (text: string, options: ParserOptions) => {
+						wrapperCallCount += 1;
+
+						if (wrapperCallCount > 1) {
+							throw new Error();
+						}
+
+						await Promise.resolve();
+						options.plugins = reassignedPlugins;
+
+						return parser[hook]!(text, options);
 					},
-				};
+				},
+			},
+		};
 
-				const plugins = [removedPlugin, priorPlugin];
+		const plugins = {
+			'after this plugin': [priorPlugin, pluginYAML, wrapperPlugin],
+			'alone': [priorPlugin, wrapperPlugin],
+			'before this plugin': [priorPlugin, wrapperPlugin, pluginYAML],
+		}[placement];
 
-				if (placement === 'after') {
-					plugins.push(pluginYAML, wrapperPlugin);
-				} else if (placement === 'before') {
-					plugins.push(wrapperPlugin, pluginYAML);
-				} else {
-					plugins.push(wrapperPlugin);
-				}
+		const expectedOutput = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		});
 
-				const output = await format(TEST_YAML, {
-					parser: 'yaml',
-					plugins,
-				});
+		const output = await format(TEST_YAML, {
+			parser: 'yaml',
+			plugins,
+		});
 
-				expect(priorHook).toHaveBeenCalledTimes(1);
-				expect(wrapperCallCount).toBe(1);
-				expect(output).toBe(expectedOutput);
-				expect(observedOptions?.locEnd).toBe(
-					override === 'locations' ? locEnd : priorParser.locEnd
-				);
-				expect(observedOptions?.locStart).toBe(
-					override === 'locations' ? locStart : priorParser.locStart
-				);
-			}
-		}
+		expect(observedPlugins).toBe(reassignedPlugins);
+		expect(priorHook).toHaveBeenCalledTimes(1);
+		expect(wrapperCallCount).toBe(1);
+		expect(output).toBe(expectedOutput);
+		expect(observedOptions?.plugins).toBe(reassignedPlugins);
 	}
 );
 
@@ -1278,12 +1323,17 @@ test('tracks entry option resets without prior preprocessing', async () => {
 		parser
 	);
 
+	const locEnd: Parser['locEnd'] = (node) =>
+		prettierParsers.yaml.locEnd(node);
+	const locStart: Parser['locStart'] = (node) =>
+		prettierParsers.yaml.locStart(node);
+
 	const options = {
-		locEnd: (node) => prettierParsers.yaml.locEnd(node),
-		locStart: (node) => prettierParsers.yaml.locStart(node),
+		locEnd,
+		locStart,
 		parser: 'yaml',
 		plugins: [priorPlugin, pluginYAML],
-	} as ParserOptions;
+	} as unknown as ParserOptions;
 
 	await expect(
 		resolvePriorParser(options, 'preprocess')
@@ -1300,112 +1350,170 @@ test('tracks entry option resets without prior preprocessing', async () => {
 	});
 });
 
-test.each(['rejected', 'resolved'] as const)(
-	'preserves entry option resets after %s parsing',
-	async (outcome) => {
-		const parser = getDirectParser(pluginYAML);
-		const locEnd: Parser['locEnd'] = (node) =>
-			prettierParsers.yaml.locEnd(node);
-		const locStart: Parser['locStart'] = (node) =>
-			prettierParsers.yaml.locStart(node);
+test('preserves entry option resets after rejected parsing', async () => {
+	const parser = getDirectParser(pluginYAML);
+	const locEnd: Parser['locEnd'] = (node) =>
+		prettierParsers.yaml.locEnd(node);
+	const locStart: Parser['locStart'] = (node) =>
+		prettierParsers.yaml.locStart(node);
 
-		let parseCallCount = 0;
-		let wrapperCallCount = 0;
+	let parseCallCount = 0;
+	let wrapperCallCount = 0;
 
-		const error = new Error();
-		const priorParser: Parser = {
-			...prettierParsers.yaml,
-			locEnd: (node) => prettierParsers.yaml.locEnd(node),
-			locStart: (node) => prettierParsers.yaml.locStart(node),
-			parse: (text, options) => {
-				parseCallCount += 1;
+	const error = new Error();
+	const priorParser: Parser = {
+		...prettierParsers.yaml,
+		locEnd: (node) => prettierParsers.yaml.locEnd(node),
+		locStart: (node) => prettierParsers.yaml.locStart(node),
+		parse: (text, options) => {
+			parseCallCount += 1;
 
-				expect(options.locEnd).toBe(
-					parseCallCount === 1 ? priorParser.locEnd : parser.locEnd
-				);
-				expect(options.locStart).toBe(
-					parseCallCount === 1
-						? priorParser.locStart
-						: parser.locStart
-				);
-				expect(options.plugins).toContain(priorPlugin);
+			expect(options.locEnd).toBe(
+				parseCallCount === 1 ? priorParser.locEnd : parser.locEnd
+			);
+			expect(options.locStart).toBe(
+				parseCallCount === 1 ? priorParser.locStart : parser.locStart
+			);
+			expect(options.plugins).toContain(priorPlugin);
 
-				if (parseCallCount === 1) {
-					options.plugins = [];
+			if (parseCallCount === 1) {
+				options.plugins = [];
+				options.locEnd = locEnd;
+				options.locStart = locStart;
+				throw error;
+			}
 
-					if (outcome === 'rejected') {
-						options.locEnd = locEnd;
-						options.locStart = locStart;
-						throw error;
+			return prettierParsers.yaml.parse(text, options);
+		},
+	};
+
+	const priorPlugin: Plugin = {
+		parsers: {
+			yaml: priorParser,
+		},
+	};
+
+	const wrapperPlugin: Plugin = {
+		parsers: {
+			yaml: {
+				...parser,
+				parse: async (text, options) => {
+					wrapperCallCount += 1;
+
+					if (wrapperCallCount > 1) {
+						throw new Error();
 					}
-				}
 
-				return prettierParsers.yaml.parse(text, options);
-			},
-		};
+					const originalPlugins = options.plugins;
 
-		const priorPlugin: Plugin = {
-			parsers: {
-				yaml: priorParser,
-			},
-		};
+					await expect(
+						Promise.resolve(parser.parse(text, options))
+					).rejects.toBe(error);
 
-		const wrapperPlugin: Plugin = {
-			parsers: {
-				yaml: {
-					...parser,
-					parse: async (text, options) => {
-						wrapperCallCount += 1;
+					expect(options.locEnd).toBe(locEnd);
+					expect(options.locStart).toBe(locStart);
+					expect(options.plugins).toStrictEqual([]);
 
-						if (wrapperCallCount > 1) {
-							throw new Error();
-						}
-
-						const originalPlugins = options.plugins;
-						const result = parser.parse(text, options);
-
-						await expect(
-							Promise.resolve(result).then(
-								() => undefined,
-								(caughtError: unknown) => caughtError
-							)
-						).resolves.toBe(
-							outcome === 'rejected' ? error : undefined
-						);
-
-						expect(options.locEnd).toBe(
-							outcome === 'rejected' ? locEnd : priorParser.locEnd
-						);
-						expect(options.locStart).toBe(
-							outcome === 'rejected'
-								? locStart
-								: priorParser.locStart
-						);
-						expect(options.plugins).toStrictEqual([]);
-
-						options.locEnd = parser.locEnd;
-						options.locStart = parser.locStart;
-						options.plugins = originalPlugins;
-						return parser.parse(text, options);
-					},
+					options.locEnd = parser.locEnd;
+					options.locStart = parser.locStart;
+					options.plugins = originalPlugins;
+					return parser.parse(text, options);
 				},
 			},
-		};
+		},
+	};
 
-		const expectedOutput = await format(TEST_YAML, { parser: 'yaml' });
+	const expectedOutput = await format(TEST_YAML, { parser: 'yaml' });
 
-		const output = await format(TEST_YAML, {
-			parser: 'yaml',
-			plugins: [priorPlugin, pluginYAML, wrapperPlugin],
-		});
+	const output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [priorPlugin, pluginYAML, wrapperPlugin],
+	});
 
-		expect(parseCallCount).toBe(2);
-		expect(wrapperCallCount).toBe(1);
-		expect(output).toBe(expectedOutput);
-	}
-);
+	expect(parseCallCount).toBe(2);
+	expect(wrapperCallCount).toBe(1);
+	expect(output).toBe(expectedOutput);
+});
 
-test('restores locations when a wrapper rejects after delegated parsing', async () => {
+test('preserves entry option resets after resolved parsing', async () => {
+	const parser = getDirectParser(pluginYAML);
+
+	let parseCallCount = 0;
+	let wrapperCallCount = 0;
+
+	const priorParser: Parser = {
+		...prettierParsers.yaml,
+		locEnd: (node) => prettierParsers.yaml.locEnd(node),
+		locStart: (node) => prettierParsers.yaml.locStart(node),
+		parse: (text, options) => {
+			parseCallCount += 1;
+
+			expect(options.locEnd).toBe(
+				parseCallCount === 1 ? priorParser.locEnd : parser.locEnd
+			);
+			expect(options.locStart).toBe(
+				parseCallCount === 1 ? priorParser.locStart : parser.locStart
+			);
+			expect(options.plugins).toContain(priorPlugin);
+
+			if (parseCallCount === 1) {
+				options.plugins = [];
+			}
+
+			return prettierParsers.yaml.parse(text, options);
+		},
+	};
+
+	const priorPlugin: Plugin = {
+		parsers: {
+			yaml: priorParser,
+		},
+	};
+
+	const wrapperPlugin: Plugin = {
+		parsers: {
+			yaml: {
+				...parser,
+				parse: async (text, options) => {
+					wrapperCallCount += 1;
+
+					if (wrapperCallCount > 1) {
+						throw new Error();
+					}
+
+					const originalPlugins = options.plugins;
+
+					await expect(
+						Promise.resolve(parser.parse(text, options))
+					).resolves.toBeDefined();
+
+					expect(options.locEnd).toBe(priorParser.locEnd);
+					expect(options.locStart).toBe(priorParser.locStart);
+					expect(options.plugins).toStrictEqual([]);
+
+					options.locEnd = parser.locEnd;
+					options.locStart = parser.locStart;
+					options.plugins = originalPlugins;
+					return parser.parse(text, options);
+				},
+			},
+		},
+	};
+
+	const expectedOutput = await format(TEST_YAML, { parser: 'yaml' });
+
+	const output = await format(TEST_YAML, {
+		parser: 'yaml',
+		plugins: [priorPlugin, pluginYAML, wrapperPlugin],
+	});
+
+	expect(parseCallCount).toBe(2);
+	expect(wrapperCallCount).toBe(1);
+	expect(output).toBe(expectedOutput);
+});
+
+test('restores parser locations when a wrapper rejects after delegated parsing', async () => {
+	const error = new Error();
 	const parser = getDirectParser(pluginYAML);
 
 	const locEnd: Parser['locEnd'] = (node) =>
@@ -1434,7 +1542,7 @@ test('restores locations when a wrapper rejects after delegated parsing', async 
 
 					await parser.parse(text, options);
 
-					throw new Error();
+					throw error;
 				},
 			},
 		},
@@ -1445,7 +1553,7 @@ test('restores locations when a wrapper rejects after delegated parsing', async 
 			parser: 'yaml',
 			plugins: [priorPlugin, wrapperPlugin, pluginYAML],
 		})
-	).rejects.toThrow(Error);
+	).rejects.toBe(error);
 
 	expect(observedOptions?.locEnd).toBe(parser.locEnd);
 	expect(observedOptions?.locStart).toBe(parser.locStart);

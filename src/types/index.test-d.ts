@@ -12,13 +12,24 @@ import type {
 import { expectTypeOf, test } from 'vite-plus/test';
 
 test('exposes valid types', () => {
-	expectTypeOf<PluginOptions>().toBeObject();
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlBlockStyle');
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlCollectionStyle');
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteKeys');
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteKeysMatching');
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValues');
-	expectTypeOf<PluginOptions>().toHaveProperty('yamlQuoteValuesMatching');
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlBlockStyle')
+		.toEqualTypeOf<'folded' | 'literal' | undefined>();
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlCollectionStyle')
+		.toEqualTypeOf<'block' | 'flow' | undefined>();
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlQuoteKeys')
+		.toEqualTypeOf<boolean | undefined>();
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlQuoteKeysMatching')
+		.toEqualTypeOf<string | undefined>();
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlQuoteValues')
+		.toEqualTypeOf<boolean | undefined>();
+	expectTypeOf<PluginOptions>()
+		.toHaveProperty('yamlQuoteValuesMatching')
+		.toEqualTypeOf<string | undefined>();
 
 	expectTypeOf<ParserDelegation>().toEqualTypeOf<{
 		hook: ParserHookName;
@@ -54,10 +65,22 @@ test('extends Prettier’s `Options`', () => {
 	expectTypeOf<PrettierOptions>().toBeObject();
 	expectTypeOf<PrettierOptions>().toHaveProperty('useTabs');
 
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlBlockStyle');
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlCollectionStyle');
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteKeys');
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteKeysMatching');
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteValues');
-	expectTypeOf<PrettierOptions>().toHaveProperty('yamlQuoteValuesMatching');
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlBlockStyle')
+		.toEqualTypeOf<'folded' | 'literal' | undefined>();
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlCollectionStyle')
+		.toEqualTypeOf<'block' | 'flow' | undefined>();
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlQuoteKeys')
+		.toEqualTypeOf<boolean | undefined>();
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlQuoteKeysMatching')
+		.toEqualTypeOf<string | undefined>();
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlQuoteValues')
+		.toEqualTypeOf<boolean | undefined>();
+	expectTypeOf<PrettierOptions>()
+		.toHaveProperty('yamlQuoteValuesMatching')
+		.toEqualTypeOf<string | undefined>();
 });

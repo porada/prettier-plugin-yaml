@@ -29,35 +29,6 @@ values:
 "
 `;
 
-exports[`formats in standalone mode 1`] = `
-"version: 2
-
-description: >-
-  You can use Dependabot to keep the packages you use updated to the latest versions.
-
-updates:
-  - package-ecosystem: github-actions
-    directory: /
-    schedule: { interval: weekly, time: 12:00 }
-
-  - package-ecosystem: npm
-    directory: /
-    schedule:
-      interval: daily
-    versioning-strategy: increase
-    cooldown:
-      default-days: 1
-    ignore:
-      - dependency-name: |-
-          @standard-config/prettier
-
-values:
-  0: true
-  1: false
-  2: null
-"
-`;
-
 exports[`respects \`bracketSpacing\` 1`] = `
 "version: 2
 
@@ -147,7 +118,8 @@ values:
 `;
 
 exports[`supports \`yamlBlockStyle\` 1`] = `
-"version: 2
+{
+  "folded": "version: 2
 
 description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -172,11 +144,8 @@ values:
   0: true
   1: false
   2: null
-"
-`;
-
-exports[`supports \`yamlBlockStyle\` 2`] = `
-"version: 2
+",
+  "literal": "version: 2
 
 description: |-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -201,11 +170,13 @@ values:
   0: true
   1: false
   2: null
-"
+",
+}
 `;
 
 exports[`supports \`yamlCollectionStyle\` 1`] = `
-"version: 2
+{
+  "block": "version: 2
 
 description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -232,11 +203,8 @@ values:
   0: true
   1: false
   2: null
-"
-`;
-
-exports[`supports \`yamlCollectionStyle\` 2`] = `
-"{
+",
+  "flow": "{
   version: 2,
 
   description: You can use Dependabot to keep the packages you use updated to the latest versions.,
@@ -261,11 +229,8 @@ exports[`supports \`yamlCollectionStyle\` 2`] = `
 
   values: { 0: true, 1: false, 2: null },
 }
-"
-`;
-
-exports[`supports \`yamlCollectionStyle\` 3`] = `
-"{
+",
+  "flowWithoutBracketSpacing": "{
   version: 2,
 
   description: You can use Dependabot to keep the packages you use updated to the latest versions.,
@@ -290,11 +255,13 @@ exports[`supports \`yamlCollectionStyle\` 3`] = `
 
   values: {0: true, 1: false, 2: null},
 }
-"
+",
+}
 `;
 
 exports[`supports \`yamlQuoteKeys\` 1`] = `
-""version": 2
+{
+  "default": ""version": 2
 
 "description": >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -319,11 +286,8 @@ exports[`supports \`yamlQuoteKeys\` 1`] = `
   "0": true
   "1": false
   "2": null
-"
-`;
-
-exports[`supports \`yamlQuoteKeys\` 2`] = `
-"'version': 2
+",
+  "singleQuote": "'version': 2
 
 'description': >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -348,11 +312,8 @@ exports[`supports \`yamlQuoteKeys\` 2`] = `
   '0': true
   '1': false
   '2': null
-"
-`;
-
-exports[`supports \`yamlQuoteKeys\` 3`] = `
-"{
+",
+  "yamlCollectionStyle": "{
   "version": 2,
 
   "description": You can use Dependabot to keep the packages you use updated to the latest versions.,
@@ -377,11 +338,13 @@ exports[`supports \`yamlQuoteKeys\` 3`] = `
 
   "values": { "0": true, "1": false, "2": null },
 }
-"
+",
+}
 `;
 
 exports[`supports \`yamlQuoteKeysMatching\` 1`] = `
-"version: 2
+{
+  "hyphen": "version: 2
 
 description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -406,11 +369,8 @@ values:
   0: true
   1: false
   2: null
-"
-`;
-
-exports[`supports \`yamlQuoteKeysMatching\` 2`] = `
-""version": 2
+",
+  "yamlQuoteKeys": ""version": 2
 
 "description": >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -435,11 +395,13 @@ exports[`supports \`yamlQuoteKeysMatching\` 2`] = `
   "0": true
   "1": false
   "2": null
-"
+",
+}
 `;
 
 exports[`supports \`yamlQuoteValues\` 1`] = `
-"version: 2
+{
+  "default": "version: 2
 
 description: "You can use Dependabot to keep the packages you use updated to the latest versions."
 
@@ -462,11 +424,8 @@ values:
   0: true
   1: false
   2: null
-"
-`;
-
-exports[`supports \`yamlQuoteValues\` 2`] = `
-"version: 2
+",
+  "singleQuote": "version: 2
 
 description: 'You can use Dependabot to keep the packages you use updated to the latest versions.'
 
@@ -489,11 +448,8 @@ values:
   0: true
   1: false
   2: null
-"
-`;
-
-exports[`supports \`yamlQuoteValues\` 3`] = `
-"'version': 2
+",
+  "singleQuoteAndYamlQuoteKeys": "'version': 2
 
 'description': 'You can use Dependabot to keep the packages you use updated to the latest versions.'
 
@@ -516,11 +472,8 @@ exports[`supports \`yamlQuoteValues\` 3`] = `
   '0': true
   '1': false
   '2': null
-"
-`;
-
-exports[`supports \`yamlQuoteValues\` 4`] = `
-"{
+",
+  "yamlCollectionStyle": "{
   version: 2,
 
   description: "You can use Dependabot to keep the packages you use updated to the latest versions.",
@@ -545,38 +498,13 @@ exports[`supports \`yamlQuoteValues\` 4`] = `
 
   values: { 0: true, 1: false, 2: null },
 }
-"
+",
+}
 `;
 
 exports[`supports \`yamlQuoteValuesMatching\` 1`] = `
-"version: 2
-
-description: "You can use Dependabot to keep the packages you use updated to the latest versions."
-
-updates:
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule: { interval: weekly, time: 12:00 }
-
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: daily
-    versioning-strategy: increase
-    cooldown:
-      default-days: 1
-    ignore:
-      - dependency-name: "@standard-config/prettier"
-
-values:
-  0: true
-  1: false
-  2: null
-"
-`;
-
-exports[`supports \`yamlQuoteValuesMatching\` 2`] = `
-"version: "2"
+{
+  "numeric": "version: "2"
 
 description: >-
   You can use Dependabot to keep the packages you use updated to the latest versions.
@@ -601,11 +529,32 @@ values:
   0: true
   1: false
   2: null
-"
-`;
+",
+  "whitespaceOrSlash": "version: 2
 
-exports[`supports \`yamlQuoteValuesMatching\` 3`] = `
-"version: "2"
+description: "You can use Dependabot to keep the packages you use updated to the latest versions."
+
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly, time: 12:00 }
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+    versioning-strategy: increase
+    cooldown:
+      default-days: 1
+    ignore:
+      - dependency-name: "@standard-config/prettier"
+
+values:
+  0: true
+  1: false
+  2: null
+",
+  "yamlQuoteValues": "version: "2"
 
 description: "You can use Dependabot to keep the packages you use updated to the latest versions."
 
@@ -628,5 +577,6 @@ values:
   0: "true"
   1: "false"
   2: "null"
-"
+",
+}
 `;
