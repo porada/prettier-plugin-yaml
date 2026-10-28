@@ -323,7 +323,7 @@ test('preserves plugin lists reassigned by prior parsers', async () => {
 	expect(options.plugins).toBe(reassignedPlugins);
 });
 
-test('works with independently loaded plugin copies', async () => {
+test('matches a single copy’s output alongside an independently loaded copy', async () => {
 	vi.resetModules();
 
 	const firstPlugin = await import('../index.ts');
@@ -348,7 +348,7 @@ test('works with independently loaded plugin copies', async () => {
 	expect(output).toBe(expectedOutput);
 });
 
-test('works with Prettier’s CommonJS YAML parser', async () => {
+test('matches its own output after Prettier’s CommonJS YAML parser', async () => {
 	const expectedOutput = await format(TEST_YAML, {
 		parser: 'yaml',
 		plugins: [pluginYAML],
@@ -660,7 +660,7 @@ test('passes the compatibility options argument to prior parsers', async () => {
 	expect(compatibilityOptions).toBe(options);
 });
 
-test('handles wrappers that copy the current parser hooks', async () => {
+test('matches its own output after wrappers that copy the current parser hooks', async () => {
 	const parser = getDirectParser(pluginYAML);
 	const wrapperPlugin: Plugin = {
 		parsers: {
@@ -701,12 +701,12 @@ test('continues to prior parsers through copied wrappers', async () => {
 
 	const expectedOutput = await format(TEST_YAML, {
 		parser: 'yaml',
-		plugins: [priorPlugin],
+		plugins: [priorPlugin, pluginYAML],
 	});
 
 	const output = await format(TEST_YAML, {
 		parser: 'yaml',
-		plugins: [priorPlugin, wrapperPlugin],
+		plugins: [priorPlugin, wrapperPlugin, pluginYAML],
 	});
 
 	expect(output).toBe(expectedOutput);
@@ -984,7 +984,7 @@ test('preserves removed plugins across prior parser hooks', async () => {
 	expect(output).toBe(expectedOutput);
 });
 
-test('retains prior parser location functions for cursor formatting', async () => {
+test('respects `cursorOffset` with prior parser locations', async () => {
 	const locEnd = vi.fn(prettierParsers.yaml.locEnd);
 	const locStart = vi.fn(prettierParsers.yaml.locStart);
 
@@ -1611,7 +1611,7 @@ test('preserves location overrides after a wrapper delegates parsing', async () 
 	expect(observedOptions?.locStart).toBe(parser.locStart);
 });
 
-test('handles wrappers that reuse the current `parse` function', async () => {
+test('matches the wrapper’s output when it reuses the current `parse` function', async () => {
 	const parser = getDirectParser(pluginYAML);
 	const wrapperPlugin: Plugin = {
 		parsers: {

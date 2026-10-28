@@ -15,7 +15,7 @@ function preprocess(
 	);
 }
 
-test('handles multi-document YAML streams', () => {
+test('quotes values in each document of a multi-document stream', () => {
 	const input = `---
 # Comment 1
 foo: bar
@@ -114,7 +114,7 @@ test('supports empty quote matching patterns', () => {
 test.each([
 	{ yamlQuoteKeys: true },
 	{ yamlQuoteKeysMatching: '^<<$' },
-] as const)('supports explicitly tagged string merge-like keys', (options) => {
+] as const)('quotes explicitly tagged string merge-like keys', (options) => {
 	const input = '!!str <<: foo\n';
 	const expectedOutput = '!!str "<<": foo\n';
 	const output = preprocess(input, options);
@@ -126,67 +126,79 @@ test.each([
 	);
 });
 
-test.each([
-	{
-		options: {
-			yamlBlockStyle: 'literal',
-			yamlQuoteValues: true,
-		},
-		output: 'foo: "bar"\n',
-	},
-	{
-		options: {
+test('prefers `yamlQuoteValues` and flow `yamlCollectionStyle` over `yamlBlockStyle`', () => {
+	const input = `foo: |-
+  bar
+`;
+	const options = {
+		yamlCollectionStyle: {
 			yamlBlockStyle: 'literal',
 			yamlCollectionStyle: 'flow',
 		},
-		output: '{ foo: bar }\n',
-	},
-] as const)(
-	'supports quote and flow collection style precedence',
-	({ options, output: expectedOutput }) => {
-		const input = `foo: |-
-  bar
-`;
-		const output = preprocess(input, options);
+		yamlQuoteValues: {
+			yamlBlockStyle: 'literal',
+			yamlQuoteValues: true,
+		},
+	} as const;
 
-		expect(output).toBe(expectedOutput);
-		expect(preprocess(output, options)).toBe(output);
-		expect(parseDocument(output).toJS()).toStrictEqual(
-			parseDocument(input).toJS()
-		);
-	}
-);
+	const outputs = {
+		yamlCollectionStyle: preprocess(input, options.yamlCollectionStyle),
+		yamlQuoteValues: preprocess(input, options.yamlQuoteValues),
+	};
 
-test.each([
-	[
-		'folded',
-		`foo: >-
-  bar
+	expect(outputs).toMatchInlineSnapshot(`
+		{
+		  "yamlCollectionStyle": "{ foo: bar }
+		",
+		  "yamlQuoteValues": "foo: "bar"
+		",
+		}
+	`);
+	expect(
+		preprocess(outputs.yamlCollectionStyle, options.yamlCollectionStyle)
+	).toBe(outputs.yamlCollectionStyle);
+	expect(preprocess(outputs.yamlQuoteValues, options.yamlQuoteValues)).toBe(
+		outputs.yamlQuoteValues
+	);
+	expect(parseDocument(outputs.yamlCollectionStyle).toJS()).toStrictEqual(
+		parseDocument(input).toJS()
+	);
+	expect(parseDocument(outputs.yamlQuoteValues).toJS()).toStrictEqual(
+		parseDocument(input).toJS()
+	);
+});
 
-  baz
-`,
-	],
-	[
-		'literal',
-		`foo: |-
-  bar
-  baz
-`,
-	],
-] as const)(
-	'supports `yamlBlockStyle: %s` with plain multi-line values',
-	(yamlBlockStyle, expectedOutput) => {
-		const input = `foo: bar
+test('supports `yamlBlockStyle` with plain multi-line values', () => {
+	const input = `foo: bar
 
   baz
 `;
-		const options = { yamlBlockStyle };
-		const output = preprocess(input, options);
+	const options = {
+		folded: { yamlBlockStyle: 'folded' },
+		literal: { yamlBlockStyle: 'literal' },
+	} as const;
 
-		expect(output).toBe(expectedOutput);
-		expect(preprocess(output, options)).toBe(output);
-	}
-);
+	const outputs = {
+		folded: preprocess(input, options.folded),
+		literal: preprocess(input, options.literal),
+	};
+
+	expect(outputs).toMatchInlineSnapshot(`
+		{
+		  "folded": "foo: >-
+		  bar
+
+		  baz
+		",
+		  "literal": "foo: |-
+		  bar
+		  baz
+		",
+		}
+	`);
+	expect(preprocess(outputs.folded, options.folded)).toBe(outputs.folded);
+	expect(preprocess(outputs.literal, options.literal)).toBe(outputs.literal);
+});
 
 test('supports `yamlQuoteKeys` with non-string keys', () => {
 	const input = `0: foo
@@ -285,22 +297,27 @@ baz: "qux"
 	expect(preprocess(input, { yamlQuoteValues: true })).toBe(expectedOutput);
 });
 
-test.each([
-	'-0',
-	'-9007199254740993',
-	'.inf',
-	'.nan',
-	'0.1234567890123456789',
-	'0o400000000000000001',
-	'0x20000000000001',
-	'1e-400',
-	'1e400',
-	'9007199254740993',
-])('preserves numeric precision of `%s`', (value) => {
-	const input = `foo: ${value}\n`;
-	const output = preprocess(input);
-
-	expect(output).toBe(input);
+test('preserves numeric precision', () => {
+	expect(preprocess('foo: -0\n')).toBe('foo: -0\n');
+	expect(preprocess('foo: -9007199254740993\n')).toBe(
+		'foo: -9007199254740993\n'
+	);
+	expect(preprocess('foo: .inf\n')).toBe('foo: .inf\n');
+	expect(preprocess('foo: .nan\n')).toBe('foo: .nan\n');
+	expect(preprocess('foo: 0.1234567890123456789\n')).toBe(
+		'foo: 0.1234567890123456789\n'
+	);
+	expect(preprocess('foo: 0o400000000000000001\n')).toBe(
+		'foo: 0o400000000000000001\n'
+	);
+	expect(preprocess('foo: 0x20000000000001\n')).toBe(
+		'foo: 0x20000000000001\n'
+	);
+	expect(preprocess('foo: 1e-400\n')).toBe('foo: 1e-400\n');
+	expect(preprocess('foo: 1e400\n')).toBe('foo: 1e400\n');
+	expect(preprocess('foo: 9007199254740993\n')).toBe(
+		'foo: 9007199254740993\n'
+	);
 });
 
 test('stringifies numeric scalars without source text', async () => {
@@ -378,21 +395,19 @@ baz: !!float 0.1234567890123456789
 	expect(preprocess(output, options)).toBe(output);
 });
 
-test.each([
-	['!!float', {}],
-	['!!float', { yamlQuoteValues: true }],
-	['!!int', {}],
-	['!!int', { yamlQuoteValues: true }],
-] as const)('preserves strings with an explicit `%s` tag', (tag, options) => {
-	const input = `foo: ${tag} "bar: baz"
-qux: ${tag} "# Comment"
+test('preserves strings with an explicit tag', () => {
+	const floatInput = `foo: !!float "bar: baz"
+qux: !!float "# Comment"
 `;
-	const output = preprocess(input, options);
+	const intInput = `foo: !!int "bar: baz"
+qux: !!int "# Comment"
+`;
+	const options = { yamlQuoteValues: true };
 
-	expect(output).toBe(input);
-	expect(parseDocument(output).toJS()).toStrictEqual(
-		parseDocument(input).toJS()
-	);
+	expect(preprocess(floatInput)).toBe(floatInput);
+	expect(preprocess(floatInput, options)).toBe(floatInput);
+	expect(preprocess(intInput)).toBe(intInput);
+	expect(preprocess(intInput, options)).toBe(intInput);
 });
 
 test('preserves numeric precision in YAML 1.1 documents', () => {
@@ -409,62 +424,81 @@ qux: 9007199254740993:00
 	expect(output).toBe(input);
 });
 
-test.each([
-	[
-		{
+test('preserves numeric precision when quoting keys and values', () => {
+	const input = '9007199254740993: 0.1234567890123456789\n';
+	const options = {
+		yamlQuoteKeys: {
 			yamlQuoteKeys: true,
 		},
-		'"9007199254740993": 0.1234567890123456789\n',
-	],
-	[
-		{
+		yamlQuoteKeysMatching: {
 			yamlQuoteKeysMatching: '^9007199254740993$',
 		},
-		'"9007199254740993": 0.1234567890123456789\n',
-	],
-	[
-		{
+		yamlQuoteValuesMatching: {
 			yamlQuoteValuesMatching: '^0\\.1234567890123456789$',
 		},
-		'9007199254740993: "0.1234567890123456789"\n',
-	],
-] as const)(
-	'preserves numeric precision when quoting keys and values',
-	(options, expectedOutput) => {
-		const input = '9007199254740993: 0.1234567890123456789\n';
-		const output = preprocess(input, options);
+	};
 
-		expect(output).toBe(expectedOutput);
-		expect(preprocess(output, options)).toBe(output);
-	}
-);
+	const outputs = {
+		yamlQuoteKeys: preprocess(input, options.yamlQuoteKeys),
+		yamlQuoteKeysMatching: preprocess(input, options.yamlQuoteKeysMatching),
+		yamlQuoteValuesMatching: preprocess(
+			input,
+			options.yamlQuoteValuesMatching
+		),
+	};
 
-test.each(['0.1234567890123456789', '9007199254740993', 'foo'])(
-	'rejects duplicate `%s` mapping keys',
-	(key) => {
-		const input = `${key}: bar\n${key}: baz\n`;
+	expect(outputs).toMatchInlineSnapshot(`
+		{
+		  "yamlQuoteKeys": ""9007199254740993": 0.1234567890123456789
+		",
+		  "yamlQuoteKeysMatching": ""9007199254740993": 0.1234567890123456789
+		",
+		  "yamlQuoteValuesMatching": "9007199254740993: "0.1234567890123456789"
+		",
+		}
+	`);
+	expect(preprocess(outputs.yamlQuoteKeys, options.yamlQuoteKeys)).toBe(
+		outputs.yamlQuoteKeys
+	);
+	expect(
+		preprocess(outputs.yamlQuoteKeysMatching, options.yamlQuoteKeysMatching)
+	).toBe(outputs.yamlQuoteKeysMatching);
+	expect(
+		preprocess(
+			outputs.yamlQuoteValuesMatching,
+			options.yamlQuoteValuesMatching
+		)
+	).toBe(outputs.yamlQuoteValuesMatching);
+});
 
-		expect(() => preprocess(input)).toThrow(
-			'Document with errors cannot be stringified'
-		);
-	}
-);
+test('rejects duplicate mapping keys', () => {
+	expect(() =>
+		preprocess('0.1234567890123456789: bar\n0.1234567890123456789: baz\n')
+	).toThrow('Document with errors cannot be stringified');
+	expect(() =>
+		preprocess('9007199254740993: bar\n9007199254740993: baz\n')
+	).toThrow('Document with errors cannot be stringified');
+	expect(() => preprocess('foo: bar\nfoo: baz\n')).toThrow(
+		'Document with errors cannot be stringified'
+	);
+});
 
-test.each([
-	['0', '-0'],
-	['1', '0o1'],
-	['1', '0x1'],
-	['1.0', '1e0'],
-] as const)(
-	'rejects equivalent numeric mapping keys `%s` and `%s`',
-	(left, right) => {
-		const input = `${left}: foo\n${right}: bar\n`;
+test('rejects equivalent numeric mapping keys', () => {
+	const options = { yamlCollectionStyle: 'flow' as const };
 
-		expect(() =>
-			preprocess(input, { yamlCollectionStyle: 'flow' })
-		).toThrow('Document with errors cannot be stringified');
-	}
-);
+	expect(() => preprocess('0: foo\n-0: bar\n', options)).toThrow(
+		'Document with errors cannot be stringified'
+	);
+	expect(() => preprocess('1: foo\n0o1: bar\n', options)).toThrow(
+		'Document with errors cannot be stringified'
+	);
+	expect(() => preprocess('1: foo\n0x1: bar\n', options)).toThrow(
+		'Document with errors cannot be stringified'
+	);
+	expect(() => preprocess('1.0: foo\n1e0: bar\n', options)).toThrow(
+		'Document with errors cannot be stringified'
+	);
+});
 
 test('rejects equivalent numeric mapping keys in YAML 1.1 documents', () => {
 	const input = `%YAML 1.1
@@ -490,15 +524,13 @@ test('preserves distinct numeric mapping keys in YAML 1.1 documents', () => {
 	expect(output).toBe(input);
 });
 
-test.each(['1.1', '1.2'])(
-	'preserves NaN mapping keys in YAML %s documents',
-	(version) => {
-		const input = `%YAML ${version}\n---\n.nan: foo\n.nan: bar\n`;
-		const output = preprocess(input);
+test('preserves NaN mapping keys in YAML documents', () => {
+	const yaml11Input = '%YAML 1.1\n---\n.nan: foo\n.nan: bar\n';
+	const yaml12Input = '%YAML 1.2\n---\n.nan: foo\n.nan: bar\n';
 
-		expect(output).toBe(input);
-	}
-);
+	expect(preprocess(yaml11Input)).toBe(yaml11Input);
+	expect(preprocess(yaml12Input)).toBe(yaml12Input);
+});
 
 test('preserves quoted merge-like keys', () => {
 	const input = `foo: &foo

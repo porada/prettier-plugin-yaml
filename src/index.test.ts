@@ -107,25 +107,26 @@ test('preserves numeric precision in distinct mapping keys', async () => {
 	await expect(format(output, options)).resolves.toBe(output);
 });
 
-test.each([
-	['0', '-0'],
-	['1', '0o1'],
-	['1', '0x1'],
-	['1.0', '1e0'],
-] as const)(
-	'rejects equivalent numeric mapping keys `%s` and `%s`',
-	async (left, right) => {
-		const input = `${left}: foo\n${right}: bar\n`;
+test('rejects equivalent numeric mapping keys', async () => {
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		yamlCollectionStyle: 'flow' as const,
+	};
 
-		await expect(
-			format(input, {
-				parser: 'yaml',
-				plugins: [pluginYAML],
-				yamlCollectionStyle: 'flow',
-			})
-		).rejects.toThrow('Document with errors cannot be stringified');
-	}
-);
+	await expect(format('0: foo\n-0: bar\n', options)).rejects.toThrow(
+		'Document with errors cannot be stringified'
+	);
+	await expect(format('1: foo\n0o1: bar\n', options)).rejects.toThrow(
+		'Document with errors cannot be stringified'
+	);
+	await expect(format('1: foo\n0x1: bar\n', options)).rejects.toThrow(
+		'Document with errors cannot be stringified'
+	);
+	await expect(format('1.0: foo\n1e0: bar\n', options)).rejects.toThrow(
+		'Document with errors cannot be stringified'
+	);
+});
 
 test('rejects equivalent numeric mapping keys in YAML 1.1 documents', async () => {
 	const input = `%YAML 1.1
@@ -344,27 +345,24 @@ test('respects `proseWrap`', async () => {
 test.each([
 	[0, RANGE_YAML.indexOf('second')],
 	[RANGE_YAML.indexOf('second'), RANGE_YAML.length],
-])(
-	'respects `rangeStart` and `rangeEnd` from %i to %i',
-	async (rangeStart, rangeEnd) => {
-		const options = {
-			parser: 'yaml' as const,
-			plugins: [pluginYAML],
-			rangeEnd,
-			rangeStart,
-			yamlQuoteValues: true,
-		};
+])('respects `rangeStart` and `rangeEnd`', async (rangeStart, rangeEnd) => {
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		rangeEnd,
+		rangeStart,
+		yamlQuoteValues: true,
+	};
 
-		const expectedOutput = await format(RANGE_YAML, {
-			parser: 'yaml',
-			rangeEnd,
-			rangeStart,
-		});
-		const output = await format(RANGE_YAML, options);
+	const expectedOutput = await format(RANGE_YAML, {
+		parser: 'yaml',
+		rangeEnd,
+		rangeStart,
+	});
+	const output = await format(RANGE_YAML, options);
 
-		expect(output).toBe(expectedOutput);
-	}
-);
+	expect(output).toBe(expectedOutput);
+});
 
 test('respects `requirePragma`', async () => {
 	const input = '# @format\nfoo: [bar,baz]\n';
@@ -697,7 +695,7 @@ test('supports `yamlQuoteValuesMatching`', async () => {
 	).resolves.toBe(outputs.yamlQuoteValues);
 });
 
-test('works with other plugins', async () => {
+test('formats output from other plugins’ parser hooks', async () => {
 	const testPlugin: Plugin = {
 		parsers: {
 			yaml: {
@@ -727,7 +725,7 @@ test('works with other plugins', async () => {
 	`);
 });
 
-test('handles empty files', async () => {
+test('formats newline-only files as empty', async () => {
 	const options = {
 		parser: 'yaml' as const,
 		plugins: [pluginYAML],

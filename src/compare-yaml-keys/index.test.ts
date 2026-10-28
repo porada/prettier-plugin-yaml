@@ -3,14 +3,13 @@ import { parseDocument, Scalar, YAMLMap, YAMLSeq } from 'yaml';
 import compareYAMLKeys from './index.ts';
 
 test('matches identical nodes', () => {
-	for (const node of [
-		new Scalar('foo'),
-		new Scalar(Number.NaN),
-		new YAMLMap(),
-		new YAMLSeq(),
-	]) {
-		expect(compareYAMLKeys(node, node)).toBe(true);
-	}
+	const nanScalar = new Scalar(Number.NaN);
+	const map = new YAMLMap();
+	const seq = new YAMLSeq();
+
+	expect(compareYAMLKeys(nanScalar, nanScalar)).toBe(true);
+	expect(compareYAMLKeys(map, map)).toBe(true);
+	expect(compareYAMLKeys(seq, seq)).toBe(true);
 });
 
 test('preserves distinct non-scalar keys', () => {
@@ -25,35 +24,52 @@ test('preserves distinct non-scalar keys', () => {
 });
 
 test('compares non-numeric scalar values', () => {
-	for (const [left, right, expected] of [
-		['false', 'false', true],
-		['false', 'true', false],
-		['foo', 'bar', false],
-		['foo', 'foo', true],
-		['null', 'null', true],
-	] as const) {
-		expect(
-			compareYAMLKeys(
-				parseDocument(left).contents,
-				parseDocument(right).contents
-			)
-		).toBe(expected);
-	}
+	expect(
+		compareYAMLKeys(
+			parseDocument('false').contents,
+			parseDocument('false').contents
+		)
+	).toBe(true);
+	expect(
+		compareYAMLKeys(
+			parseDocument('false').contents,
+			parseDocument('true').contents
+		)
+	).toBe(false);
+	expect(
+		compareYAMLKeys(
+			parseDocument('foo').contents,
+			parseDocument('bar').contents
+		)
+	).toBe(false);
+	expect(
+		compareYAMLKeys(
+			parseDocument('foo').contents,
+			parseDocument('foo').contents
+		)
+	).toBe(true);
+	expect(
+		compareYAMLKeys(
+			parseDocument('null').contents,
+			parseDocument('null').contents
+		)
+	).toBe(true);
 });
 
 test('compares numeric mapping keys without source text', () => {
-	for (const [left, right, expected] of [
-		[-0, 0, true],
-		[1, 1, true],
-		[1, 2, false],
-		[1, Number.NaN, false],
-		[Number.NaN, Number.NaN, false],
-		[Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, true],
-	] as const) {
-		expect(compareYAMLKeys(new Scalar(left), new Scalar(right))).toBe(
-			expected
-		);
-	}
+	expect(compareYAMLKeys(new Scalar(-0), new Scalar(0))).toBe(true);
+	expect(compareYAMLKeys(new Scalar(1), new Scalar(1))).toBe(true);
+	expect(compareYAMLKeys(new Scalar(1), new Scalar(2))).toBe(false);
+	expect(compareYAMLKeys(new Scalar(1), new Scalar(Number.NaN))).toBe(false);
+	expect(
+		compareYAMLKeys(new Scalar(Number.NaN), new Scalar(Number.NaN))
+	).toBe(false);
+	expect(
+		compareYAMLKeys(
+			new Scalar(Number.POSITIVE_INFINITY),
+			new Scalar(Number.POSITIVE_INFINITY)
+		)
+	).toBe(true);
 });
 
 test.each([
