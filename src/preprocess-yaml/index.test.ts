@@ -424,7 +424,6 @@ test.each([
 	],
 	[
 		{
-			/* oxlint-disable-next-line unicorn/prefer-string-raw */
 			yamlQuoteValuesMatching: '^0\\.1234567890123456789$',
 		},
 		'9007199254740993: "0.1234567890123456789"\n',
