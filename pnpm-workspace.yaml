@@ -4,8 +4,6 @@ autoInstallPeers: false
 
 color: always
 
-engineStrict: true
-
 gitChecks: false
 
 lockfile:
@@ -15,27 +13,12 @@ minimumReleaseAgeExclude:
   - '@prettier/*'
   - '@standard-config/*'
   - prettier
-  - '@pnpm/exe.android-arm64@12.16.1'
-  - '@pnpm/exe.android-x64@12.16.1'
-  - '@pnpm/exe.darwin-arm64@12.16.1'
-  - '@pnpm/exe.darwin-x64@12.16.1'
-  - '@pnpm/exe.freebsd-x64@12.16.1'
-  - '@pnpm/exe.linux-arm64-musl@12.16.1'
-  - '@pnpm/exe.linux-arm64@12.16.1'
-  - '@pnpm/exe.linux-ppc64@12.16.1'
-  - '@pnpm/exe.linux-riscv64@12.16.1'
-  - '@pnpm/exe.linux-s390x@12.16.1'
-  - '@pnpm/exe.linux-x64-musl@12.16.1'
-  - '@pnpm/exe.linux-x64@12.16.1'
-  - '@pnpm/exe.win32-arm64@12.16.1'
-  - '@pnpm/exe.win32-x64@12.16.1'
-  - pnpm@12.16.1
 
 overrides:
   vite-plus>oxfmt: '-'
   vite-plus>oxlint: latest
   vite-plus>oxlint-tsgolint: latest
-  vite: npm:@voidzero-dev/vite-plus-core@1.4.0
+  vite: npm:@voidzero-dev/vite-plus-core@1.6.0
 
 peerDependencyRules:
   allowAny:
