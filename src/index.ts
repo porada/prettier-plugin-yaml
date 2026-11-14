@@ -98,7 +98,7 @@ export const parsers: Plugin['parsers'] = {
 
 export const options: Plugin['options'] = {
 	yamlBlockStyle: {
-		category: 'Output',
+		category: 'YAML',
 		description:
 			'Enforce a block style for multi-line string values. Does not apply to flow collections.',
 		type: 'choice',
@@ -114,7 +114,7 @@ export const options: Plugin['options'] = {
 		],
 	},
 	yamlCollectionStyle: {
-		category: 'Output',
+		category: 'YAML',
 		description: 'Enforce a collection style for maps and sequences.',
 		type: 'choice',
 		choices: [
@@ -129,27 +129,27 @@ export const options: Plugin['options'] = {
 		],
 	},
 	yamlQuoteKeys: {
-		category: 'Output',
+		category: 'YAML',
 		description:
 			'Quote all scalar mapping keys. Leaves YAML merge keys and explicitly tagged non-string keys unchanged. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteKeysMatching: {
-		category: 'Output',
+		category: 'YAML',
 		description:
 			'Quote scalar mapping keys that match a specific pattern. Matches non-string keys based on their string representation. Leaves YAML merge keys and explicitly tagged non-string keys unchanged.',
 		type: 'string',
 	},
 	yamlQuoteValues: {
-		category: 'Output',
+		category: 'YAML',
 		description:
 			'Quote all string values. Takes precedence over `yamlBlockStyle`. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteValuesMatching: {
-		category: 'Output',
+		category: 'YAML',
 		description:
 			'Quote values that match a specific pattern. Matches non-string values based on their string representation. Leaves explicitly tagged non-string values unchanged. Takes precedence over `yamlBlockStyle`.',
 		type: 'string',
