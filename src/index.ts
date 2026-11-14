@@ -5,7 +5,7 @@ import {
 	callParserWithCompatibility,
 	createPriorParserResolver,
 	getParserDelegation,
-	markParserAsYAML,
+	markParserAsOwn,
 	withPriorParserOptions,
 } from './plugin-hooks/index.ts';
 import preprocessYAML, {
@@ -89,7 +89,7 @@ function createParser(): Parser {
 		parser
 	);
 
-	return markParserAsYAML(parser);
+	return markParserAsOwn(parser);
 }
 
 export const parsers: Plugin['parsers'] = {
