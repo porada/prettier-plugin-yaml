@@ -21,7 +21,7 @@ jobs:
       - uses: pnpm/setup@v3.2.0
         with:
           cache: true
-          runtime: node@24
+          runtime: node@26
       - run: pnpm build
 
   coverage:
@@ -33,7 +33,7 @@ jobs:
       - uses: pnpm/setup@v3.2.0
         with:
           cache: true
-          runtime: node@24
+          runtime: node@26
       - run: pnpm test --coverage
       - uses: codecov/codecov-action@v7.1.1
         with:
@@ -48,7 +48,7 @@ jobs:
       - uses: pnpm/setup@v3.2.0
         with:
           cache: true
-          runtime: node@24
+          runtime: node@26
       - run: pnpm format:check
 
   lint:
@@ -60,7 +60,7 @@ jobs:
       - uses: pnpm/setup@v3.2.0
         with:
           cache: true
-          runtime: node@24
+          runtime: node@26
       - run: pnpm lint:check
 
   typecheck:
@@ -72,5 +72,5 @@ jobs:
       - uses: pnpm/setup@v3.2.0
         with:
           cache: true
-          runtime: node@24
+          runtime: node@26
       - run: pnpm typecheck
