@@ -191,10 +191,10 @@ importers:
     devDependencies:
       '@standard-config/oxlint':
         specifier: ^2.11.1
-        version: 2.11.1(@standard-config/oxlint-stylistic@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
+        version: 2.11.1(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
       '@standard-config/oxlint-stylistic':
-        specifier: ^2.11.1
-        version: 2.11.1(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+        specifier: ^2.12.0
+        version: 2.12.0(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.23.0
         version: 1.23.0(prettier@3.10.1)
@@ -588,8 +588,8 @@ packages:
     engines: {node: ^v12.20.0 || ^14.13.0 || >=16.0.0}
     hasBin: true
 
-  '@standard-config/oxlint-stylistic@2.11.1':
-    resolution: {integrity: sha512-E7+v6imj2cv6pPjLLgBhAVqMZfDEpoM5ZXCS6kAUFsRfaBDauct0sABabPuwuq80iyz3yeVHZ5qidIFqePZOUg==}
+  '@standard-config/oxlint-stylistic@2.12.0':
+    resolution: {integrity: sha512-3ieKZxBM2QxM9FUoSh2S2uAQ6EqNWXkylhe2dflYX6gPPOGP6sxWKIhI9o7GiAlylYenR1ugtduUAY9KxFGlaQ==}
     engines: {node: '>=22'}
     peerDependencies:
       '@standard-config/oxlint': ^2.0.1
@@ -625,11 +625,17 @@ packages:
       typescript:
         optional: true
 
-  '@stylistic/eslint-plugin@5.10.0':
-    resolution: {integrity: sha512-nPK52ZHvot8Ju/0A4ucSX1dcPV2/1clx0kLcH5wDmrE4naKso7TUC/voUyU1O9OTKTrR6MYip6LP0ogEMQ9jPQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+  '@stylistic/eslint-plugin@6.0.1':
+    resolution: {integrity: sha512-7nyi2RmGIuzBYGq5C8cFaoQsh+COfo6oHMWCygzg2iaqJJ4RDThaKCMYRkkOUAQWv80R7sbBbpuKZfulH7bFcw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
+      oxlint: ^1.55.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+      oxlint:
+        optional: true
 
   '@testing-library/dom@10.4.2':
     resolution: {integrity: sha512-yzr2S9HyAIdhz2/6qHgbs665Q7PKVcDF05vsOlHPxG1mo36gKVesdYVeDLnXgfjJ03CrKRk08knc6+E/9m8v2Q==}
@@ -1001,8 +1007,8 @@ packages:
   es-module-lexer@2.3.2:
     resolution: {integrity: sha512-poHGpORABojJJucnV9KbOavETW8lBVnphkW77ER5/BQ5Fz7oXSoCNek7IH3vR5nRjdsEz926ibFYX8KtLQmdyw==}
 
-  eslint-plugin-perfectionist@5.13.0:
-    resolution: {integrity: sha512-kPlqE2Kdh0njsad9S9xL/xnq+NNVUsga/uS3yf6axE0RddACM3Q+idJyethC7R+C9b73+NRhAWvKyXPrkl0nFA==}
+  eslint-plugin-perfectionist@5.14.0:
+    resolution: {integrity: sha512-z8mINHD3a4lMwtCuBJ5d5oZjfKwFjWF1gVKXxnUr04beCFwFYQP4TWd+182Mnk038n5Wc+LtSuvQMpbnPvdVSg==}
     engines: {node: ^20.0.0 || >=22.0.0}
     peerDependencies:
       eslint: ^8.45.0 || ^9.0.0 || ^10.0.0
@@ -1014,21 +1020,13 @@ packages:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  eslint-visitor-keys@4.2.1:
-    resolution: {integrity: sha512-Uhdk5sfqcee/9H/rCOJikYz67o0a2Tw2hGRPOG2Y1R2dg7brRe1uG0yaNQDHu+TO/uQPF/5eCapvYSmHUjt7JQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   eslint-visitor-keys@5.0.1:
     resolution: {integrity: sha512-tD40eHxA35h0PEIZNeIjkHoDR4YjjJp34biM0mDvplBe//mB+IHCqHDGV7pxF+7MklTvighcCPPZC7ynWyjdTA==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  espree@10.4.0:
-    resolution: {integrity: sha512-j6PAQ2uUr79PZhBjP5C5fhl8e39FmRnOjsD5lGnWrFU8i2G776tBK7+nP8KuQUTTyAZUwfQqXAgrVH5MbH9CYQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  estraverse@5.3.0:
-    resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
-    engines: {node: '>=4.0'}
+  espree@11.2.0:
+    resolution: {integrity: sha512-7p3DrVEIopW1B1avAGLuCSh1jubc01H2JHc8B4qqGblmg5gI9yumBgACjWo4JlIc04ufug4xJ3SQI8HkS/Rgzw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
@@ -1619,23 +1617,23 @@ snapshots:
       '@reteps/dockerfmt-linux-arm64': 0.5.4
       '@reteps/dockerfmt-linux-x64': 0.5.4
 
-  '@standard-config/oxlint-stylistic@2.11.1(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.12.0(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
     dependencies:
-      '@stylistic/eslint-plugin': 5.10.0
-      eslint-plugin-perfectionist: 5.13.0(typescript@6.0.3)
+      '@stylistic/eslint-plugin': 6.0.1(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
+      eslint-plugin-perfectionist: 5.14.0(typescript@6.0.3)
       oxlint: 1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint': 2.11.1(@standard-config/oxlint-stylistic@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
+      '@standard-config/oxlint': 2.11.1(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
     transitivePeerDependencies:
       - eslint
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@2.11.1(@standard-config/oxlint-stylistic@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))':
+  '@standard-config/oxlint@2.11.1(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))':
     dependencies:
       oxlint: 1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.11.1(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.12.0(@standard-config/oxlint@2.11.1)(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.23.0(prettier@3.10.1)':
     dependencies:
@@ -1652,14 +1650,15 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  '@stylistic/eslint-plugin@5.10.0':
+  '@stylistic/eslint-plugin@6.0.1(oxlint@1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))':
     dependencies:
       '@eslint-community/eslint-utils': 4.10.1
       '@typescript-eslint/types': 8.72.2
-      eslint-visitor-keys: 4.2.1
-      espree: 10.4.0
-      estraverse: 5.3.0
+      '@typescript-eslint/visitor-keys': 8.72.2
+      espree: 11.2.0
       picomatch: 4.0.7
+    optionalDependencies:
+      oxlint: 1.93.0(oxlint-tsgolint@7.0.2007)(vite-plus@1.6.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1))
 
   '@testing-library/dom@10.4.2':
     dependencies:
@@ -1952,7 +1951,7 @@ snapshots:
 
   es-module-lexer@2.3.2: {}
 
-  eslint-plugin-perfectionist@5.13.0(typescript@6.0.3):
+  eslint-plugin-perfectionist@5.14.0(typescript@6.0.3):
     dependencies:
       '@typescript-eslint/types': 8.72.2
       '@typescript-eslint/utils': 8.72.2(typescript@6.0.3)
@@ -1963,17 +1962,13 @@ snapshots:
 
   eslint-visitor-keys@3.4.3: {}
 
-  eslint-visitor-keys@4.2.1: {}
-
   eslint-visitor-keys@5.0.1: {}
 
-  espree@10.4.0:
+  espree@11.2.0:
     dependencies:
       acorn: 8.19.0
       acorn-jsx: 5.3.2(acorn@8.19.0)
-      eslint-visitor-keys: 4.2.1
-
-  estraverse@5.3.0: {}
+      eslint-visitor-keys: 5.0.1
 
   estree-walker@3.0.3:
     dependencies:
