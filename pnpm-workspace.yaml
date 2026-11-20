@@ -18,12 +18,11 @@ overrides:
   vite-plus>oxfmt: '-'
   vite-plus>oxlint: latest
   vite-plus>oxlint-tsgolint: latest
-  vite: npm:@voidzero-dev/vite-plus-core@1.6.0
+  vite: npm:@voidzero-dev/vite-plus-core@latest
 
 peerDependencyRules:
   allowAny:
     - typescript
-    - vite
   ignoreMissing:
     - eslint
     - vitest
@@ -31,3 +30,6 @@ peerDependencyRules:
 strictPeerDependencies: true
 
 trustPolicy: no-downgrade
+
+trustPolicyExclude:
+  - tsrs
