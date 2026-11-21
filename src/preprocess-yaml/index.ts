@@ -53,7 +53,7 @@ export default function preprocessYAML(
 							: (args[0].source ?? stringify(...args)),
 				};
 			}),
-		// Compare equivalent numeric keys without rounding distinct source values
+		// Compare numeric keys for equality without rounding distinct values
 		uniqueKeys: compareYAMLKeys,
 	});
 

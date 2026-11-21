@@ -100,30 +100,30 @@ export const options: Plugin['options'] = {
 	yamlBlockStyle: {
 		category: 'YAML',
 		description:
-			'Enforce a block style for multi-line string values. Does not apply to flow collections.',
+			'Set the block style for multi-line strings outside flow collections.',
 		type: 'choice',
 		choices: [
 			{
-				description: 'Use folded block scalars.',
+				description: 'Use folded scalars.',
 				value: 'folded',
 			},
 			{
-				description: 'Use literal block scalars.',
+				description: 'Use literal scalars.',
 				value: 'literal',
 			},
 		],
 	},
 	yamlCollectionStyle: {
 		category: 'YAML',
-		description: 'Enforce a collection style for maps and sequences.',
+		description: 'Choose how to format maps and sequences.',
 		type: 'choice',
 		choices: [
 			{
-				description: 'Use block style.',
+				description: 'Use indentation and dashes.',
 				value: 'block',
 			},
 			{
-				description: 'Use flow style.',
+				description: 'Use braces and brackets.',
 				value: 'flow',
 			},
 		],
@@ -131,27 +131,26 @@ export const options: Plugin['options'] = {
 	yamlQuoteKeys: {
 		category: 'YAML',
 		description:
-			'Quote all scalar mapping keys. Leaves YAML merge keys and explicitly tagged non-string keys unchanged. Removes unnecessary quotes when disabled.',
+			'Quote all scalar mapping keys. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteKeysMatching: {
 		category: 'YAML',
 		description:
-			'Quote scalar mapping keys that match a specific pattern. Matches non-string keys based on their string representation. Leaves YAML merge keys and explicitly tagged non-string keys unchanged.',
+			'Quote scalar mapping keys that match a regular expression.',
 		type: 'string',
 	},
 	yamlQuoteValues: {
 		category: 'YAML',
 		description:
-			'Quote all string values. Takes precedence over `yamlBlockStyle`. Removes unnecessary quotes when disabled.',
+			'Quote all string values. Removes unnecessary quotes when disabled.',
 		type: 'boolean',
 		default: false,
 	},
 	yamlQuoteValuesMatching: {
 		category: 'YAML',
-		description:
-			'Quote values that match a specific pattern. Matches non-string values based on their string representation. Leaves explicitly tagged non-string values unchanged. Takes precedence over `yamlBlockStyle`.',
+		description: 'Quote values that match a regular expression.',
 		type: 'string',
 	},
 };

@@ -2,38 +2,41 @@ import type { Parser, ParserOptions, Plugin } from 'prettier';
 
 export interface PluginOptions {
 	/**
-	 * Enforce a single block style for multi-line string values. Does not apply
-	 * to flow collections.
+	 * Set the block style for multi-line strings outside flow collections.
+	 * `folded` uses `>` and `literal` uses `|`.
 	 */
 	yamlBlockStyle?: 'folded' | 'literal' | undefined;
 	/**
-	 * Enforce a single collection style for maps and sequences.
+	 * Format maps and sequences with indentation and dashes in `block` style,
+	 * or braces and brackets in `flow` style.
 	 */
 	yamlCollectionStyle?: 'block' | 'flow' | undefined;
 	/**
-	 * Quote all scalar mapping keys. Leaves YAML merge keys and explicitly
-	 * tagged non-string keys unchanged. Removes unnecessary quotes when disabled.
+	 * Quote all scalar mapping keys. Preserves YAML merge keys and explicitly
+	 * tagged non-string keys. Removes unnecessary quotes when disabled.
+	 *
 	 * @default false
 	 */
 	yamlQuoteKeys?: boolean | undefined;
 	/**
-	 * Quote keys that match a specific pattern. Non-string keys are matched
-	 * based on their string representation. Leaves YAML merge keys and explicitly
-	 * tagged non-string keys unchanged. Doesn’t affect keys that must be quoted
-	 * anyway.
+	 * Quote scalar mapping keys that match a regular expression. Matches
+	 * non-string keys by their string representation. Preserves YAML merge keys
+	 * and explicitly tagged non-string keys. Doesn’t affect keys that must be
+	 * quoted anyway.
 	 */
 	yamlQuoteKeysMatching?: string | undefined;
 	/**
 	 * Quote all string values. Takes precedence over `yamlBlockStyle`. Removes
 	 * unnecessary quotes when disabled.
+	 *
 	 * @default false
 	 */
 	yamlQuoteValues?: boolean | undefined;
 	/**
-	 * Quote values that match a specific pattern. Non-string values are matched
-	 * based on their string representation. Leaves explicitly tagged non-string
-	 * values unchanged. Takes precedence over `yamlBlockStyle`. Doesn’t affect
-	 * values that must be quoted anyway.
+	 * Quote values that match a regular expression. Matches non-string values
+	 * by their string representation. Preserves explicitly tagged non-string
+	 * values. Takes precedence over `yamlBlockStyle`. Doesn’t affect values
+	 * that must be quoted anyway.
 	 */
 	yamlQuoteValuesMatching?: string | undefined;
 }
