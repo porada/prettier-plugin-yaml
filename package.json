@@ -49,13 +49,14 @@
 	},
 	"scripts": {
 		"build": "vp pack",
-		"fix": "pnpm format && pnpm lint && pnpm format",
+		"fix": "pnpm build && pnpm format && pnpm lint && pnpm format",
 		"format": "prettier --ignore-unknown --log-level=warn --write .",
 		"format:check": "prettier --check --ignore-unknown .",
 		"lint": "vp lint --fix",
 		"lint:check": "vp lint --deny-warnings --type-check",
-		"prepack": "pnpm run '/^(format:check|lint:check|test|typecheck)$/' && pnpm build",
+		"prepack": "pnpm build && pnpm run '/^(format:check|lint:check|test|typecheck)$/'",
 		"prepare": "vp config --hooks-dir .hooks",
+		"postprepare": "pnpm build",
 		"test": "vp test",
 		"typecheck": "tsc --noEmit"
 	}
