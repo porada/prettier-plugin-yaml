@@ -2,7 +2,7 @@ import type { ParserOptions } from 'prettier';
 import type * as YAML from 'yaml';
 import type { PluginOptions } from '../types/index.d.ts';
 import { expect, test, vi } from 'vite-plus/test';
-import { parseAllDocuments, parseDocument } from 'yaml';
+import { parseAllDocuments, parseDocument, YAMLParseError } from 'yaml';
 import preprocessYAML, { createPreprocessState } from './index.ts';
 
 function preprocess(
@@ -13,6 +13,20 @@ function preprocess(
 		text,
 		options as unknown as ParserOptions & PluginOptions
 	);
+}
+
+function getSyntaxError(callback: () => unknown): SyntaxError {
+	try {
+		callback();
+	} catch (error) {
+		if (error instanceof SyntaxError) {
+			return error;
+		}
+
+		throw error;
+	}
+
+	throw new TypeError('Expected a `SyntaxError`');
 }
 
 test('quotes values in each document of a multi-document stream', () => {
@@ -59,7 +73,11 @@ test('respects `originalText` when preserving source positions', () => {
 			originalText,
 			rangeEnd: input.length,
 		} as unknown as ParserOptions)
-	).toStrictEqual({ preserveSourcePositions: true });
+	).toStrictEqual({
+		mayHaveInsertedPragma: false,
+		preserveSourcePositions: true,
+		sourceText: input,
+	});
 });
 
 test('respects `prettier-ignore` comments', () => {
@@ -89,7 +107,11 @@ test('respects `rangeStart` and `rangeEnd` without a native pragma inserter', as
 				rangeEnd: input.length,
 				rangeStart: 0,
 			} as unknown as ParserOptions)
-		).toStrictEqual({ preserveSourcePositions: false });
+		).toStrictEqual({
+			mayHaveInsertedPragma: false,
+			preserveSourcePositions: false,
+			sourceText: input,
+		});
 	} finally {
 		vi.doUnmock('prettier/plugins/yaml');
 		vi.resetModules();
@@ -474,12 +496,12 @@ test('preserves numeric precision when quoting keys and values', () => {
 test('rejects duplicate mapping keys', () => {
 	expect(() =>
 		preprocess('0.1234567890123456789: bar\n0.1234567890123456789: baz\n')
-	).toThrow('Document with errors cannot be stringified');
+	).toThrow('Map keys must be unique');
 	expect(() =>
 		preprocess('9007199254740993: bar\n9007199254740993: baz\n')
-	).toThrow('Document with errors cannot be stringified');
+	).toThrow('Map keys must be unique');
 	expect(() => preprocess('foo: bar\nfoo: baz\n')).toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 });
 
@@ -487,16 +509,16 @@ test('rejects equivalent numeric mapping keys', () => {
 	const options = { yamlCollectionStyle: 'flow' as const };
 
 	expect(() => preprocess('0: foo\n-0: bar\n', options)).toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	expect(() => preprocess('1: foo\n0o1: bar\n', options)).toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	expect(() => preprocess('1: foo\n0x1: bar\n', options)).toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	expect(() => preprocess('1.0: foo\n1e0: bar\n', options)).toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 });
 
@@ -507,9 +529,145 @@ test('rejects equivalent numeric mapping keys in YAML 1.1 documents', () => {
 540431955284459580: bar
 `;
 
-	expect(() => preprocess(input)).toThrow(
-		'Document with errors cannot be stringified'
+	expect(() => preprocess(input)).toThrow('Map keys must be unique');
+});
+
+test('reports the first YAML error in document order', () => {
+	const input = `---
+foo: bar
+---
+baz: qux
+baz: quux
+---
+[
+`;
+
+	const error = getSyntaxError(() => preprocess(input));
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"Map keys must be unique at line 5, column 1:
+
+		baz: qux
+		baz: quux
+		^
+		"
+	`);
+	expect(error).toHaveProperty('loc', {
+		end: { column: 2, line: 5 },
+		start: { column: 1, line: 5 },
+	});
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
+	expect(error.cause).toHaveProperty('code', 'DUPLICATE_KEY');
+	expect(error.cause).toHaveProperty('message', error.message);
+});
+
+test('reports YAML errors in text from prior `preprocess` hooks without source locations', () => {
+	const input = 'foo: bar\n';
+	const preprocessedInput = 'foo: bar\nfoo: baz\n';
+	const options = {} as ParserOptions & PluginOptions;
+
+	const error = getSyntaxError(() =>
+		preprocessYAML(
+			preprocessedInput,
+			options,
+			createPreprocessState(input, options)
+		)
 	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+
+		Map keys must be unique at line 2, column 1:
+
+		foo: bar
+		foo: baz
+		^
+		"
+	`);
+	expect(error).not.toHaveProperty('loc');
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
+	expect(error.cause).toHaveProperty('code', 'DUPLICATE_KEY');
+});
+
+test('reports YAML errors without source locations when the pragma inserter is unknown', () => {
+	const error = getSyntaxError(() =>
+		preprocess('foo: bar\nfoo: baz\n', { insertPragma: true })
+	);
+
+	expect(error.message).toMatch(
+		/^\[prettier-plugin-yaml\] Failed to parse YAML\. Locations refer to the parser input:\n\n/
+	);
+	expect(error).not.toHaveProperty('loc');
+});
+
+test('rejects invalid quote matching patterns before invalid YAML', () => {
+	expect(() =>
+		preprocess('foo: bar\nfoo: baz\n', { yamlQuoteKeysMatching: '(' })
+	).toThrowErrorMatchingInlineSnapshot(
+		`[SyntaxError: Invalid regular expression: /(/: Unterminated group]`
+	);
+});
+
+test('preserves invalid YAML after `prettier-ignore` comments', () => {
+	const input = `# prettier-ignore
+foo: bar
+foo: baz
+`;
+
+	expect(preprocess(input, { yamlQuoteValues: true })).toBe(input);
+});
+
+test('preserves empty streams with YAML errors', () => {
+	const input = '%YAML\n';
+
+	expect(preprocess(input, { yamlQuoteValues: true })).toBe(input);
+});
+
+test('omits the source location when the YAML parser supplies no position', async () => {
+	let yamlError: YAML.YAMLParseError | undefined;
+
+	vi.resetModules();
+	vi.doMock('yaml', async (importOriginal) => {
+		const yaml = await importOriginal<typeof YAML>();
+
+		return {
+			...yaml,
+			parseAllDocuments: (
+				...args: Parameters<typeof yaml.parseAllDocuments>
+			) => {
+				const documents = yaml.parseAllDocuments(...args);
+				yamlError = new yaml.YAMLParseError(
+					[-1, -1],
+					'IMPOSSIBLE',
+					'Unexpected error'
+				);
+
+				for (const document of documents) {
+					document.errors = [yamlError];
+				}
+
+				return documents;
+			},
+		};
+	});
+
+	try {
+		const { default: preprocessYAMLWithMock } = await import('./index.ts');
+
+		const error = getSyntaxError(() =>
+			preprocessYAMLWithMock(
+				'foo: bar\n',
+				{} as ParserOptions & PluginOptions
+			)
+		);
+
+		expect(error.message).toBe('Unexpected error');
+		expect(error).not.toHaveProperty('loc');
+		expect(error.cause).toBe(yamlError);
+	} finally {
+		vi.doUnmock('yaml');
+		vi.resetModules();
+	}
 });
 
 test('preserves distinct numeric mapping keys in YAML 1.1 documents', () => {

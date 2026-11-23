@@ -1,4 +1,5 @@
-import type { ParserOptions } from 'prettier';
+import type { ParserOptions, Printer } from 'prettier';
+import type { YAMLError } from 'yaml';
 import type { PluginOptions, PreprocessState } from '../types/index.d.ts';
 import { printers as prettierPrinters } from 'prettier/plugins/yaml';
 import { parseAllDocuments, Scalar, visit } from 'yaml';
@@ -11,11 +12,19 @@ export function createPreprocessState(
 	text: string,
 	options: ParserOptions
 ): PreprocessState {
+	const hasInsertedPragma = detectInsertedPragma(text, options);
+
 	return {
+		mayHaveInsertedPragma: detectPossiblePragmaInsertion(
+			options,
+			hasInsertedPragma
+		),
 		preserveSourcePositions: requiresSourcePositionPreservation(
 			text,
-			options
+			options,
+			hasInsertedPragma
 		),
+		sourceText: text,
 	};
 }
 
@@ -90,6 +99,14 @@ export default function preprocessYAML(
 	const isMatchedValue = matchedValueExpression
 		? (value: unknown) => matchedValueExpression.test(String(value))
 		: () => false;
+
+	for (const document of documents) {
+		const [error] = document.errors;
+
+		if (error) {
+			throw createSyntaxError(error, text, state);
+		}
+	}
 
 	const scalarVisitor: Parameters<typeof visit>[1] = {
 		Scalar(key, node) {
@@ -182,10 +199,14 @@ export default function preprocessYAML(
 
 function requiresSourcePositionPreservation(
 	text: string,
-	options: ParserOptions
+	options: ParserOptions,
+	hasInsertedPragma: boolean
 ): boolean {
-	const { cursorOffset, rangeEnd, rangeStart } = options;
-	const sourceLength = getOriginalSourceLength(text, options);
+	const { cursorOffset, originalText, rangeEnd, rangeStart } = options;
+	const sourceLength =
+		typeof originalText === 'string'
+			? originalText.length
+			: text.length - (hasInsertedPragma ? YAML_PRAGMA_PREFIX.length : 0);
 
 	// Parser preprocessors can’t return source maps, so plugin-owned text
 	// changes are unsafe while Prettier is tracking original source positions
@@ -196,7 +217,7 @@ function requiresSourcePositionPreservation(
 	);
 }
 
-function getOriginalSourceLength(
+function detectInsertedPragma(
 	text: string,
 	{
 		insertPragma,
@@ -205,22 +226,71 @@ function getOriginalSourceLength(
 		rangeStart,
 		requirePragma,
 	}: ParserOptions
-): number {
+): boolean {
 	if (typeof originalText === 'string') {
-		return originalText.length;
+		return false;
 	}
 
 	const sourceWithoutPragma = text.slice(YAML_PRAGMA_PREFIX.length);
-	const hasInsertedPragma =
+
+	return (
 		insertPragma &&
 		!requirePragma &&
 		rangeStart === 0 &&
 		typeof rangeEnd === 'number' &&
 		YAML_PRAGMA_PREFIX.length > 0 &&
 		sourceWithoutPragma.length === rangeEnd &&
-		prettierPrinters.yaml.insertPragma?.(sourceWithoutPragma) === text;
+		prettierPrinters.yaml.insertPragma?.(sourceWithoutPragma) === text
+	);
+}
 
-	return hasInsertedPragma ? rangeEnd : text.length;
+function detectPossiblePragmaInsertion(
+	{
+		insertPragma,
+		printer,
+		requirePragma,
+	}: ParserOptions & { printer?: Pick<Printer, 'insertPragma'> },
+	hasInsertedPragma: boolean
+): boolean {
+	if (!insertPragma || requirePragma || (printer && !printer.insertPragma)) {
+		return false;
+	}
+
+	// Only insertions by Prettier’s YAML printer can be ruled out from the text
+	return (
+		printer?.insertPragma !== prettierPrinters.yaml.insertPragma ||
+		hasInsertedPragma
+	);
+}
+
+function createSyntaxError(
+	error: YAMLError,
+	text: string,
+	{ mayHaveInsertedPragma, sourceText }: PreprocessState
+): SyntaxError {
+	// Without a source map, positions in text that Prettier or prior
+	// `preprocess` hooks may have changed can’t be mapped to the original file
+	if (mayHaveInsertedPragma || text !== sourceText) {
+		return new SyntaxError(
+			`[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:\n\n${error.message}`,
+			{ cause: error }
+		);
+	}
+
+	const syntaxError = new SyntaxError(error.message, { cause: error });
+
+	if (error.linePos) {
+		const [start, end] = error.linePos;
+
+		Object.assign(syntaxError, {
+			loc: {
+				...(end && { end: { column: end.col, line: end.line } }),
+				start: { column: start.col, line: start.line },
+			},
+		});
+	}
+
+	return syntaxError;
 }
 
 function hasPrettierIgnore(

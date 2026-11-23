@@ -4,6 +4,7 @@ import { format, formatWithCursor } from 'prettier';
 import * as prettierPluginYAML from 'prettier/plugins/yaml';
 import { format as standaloneFormat } from 'prettier/standalone';
 import { expect, expectTypeOf, test } from 'vite-plus/test';
+import { YAMLParseError } from 'yaml';
 import * as pluginYAML from './index.ts';
 
 test('exposes correct public API', () => {
@@ -47,6 +48,20 @@ values:
 `;
 
 const RANGE_YAML = 'first: [foo,bar]\nsecond: [baz,qux]\n';
+
+async function getSyntaxError(promise: Promise<unknown>): Promise<SyntaxError> {
+	try {
+		await promise;
+	} catch (error) {
+		if (error instanceof SyntaxError) {
+			return error;
+		}
+
+		throw error;
+	}
+
+	throw new TypeError('Expected a `SyntaxError`');
+}
 
 test('formats YAML', async () => {
 	const options = {
@@ -115,16 +130,16 @@ test('rejects equivalent numeric mapping keys', async () => {
 	};
 
 	await expect(format('0: foo\n-0: bar\n', options)).rejects.toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	await expect(format('1: foo\n0o1: bar\n', options)).rejects.toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	await expect(format('1: foo\n0x1: bar\n', options)).rejects.toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 	await expect(format('1.0: foo\n1e0: bar\n', options)).rejects.toThrow(
-		'Document with errors cannot be stringified'
+		'Map keys must be unique'
 	);
 });
 
@@ -140,7 +155,191 @@ test('rejects equivalent numeric mapping keys in YAML 1.1 documents', async () =
 			parser: 'yaml',
 			plugins: [pluginYAML],
 		})
-	).rejects.toThrow('Document with errors cannot be stringified');
+	).rejects.toThrow('Map keys must be unique');
+});
+
+test('reports YAML errors with source locations', async () => {
+	const input = 'foo: [bar,baz\nqux: quux\n';
+
+	const error = await getSyntaxError(
+		format(input, {
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		})
+	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"Flow sequence in block collection must be sufficiently indented and end with a ] at line 2, column 1:
+
+		foo: [bar,baz
+		qux: quux
+		^
+		"
+	`);
+	expect(error).toHaveProperty('loc', {
+		end: { column: 2, line: 2 },
+		start: { column: 1, line: 2 },
+	});
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
+	expect(error.cause).toHaveProperty('message', error.message);
+});
+
+test('reports YAML errors after `insertPragma` without source locations', async () => {
+	const error = await getSyntaxError(
+		format('foo: bar\nfoo: baz\n', {
+			insertPragma: true,
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		})
+	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+
+		Map keys must be unique at line 4, column 1:
+
+		foo: bar
+		foo: baz
+		^
+		"
+	`);
+	expect(error).not.toHaveProperty('loc');
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
+});
+
+test('reports YAML errors with source locations after an existing pragma', async () => {
+	const error = await getSyntaxError(
+		format('# @prettier\nfoo: bar\nfoo: baz\n', {
+			insertPragma: true,
+			parser: 'yaml',
+			plugins: [pluginYAML],
+		})
+	);
+
+	expect(error.cause).toHaveProperty('message', error.message);
+	expect(error).toHaveProperty('loc', {
+		end: { column: 2, line: 3 },
+		start: { column: 1, line: 3 },
+	});
+});
+
+test('reports YAML errors without source locations after an ambiguous existing pragma', async () => {
+	const pragma = '# @format\n\n';
+	const input = `${pragma}foo: bar\nfoo: baz\n`;
+
+	const error = await getSyntaxError(
+		format(input, {
+			insertPragma: true,
+			parser: 'yaml',
+			plugins: [pluginYAML],
+			rangeEnd: input.length - pragma.length,
+		})
+	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+
+		Map keys must be unique at line 4, column 1:
+
+		foo: bar
+		foo: baz
+		^
+		"
+	`);
+	expect(error).not.toHaveProperty('loc');
+});
+
+test('reports YAML errors without source locations after a custom `insertPragma`', async () => {
+	const testPlugin: Plugin = {
+		printers: {
+			yaml: {
+				...prettierPluginYAML.printers.yaml,
+				insertPragma: (text) =>
+					text.replace('# generator\n', '# @format\n#\n'),
+			},
+		},
+	};
+
+	const error = await getSyntaxError(
+		format('# generator\nfoo: bar\nfoo: baz\n', {
+			insertPragma: true,
+			parser: 'yaml',
+			plugins: [testPlugin, pluginYAML],
+		})
+	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+
+		Map keys must be unique at line 4, column 1:
+
+		foo: bar
+		foo: baz
+		^
+		"
+	`);
+	expect(error).not.toHaveProperty('loc');
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
+});
+
+test.each([
+	{
+		input: '# @prettier\n\nfoo: bar\nfoo: baz\n',
+		insertPragma: (text: string) =>
+			text.replace('# generator\n', '# @format\n#\n'),
+		line: 4,
+		requirePragma: true,
+	},
+	{
+		input: 'foo: bar\nfoo: baz\n',
+		insertPragma: undefined,
+		line: 2,
+		requirePragma: false,
+	},
+])(
+	'reports YAML errors with source locations when Prettier skips pragma insertion',
+	async ({ input, insertPragma, line, requirePragma }) => {
+		const testPlugin: Plugin = {
+			printers: {
+				yaml: {
+					...prettierPluginYAML.printers.yaml,
+					insertPragma,
+				},
+			},
+		};
+
+		const error = await getSyntaxError(
+			format(input, {
+				insertPragma: true,
+				parser: 'yaml',
+				plugins: [testPlugin, pluginYAML],
+				requirePragma,
+			})
+		);
+
+		expect(error.cause).toHaveProperty('message', error.message);
+		expect(error).toHaveProperty('loc', {
+			end: { column: 2, line },
+			start: { column: 1, line },
+		});
+	}
+);
+
+test('formats YAML with parser warnings', async () => {
+	const input = 'foo: !bar [baz,qux]\n';
+	const options = {
+		parser: 'yaml' as const,
+		plugins: [pluginYAML],
+		yamlQuoteValues: true,
+	};
+
+	const output = await format(input, options);
+
+	expect(output).toMatchInlineSnapshot(`
+		"foo: !bar ["baz", "qux"]
+		"
+	`);
+	await expect(format(output, options)).resolves.toBe(output);
 });
 
 test.each(['!!float', '!!int'])(
@@ -723,6 +922,37 @@ test('formats output from other plugins’ parser hooks', async () => {
 		"foo: [bar, baz]
 		"
 	`);
+});
+
+test('reports YAML errors from other plugins’ `preprocess` hooks without source locations', async () => {
+	const testPlugin: Plugin = {
+		parsers: {
+			yaml: {
+				...prettierPluginYAML.parsers.yaml,
+				preprocess: (text) => `${text}foo: baz\n`,
+			},
+		},
+	};
+
+	const error = await getSyntaxError(
+		format('foo: bar\n', {
+			parser: 'yaml',
+			plugins: [testPlugin, pluginYAML],
+		})
+	);
+
+	expect(error.message).toMatchInlineSnapshot(`
+		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+
+		Map keys must be unique at line 2, column 1:
+
+		foo: bar
+		foo: baz
+		^
+		"
+	`);
+	expect(error).not.toHaveProperty('loc');
+	expect(error.cause).toBeInstanceOf(YAMLParseError);
 });
 
 test('formats newline-only files as empty', async () => {
