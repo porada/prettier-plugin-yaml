@@ -75,26 +75,24 @@ export default function preprocessYAML(
 		yamlBlockStyle,
 		yamlCollectionStyle,
 		yamlQuoteKeys,
-		yamlQuoteKeysMatching,
 		yamlQuoteValues,
-		yamlQuoteValuesMatching,
 	} = options;
 
 	const { BLOCK_FOLDED, BLOCK_LITERAL, PLAIN, QUOTE_DOUBLE } = Scalar;
 
-	const matchedKeyExpression =
-		typeof yamlQuoteKeysMatching === 'string'
-			? new RegExp(yamlQuoteKeysMatching)
-			: undefined;
+	const matchedKeyExpression = compilePatternOption(
+		options,
+		'yamlQuoteKeysMatching'
+	);
 
 	const isMatchedKey = matchedKeyExpression
 		? (key: unknown) => matchedKeyExpression.test(String(key))
 		: () => false;
 
-	const matchedValueExpression =
-		typeof yamlQuoteValuesMatching === 'string'
-			? new RegExp(yamlQuoteValuesMatching)
-			: undefined;
+	const matchedValueExpression = compilePatternOption(
+		options,
+		'yamlQuoteValuesMatching'
+	);
 
 	const isMatchedValue = matchedValueExpression
 		? (value: unknown) => matchedValueExpression.test(String(value))
@@ -195,6 +193,26 @@ export default function preprocessYAML(
 			})
 		)
 		.join('');
+}
+
+function compilePatternOption(
+	options: PluginOptions,
+	name: 'yamlQuoteKeysMatching' | 'yamlQuoteValuesMatching'
+): RegExp | undefined {
+	const pattern = options[name];
+
+	if (typeof pattern !== 'string') {
+		return undefined;
+	}
+
+	try {
+		return new RegExp(pattern);
+	} catch (error) {
+		throw new SyntaxError(
+			`[prettier-plugin-yaml] Failed to compile the regular expression for \`${name}\`:\n\n${(error as SyntaxError).message}`,
+			{ cause: error }
+		);
+	}
 }
 
 function requiresSourcePositionPreservation(

@@ -589,6 +589,34 @@ test('reports YAML errors in text from prior `preprocess` hooks without source l
 	expect(error.cause).toHaveProperty('code', 'DUPLICATE_KEY');
 });
 
+test.each(['yamlQuoteKeysMatching', 'yamlQuoteValuesMatching'] as const)(
+	'rejects invalid `%s` patterns',
+	(name) => {
+		const pattern = '(';
+		const nativeError = getSyntaxError(() => new RegExp(pattern));
+
+		const error = getSyntaxError(() =>
+			preprocess('foo: bar\n', { [name]: pattern })
+		);
+
+		expect(error.message).toBe(
+			`[prettier-plugin-yaml] Failed to compile the regular expression for \`${name}\`:\n\n${nativeError.message}`
+		);
+		expect(error).not.toHaveProperty('loc');
+		expect(error.cause).toBeInstanceOf(SyntaxError);
+		expect(error.cause).toHaveProperty('message', nativeError.message);
+	}
+);
+
+test('rejects invalid `yamlQuoteKeysMatching` patterns before invalid `yamlQuoteValuesMatching` patterns', () => {
+	expect(() =>
+		preprocess('foo: bar\n', {
+			yamlQuoteKeysMatching: '(',
+			yamlQuoteValuesMatching: '[',
+		})
+	).toThrow('`yamlQuoteKeysMatching`');
+});
+
 test('reports YAML errors without source locations when the pragma inserter is unknown', () => {
 	const error = getSyntaxError(() =>
 		preprocess('foo: bar\nfoo: baz\n', { insertPragma: true })
@@ -603,9 +631,20 @@ test('reports YAML errors without source locations when the pragma inserter is u
 test('rejects invalid quote matching patterns before invalid YAML', () => {
 	expect(() =>
 		preprocess('foo: bar\nfoo: baz\n', { yamlQuoteKeysMatching: '(' })
-	).toThrowErrorMatchingInlineSnapshot(
-		`[SyntaxError: Invalid regular expression: /(/: Unterminated group]`
-	);
+	).toThrowErrorMatchingInlineSnapshot(`
+		[SyntaxError: [prettier-plugin-yaml] Failed to compile the regular expression for \`yamlQuoteKeysMatching\`:
+
+		Invalid regular expression: /(/: Unterminated group]
+	`);
+});
+
+test('ignores invalid quote matching patterns while preserving source text', () => {
+	const input = 'foo: bar\n';
+	const ignoredInput = `# prettier-ignore\n${input}`;
+	const options = { yamlQuoteValuesMatching: '(' };
+
+	expect(preprocess(input, { ...options, cursorOffset: 0 })).toBe(input);
+	expect(preprocess(ignoredInput, options)).toBe(ignoredInput);
 });
 
 test('preserves invalid YAML after `prettier-ignore` comments', () => {
