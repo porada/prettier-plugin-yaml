@@ -194,7 +194,7 @@ test('reports YAML errors after `insertPragma` without source locations', async 
 	);
 
 	expect(error.message).toMatchInlineSnapshot(`
-		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+		"[prettier-plugin-yaml] Failed to parse YAML:
 
 		Map keys must be unique at line 4, column 1:
 
@@ -237,7 +237,7 @@ test('reports YAML errors without source locations after an ambiguous existing p
 	);
 
 	expect(error.message).toMatchInlineSnapshot(`
-		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+		"[prettier-plugin-yaml] Failed to parse YAML:
 
 		Map keys must be unique at line 4, column 1:
 
@@ -269,7 +269,7 @@ test('reports YAML errors without source locations after a custom `insertPragma`
 	);
 
 	expect(error.message).toMatchInlineSnapshot(`
-		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+		"[prettier-plugin-yaml] Failed to parse YAML:
 
 		Map keys must be unique at line 4, column 1:
 
@@ -942,7 +942,7 @@ test('reports YAML errors from other plugins’ `preprocess` hooks without sourc
 	);
 
 	expect(error.message).toMatchInlineSnapshot(`
-		"[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:
+		"[prettier-plugin-yaml] Failed to parse YAML:
 
 		Map keys must be unique at line 2, column 1:
 

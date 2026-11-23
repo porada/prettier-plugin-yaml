@@ -313,7 +313,7 @@ function createSyntaxError(
 	// `preprocess` hooks may have changed can’t be mapped to the original file
 	if (mayHaveInsertedPragma || text !== sourceText) {
 		return new SyntaxError(
-			`[prettier-plugin-yaml] Failed to parse YAML. Locations refer to the parser input:\n\n${error.message}`,
+			`[prettier-plugin-yaml] Failed to parse YAML:\n\n${error.message}`,
 			{ cause: error }
 		);
 	}
