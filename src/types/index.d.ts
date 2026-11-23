@@ -67,14 +67,8 @@ export type PluginWithParsers = Omit<Plugin, 'parsers'> & {
 };
 
 export type PreprocessState = {
-	/**
-	 * Whether Prettier may have changed the text with a pragma inserter.
-	 */
 	mayHaveInsertedPragma: boolean;
 	preserveSourcePositions: boolean;
-	/**
-	 * Text this plugin received before prior `preprocess` hooks ran.
-	 */
 	sourceText: string;
 };
 

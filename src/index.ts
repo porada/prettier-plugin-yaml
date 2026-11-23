@@ -12,6 +12,10 @@ import preprocessYAML, {
 	createPreprocessState,
 } from './preprocess-yaml/index.ts';
 
+/**
+ * Creates a parser that defers to the prior compatible parser before Prettier’s
+ * native parser.
+ */
 function createParser(): Parser {
 	async function parse(
 		text: string,

@@ -8,6 +8,9 @@ import compareYAMLKeys from '../compare-yaml-keys/index.ts';
 
 const YAML_PRAGMA_PREFIX = prettierPrinters.yaml.insertPragma?.('') ?? '';
 
+/**
+ * Captures the input for cursor offsets, formatting ranges, and diagnostics.
+ */
 export function createPreprocessState(
 	text: string,
 	options: ParserOptions
@@ -28,6 +31,10 @@ export function createPreprocessState(
 	};
 }
 
+/**
+ * Applies YAML formatting options to the document stream. Preserves the input
+ * for cursor or partial-range formatting and `prettier-ignore` directives.
+ */
 export default function preprocessYAML(
 	text: string,
 	options: ParserOptions & PluginOptions,
@@ -195,6 +202,9 @@ export default function preprocessYAML(
 		.join('');
 }
 
+/**
+ * Compiles a quoting pattern and names the option if the expression is invalid.
+ */
 function compilePatternOption(
 	options: PluginOptions,
 	name: 'yamlQuoteKeysMatching' | 'yamlQuoteValuesMatching'
@@ -215,6 +225,9 @@ function compilePatternOption(
 	}
 }
 
+/**
+ * Checks whether a cursor offset or partial range requires unchanged input.
+ */
 function requiresSourcePositionPreservation(
 	text: string,
 	options: ParserOptions,
@@ -235,6 +248,9 @@ function requiresSourcePositionPreservation(
 	);
 }
 
+/**
+ * Checks the text and range for the pragma added by Prettier’s YAML printer.
+ */
 function detectInsertedPragma(
 	text: string,
 	{
@@ -262,6 +278,9 @@ function detectInsertedPragma(
 	);
 }
 
+/**
+ * Checks whether pragma insertion could have shifted source locations.
+ */
 function detectPossiblePragmaInsertion(
 	{
 		insertPragma,
@@ -281,6 +300,10 @@ function detectPossiblePragmaInsertion(
 	);
 }
 
+/**
+ * Preserves the YAML error as the cause and includes file coordinates when the
+ * parser’s positions still apply to the source.
+ */
 function createSyntaxError(
 	error: YAMLError,
 	text: string,
@@ -311,6 +334,9 @@ function createSyntaxError(
 	return syntaxError;
 }
 
+/**
+ * Checks the document and its nodes for a `prettier-ignore` directive.
+ */
 function hasPrettierIgnore(
 	document: ReturnType<typeof parseAllDocuments>[number]
 ): boolean {
@@ -330,6 +356,9 @@ function hasPrettierIgnore(
 	return hasIgnoreComment;
 }
 
+/**
+ * Checks whether the last line of a leading comment is `prettier-ignore`.
+ */
 function hasPrettierIgnoreComment({
 	commentBefore,
 }: {
