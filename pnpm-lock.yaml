@@ -177,10 +177,10 @@ settings:
 
 overrides:
   prettier-plugin-yaml: link:.
+  vite: npm:@voidzero-dev/vite-plus-core@latest
   vite-plus>oxfmt: '-'
   vite-plus>oxlint: latest
   vite-plus>oxlint-tsgolint: latest
-  vite: npm:@voidzero-dev/vite-plus-core@latest
 
 importers:
 
@@ -192,10 +192,10 @@ importers:
     devDependencies:
       '@standard-config/oxlint':
         specifier: ^2.12.0
-        version: 2.12.0(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
+        version: 2.12.0(@standard-config/oxlint-stylistic@2.13.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
       '@standard-config/oxlint-stylistic':
-        specifier: ^2.12.0
-        version: 2.12.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+        specifier: ^2.13.0
+        version: 2.13.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
       '@standard-config/prettier':
         specifier: ^1.23.1
         version: 1.23.1(prettier@3.10.1)
@@ -565,8 +565,8 @@ packages:
     engines: {node: ^v12.20.0 || ^14.13.0 || >=16.0.0}
     hasBin: true
 
-  '@standard-config/oxlint-stylistic@2.12.0':
-    resolution: {integrity: sha512-3ieKZxBM2QxM9FUoSh2S2uAQ6EqNWXkylhe2dflYX6gPPOGP6sxWKIhI9o7GiAlylYenR1ugtduUAY9KxFGlaQ==}
+  '@standard-config/oxlint-stylistic@2.13.0':
+    resolution: {integrity: sha512-DGk3CKEx4Yhfki/dVnPLca8UyPIw6gxNtSNiQ7sMH0u6ZL6TU68uVHGbq2dxGMqb/Yh0hIKYQpBwFs8Qf19WdQ==}
     engines: {node: '>=22'}
     peerDependencies:
       '@standard-config/oxlint': ^2.0.1
@@ -1433,10 +1433,12 @@ packages:
   yuku-core@0.19.0:
     resolution: {integrity: sha512-kYK9e1XdfirNhkipzW0wmMcSWcVF/CWnuugodfVYRCUwvoBefweL9HzB96OiKEhsx78V5WbUxbJqlizMX869Qg==}
     engines: {node: '>=14.18.0'}
+    deprecated: 'Yuku is now one package with one core. Use "yuku" instead: https://yuku.fyi/javascript/. Existing installs keep working but get no more fixes.'
 
   yuku-parser@0.19.0:
     resolution: {integrity: sha512-XrBh9ZiQK5mJVRxZBAvD6LwRyAYrK3MFtH3+onyuxFL5hFD44EC3QOmIC1FjTj6H2MMwq46/NAI+NZxLZPZgxg==}
     engines: {node: '>=14.18.0'}
+    deprecated: 'Yuku is now one package with one core. Use "yuku" instead: https://yuku.fyi/javascript/. Existing installs keep working but get no more fixes.'
 
 snapshots:
 
@@ -1631,24 +1633,24 @@ snapshots:
       '@reteps/dockerfmt-linux-arm64': 0.5.4
       '@reteps/dockerfmt-linux-x64': 0.5.4
 
-  '@standard-config/oxlint-stylistic@2.12.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
+  '@standard-config/oxlint-stylistic@2.13.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)':
     dependencies:
       '@stylistic/eslint-plugin': 6.0.1(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
       eslint-plugin-perfectionist: 5.14.0(typescript@6.0.3)
       oxlint: 1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint': 2.12.0(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
+      '@standard-config/oxlint': 2.12.0(@standard-config/oxlint-stylistic@2.13.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))
     transitivePeerDependencies:
       - '@typescript/native'
       - eslint
       - supports-color
       - typescript
 
-  '@standard-config/oxlint@2.12.0(@standard-config/oxlint-stylistic@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))':
+  '@standard-config/oxlint@2.12.0(@standard-config/oxlint-stylistic@2.13.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))':
     dependencies:
       oxlint: 1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1))
     optionalDependencies:
-      '@standard-config/oxlint-stylistic': 2.12.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
+      '@standard-config/oxlint-stylistic': 2.13.0(@standard-config/oxlint@2.12.0)(oxlint@1.94.0(vite-plus@1.7.0(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(publint@0.3.25)(typescript@6.0.3)(yaml@2.9.1)))(typescript@6.0.3)
 
   '@standard-config/prettier@1.23.1(prettier@3.10.1)':
     dependencies:
