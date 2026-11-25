@@ -13,6 +13,11 @@ updates:
     schedule:
       interval: daily
     versioning-strategy: increase
+    groups:
+      vite-plus:
+        patterns:
+          - '@vitest/coverage-v8'
+          - vite-plus
     cooldown:
       default-days: 1
       exclude:
